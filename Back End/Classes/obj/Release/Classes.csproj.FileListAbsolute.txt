@@ -1,0 +1,17 @@
+C:\Users\micha\source\repos\BackEndMTAProject\Classes\bin\Release\Classes.dll.config
+C:\Users\micha\source\repos\BackEndMTAProject\Classes\bin\Release\Classes.dll
+C:\Users\micha\source\repos\BackEndMTAProject\Classes\bin\Release\Classes.pdb
+C:\Users\micha\source\repos\BackEndMTAProject\Classes\bin\Release\EntityFramework.dll
+C:\Users\micha\source\repos\BackEndMTAProject\Classes\bin\Release\EntityFramework.SqlServer.dll
+C:\Users\micha\source\repos\BackEndMTAProject\Classes\bin\Release\Newtonsoft.Json.dll
+C:\Users\micha\source\repos\BackEndMTAProject\Classes\bin\Release\Usefull Methods.dll
+C:\Users\micha\source\repos\BackEndMTAProject\Classes\bin\Release\Usefull Methods.pdb
+C:\Users\micha\source\repos\BackEndMTAProject\Classes\bin\Release\Usefull Methods.dll.config
+C:\Users\micha\source\repos\BackEndMTAProject\Classes\bin\Release\EntityFramework.xml
+C:\Users\micha\source\repos\BackEndMTAProject\Classes\bin\Release\EntityFramework.SqlServer.xml
+C:\Users\micha\source\repos\BackEndMTAProject\Classes\bin\Release\Newtonsoft.Json.xml
+C:\Users\micha\source\repos\BackEndMTAProject\Classes\obj\Release\Classes.csproj.CoreCompileInputs.cache
+C:\Users\micha\source\repos\BackEndMTAProject\Classes\obj\Release\Classes.csproj.CopyComplete
+C:\Users\micha\source\repos\BackEndMTAProject\Classes\obj\Release\Classes.dll
+C:\Users\micha\source\repos\BackEndMTAProject\Classes\obj\Release\Classes.pdb
+C:\Users\micha\source\repos\BackEndMTAProject\Classes\obj\Release\Classes.csproj.AssemblyReference.cache

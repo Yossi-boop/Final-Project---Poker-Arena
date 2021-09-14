@@ -1,0 +1,17 @@
+C:\Users\user\source\repos\Server\obj\Debug\Server.csprojAssemblyReference.cache
+C:\Users\user\source\repos\Server\obj\Debug\Server.csproj.CoreCompileInputs.cache
+C:\Users\micha\source\repos\BackEndMTAProject\Server\obj\Debug\Server.csproj.CoreCompileInputs.cache
+C:\Users\micha\source\repos\BackEndMTAProject\Server\bin\Debug\Server.dll.config
+C:\Users\micha\source\repos\BackEndMTAProject\Server\bin\Debug\Server.dll
+C:\Users\micha\source\repos\BackEndMTAProject\Server\bin\Debug\Server.pdb
+C:\Users\micha\source\repos\BackEndMTAProject\Server\bin\Debug\Classes.dll
+C:\Users\micha\source\repos\BackEndMTAProject\Server\bin\Debug\Usefull Methods.dll
+C:\Users\micha\source\repos\BackEndMTAProject\Server\bin\Debug\Classes.pdb
+C:\Users\micha\source\repos\BackEndMTAProject\Server\bin\Debug\Classes.dll.config
+C:\Users\micha\source\repos\BackEndMTAProject\Server\bin\Debug\Usefull Methods.pdb
+C:\Users\micha\source\repos\BackEndMTAProject\Server\bin\Debug\Usefull Methods.dll.config
+C:\Users\micha\source\repos\BackEndMTAProject\Server\obj\Debug\Server.csproj.CopyComplete
+C:\Users\micha\source\repos\BackEndMTAProject\Server\obj\Debug\Server.dll
+C:\Users\micha\source\repos\BackEndMTAProject\Server\obj\Debug\Server.pdb
+C:\Users\micha\source\repos\BackEndMTAProject\Server\bin\Debug\Newtonsoft.Json.xml
+C:\Users\micha\source\repos\BackEndMTAProject\Server\obj\Debug\Server.csproj.AssemblyReference.cache

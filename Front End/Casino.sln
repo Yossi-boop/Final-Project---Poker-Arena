@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31410.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "CasinoSharedLibary", "CasinoSharedLibary\CasinoSharedLibary.shproj", "{A0CDBD0E-3A41-42B7-9425-A838BC2C7383}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopCasino", "DesktopCasino\DesktopCasino.csproj", "{A1DE49A9-D4B4-47A8-B190-6BDA2A7C0F74}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		CasinoSharedLibary\CasinoSharedLibary.projitems*{a0cdbd0e-3a41-42b7-9425-a838bc2c7383}*SharedItemsImports = 13
+		CasinoSharedLibary\CasinoSharedLibary.projitems*{a1de49a9-d4b4-47a8-b190-6bda2a7c0f74}*SharedItemsImports = 5
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A1DE49A9-D4B4-47A8-B190-6BDA2A7C0F74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1DE49A9-D4B4-47A8-B190-6BDA2A7C0F74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1DE49A9-D4B4-47A8-B190-6BDA2A7C0F74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1DE49A9-D4B4-47A8-B190-6BDA2A7C0F74}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A28228A3-462B-4A69-ACC8-8296FDEB7F40}
+	EndGlobalSection
+EndGlobal

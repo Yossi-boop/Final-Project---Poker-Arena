@@ -1,0 +1,15 @@
+C:\Users\micha\source\repos\BackEndMTAProject\Server\obj\Release\Server.csproj.CoreCompileInputs.cache
+C:\Users\micha\source\repos\BackEndMTAProject\Server\obj\Release\Server.csproj.AssemblyReference.cache
+C:\Users\micha\source\repos\BackEndMTAProject\Server\bin\Release\Server.dll.config
+C:\Users\micha\source\repos\BackEndMTAProject\Server\bin\Release\Server.dll
+C:\Users\micha\source\repos\BackEndMTAProject\Server\bin\Release\Server.pdb
+C:\Users\micha\source\repos\BackEndMTAProject\Server\bin\Release\Classes.dll
+C:\Users\micha\source\repos\BackEndMTAProject\Server\bin\Release\Usefull Methods.dll
+C:\Users\micha\source\repos\BackEndMTAProject\Server\bin\Release\Classes.pdb
+C:\Users\micha\source\repos\BackEndMTAProject\Server\bin\Release\Classes.dll.config
+C:\Users\micha\source\repos\BackEndMTAProject\Server\bin\Release\Newtonsoft.Json.xml
+C:\Users\micha\source\repos\BackEndMTAProject\Server\bin\Release\Usefull Methods.pdb
+C:\Users\micha\source\repos\BackEndMTAProject\Server\bin\Release\Usefull Methods.dll.config
+C:\Users\micha\source\repos\BackEndMTAProject\Server\obj\Release\Server.csproj.CopyComplete
+C:\Users\micha\source\repos\BackEndMTAProject\Server\obj\Release\Server.dll
+C:\Users\micha\source\repos\BackEndMTAProject\Server\obj\Release\Server.pdb
