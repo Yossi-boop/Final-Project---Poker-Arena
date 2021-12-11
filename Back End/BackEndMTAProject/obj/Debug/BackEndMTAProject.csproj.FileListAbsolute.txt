@@ -17,3 +17,22 @@ C:\Users\micha\source\repos\BackEndMTAProject\BackEndMTAProject\obj\Debug\BackEn
 C:\Users\micha\source\repos\BackEndMTAProject\BackEndMTAProject\bin\Debug\Newtonsoft.Json.dll
 C:\Users\micha\source\repos\BackEndMTAProject\BackEndMTAProject\bin\Debug\Newtonsoft.Json.xml
 C:\Users\micha\source\repos\BackEndMTAProject\BackEndMTAProject\obj\Debug\BackEndMTAProject.csproj.AssemblyReference.cache
+C:\Users\Yossi\Desktop\Final Project\Back End\BackEndMTAProject\bin\Debug\BackEndMTAProject.exe.config
+C:\Users\Yossi\Desktop\Final Project\Back End\BackEndMTAProject\bin\Debug\BackEndMTAProject.exe
+C:\Users\Yossi\Desktop\Final Project\Back End\BackEndMTAProject\bin\Debug\BackEndMTAProject.pdb
+C:\Users\Yossi\Desktop\Final Project\Back End\BackEndMTAProject\bin\Debug\Classes.dll
+C:\Users\Yossi\Desktop\Final Project\Back End\BackEndMTAProject\bin\Debug\Server.dll
+C:\Users\Yossi\Desktop\Final Project\Back End\BackEndMTAProject\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Yossi\Desktop\Final Project\Back End\BackEndMTAProject\bin\Debug\Usefull Methods.dll
+C:\Users\Yossi\Desktop\Final Project\Back End\BackEndMTAProject\bin\Debug\Classes.pdb
+C:\Users\Yossi\Desktop\Final Project\Back End\BackEndMTAProject\bin\Debug\Classes.dll.config
+C:\Users\Yossi\Desktop\Final Project\Back End\BackEndMTAProject\bin\Debug\Server.pdb
+C:\Users\Yossi\Desktop\Final Project\Back End\BackEndMTAProject\bin\Debug\Server.dll.config
+C:\Users\Yossi\Desktop\Final Project\Back End\BackEndMTAProject\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Yossi\Desktop\Final Project\Back End\BackEndMTAProject\bin\Debug\Usefull Methods.pdb
+C:\Users\Yossi\Desktop\Final Project\Back End\BackEndMTAProject\bin\Debug\Usefull Methods.dll.config
+C:\Users\Yossi\Desktop\Final Project\Back End\BackEndMTAProject\obj\Debug\BackEndMTAProject.csproj.AssemblyReference.cache
+C:\Users\Yossi\Desktop\Final Project\Back End\BackEndMTAProject\obj\Debug\BackEndMTAProject.csproj.CoreCompileInputs.cache
+C:\Users\Yossi\Desktop\Final Project\Back End\BackEndMTAProject\obj\Debug\BackEndMTAProject.csproj.CopyComplete
+C:\Users\Yossi\Desktop\Final Project\Back End\BackEndMTAProject\obj\Debug\BackEndMTAProject.exe
+C:\Users\Yossi\Desktop\Final Project\Back End\BackEndMTAProject\obj\Debug\BackEndMTAProject.pdb
