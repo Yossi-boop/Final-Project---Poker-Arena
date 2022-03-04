@@ -22,7 +22,6 @@ C:\Users\Yossi\Desktop\Final Project\Back End\Server\bin\Debug\Classes.dll
 C:\Users\Yossi\Desktop\Final Project\Back End\Server\bin\Debug\Usefull Methods.dll
 C:\Users\Yossi\Desktop\Final Project\Back End\Server\bin\Debug\Classes.pdb
 C:\Users\Yossi\Desktop\Final Project\Back End\Server\bin\Debug\Classes.dll.config
-C:\Users\Yossi\Desktop\Final Project\Back End\Server\bin\Debug\Newtonsoft.Json.xml
 C:\Users\Yossi\Desktop\Final Project\Back End\Server\bin\Debug\Usefull Methods.pdb
 C:\Users\Yossi\Desktop\Final Project\Back End\Server\bin\Debug\Usefull Methods.dll.config
 C:\Users\Yossi\Desktop\Final Project\Back End\Server\obj\Debug\Server.csproj.AssemblyReference.cache

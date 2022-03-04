@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <parameters>
   <parameter name="UsersDbContext-Web.config Connection String" description="UsersDbContext Connection String used in web.config by the application to access the database." defaultValue="Data Source=(LocalDb)\MSSQLLocalDB;Initial Catalog=GameUsersDb;Integrated Security=SSPI;AttachDBFilename=|DataDirectory|\GameUsersDb.mdf" tags="SqlConnectionString">
-    <parameterEntry kind="XmlFile" scope="C:\\Users\\micha\\source\\repos\\BackEndMTAProject\\WebApiControllers\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='UsersDbContext']/@connectionString" />
-  </parameter>
-  <parameter name="WebApiControllers.data.GameUsersDbContext-Web.config Connection String" description="WebApiControllers.data.GameUsersDbContext Connection String used in web.config by the application to access the database." defaultValue="WebApiControllers.data.GameUsersDbContext_ConnectionString" tags="SqlConnectionString">
-    <parameterEntry kind="XmlFile" scope="C:\\Users\\micha\\source\\repos\\BackEndMTAProject\\WebApiControllers\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='WebApiControllers.data.GameUsersDbContext']/@connectionString" />
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\Yossi\\Desktop\\Final\ Project\\Back\ End\\WebApiControllers\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='UsersDbContext']/@connectionString" />
   </parameter>
 </parameters>

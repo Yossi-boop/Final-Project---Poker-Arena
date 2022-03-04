@@ -15,13 +15,14 @@ namespace Server
     public class Proxy
     {
         public List<KeyValuePair<string,string>> m_Parameters = new List<KeyValuePair<string, string>>();
-        //public string BaseURL = "http://localhost:61968/";
-        public string BaseURL;
+        public string BaseURL = "http://localhost:61968/";
+        //public string BaseURL;
 
         public HttpClient client;
         public Timer aTimer;
 
-        public Proxy(string i_BaseUrl = "https://pokerarenaapi.azurewebsites.net/")
+        //public Proxy(string i_BaseUrl = "https://pokerarenaapi.azurewebsites.net/")
+        public Proxy(string i_BaseUrl = "https://webapicontrollers20220101232715.azurewebsites.net/")
         {
             BaseURL = i_BaseUrl;
             connerctToServer();
@@ -386,7 +387,7 @@ namespace Server
         {
             try
             {
-                string result = GetRequestAsync(BaseURL + "api/TablePokerChat?CasinoId=" + i_CasinoId + "&&TableId=" + i_TableId).Result;
+                string result = DeleteRequestAsync(BaseURL + "api/TablePokerChat?CasinoId=" + i_CasinoId + "&&TableId=" + i_TableId).Result;
                 var val = JArray.Parse(result);
 
                 List<Message> messages = val.ToObject<List<Message>>();

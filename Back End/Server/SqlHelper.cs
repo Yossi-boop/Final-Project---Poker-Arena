@@ -14,10 +14,10 @@ namespace Server
 
         public SqlHelper()
         {
-            builder.DataSource = "pokerarenadbserver.database.windows.net";
-            builder.UserID = "Meir";
-            builder.Password = "M1e9i9r1";
-            builder.InitialCatalog = "PokerArena_db";
+            builder.DataSource = "pokerarenafirsttest.database.windows.net";
+            builder.UserID = "YossiHagever";
+            builder.Password = "Meir1991";
+            builder.InitialCatalog = "PokerArena";
         }
 
         public void AddUser(string i_Email, string i_Name, string i_Password, int i_Figure)
