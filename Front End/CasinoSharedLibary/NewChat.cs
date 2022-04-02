@@ -327,16 +327,18 @@ namespace CasinoSharedLibary
                             text.Append(word);
                             lineCounter += word.Length;
 
-                            if (lineCounter > (30 - ChatData[firstMessage].UserName.Length - 2)) // - 2 for the : and space chars.
-                            {
-                                text.Append("\n");
-                                lineCounter = 0;
-                            }
-                            else
-                            {
-                                lineCounter++;
-                                text.Append(' ');
-                            }
+                            
+
+                            //if (lineCounter > (30 - ChatData[firstMessage].UserName.Length - 2)) // - 2 for the : and space chars.
+                            //{
+                            //    text.Append("\n");
+                            //    lineCounter = 0;
+                            //}
+                            //else
+                            //{
+                            //    lineCounter++;
+                            //    text.Append(' ');
+                            //}
                         }
                     }
                     text.Append("\n");
