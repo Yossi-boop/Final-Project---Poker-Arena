@@ -324,21 +324,20 @@ namespace CasinoSharedLibary
 
                         foreach (string word in words)
                         {
-                            text.Append(word);
                             lineCounter += word.Length;
 
-                            
-
-                            //if (lineCounter > (30 - ChatData[firstMessage].UserName.Length - 2)) // - 2 for the : and space chars.
-                            //{
-                            //    text.Append("\n");
-                            //    lineCounter = 0;
-                            //}
-                            //else
-                            //{
-                            //    lineCounter++;
-                            //    text.Append(' ');
-                            //}
+                            if (lineCounter < (30 - ChatData[firstMessage].UserName.Length - 2)) // - 2 for the : and space chars.
+                            {
+                                text.Append(word);
+                            }
+                            else if (lineCounter > (30 - ChatData[firstMessage].UserName.Length - 2))
+                            {
+                                text.Append("\n");
+                                lineCounter = 0;
+                                text.Append(word);
+                            }
+                            lineCounter++;
+                            text.Append(' ');
                         }
                     }
                     text.Append("\n");

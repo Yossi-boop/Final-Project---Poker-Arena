@@ -15,8 +15,8 @@ namespace Server
     public class Proxy
     {
         public List<KeyValuePair<string,string>> m_Parameters = new List<KeyValuePair<string, string>>();
-        public string BaseURL = "http://localhost:61968/";
-        //public string BaseURL;
+        //public string BaseURL = "http://localhost:61968/";
+        public string BaseURL;
 
         public HttpClient client;
         public Timer aTimer;
