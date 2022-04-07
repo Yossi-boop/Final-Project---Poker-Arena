@@ -1,4 +1,4 @@
-
+*.suo
 Back End/Classes/bin/
 Back End/BackEndMTAProject/bin/
 Back End/Usefull Methods/bin/
