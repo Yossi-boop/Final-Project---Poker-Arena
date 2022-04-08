@@ -258,6 +258,7 @@ namespace CasinoSharedLibary
             return returnString;
         }
 
+        //should add sentences array for chat good ui
         public void Draw(GameTime i_gameTime)
         {
             if (isChatVisible)
