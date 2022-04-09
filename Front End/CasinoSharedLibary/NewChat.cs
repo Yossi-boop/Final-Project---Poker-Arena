@@ -263,7 +263,6 @@ namespace CasinoSharedLibary
         {
             if (isChatVisible)
             {
-                string drawingTextString;
                 Vector2 drawingTextStringSize;
 
                 painter.Draw(storage.GreenUI[6], new Rectangle((int)SendMessageButton.Position.X, (int)SendMessageButton.Position.Y - 20, ChatMessagesWidth, 20), Color.White);
@@ -371,24 +370,6 @@ namespace CasinoSharedLibary
             }
 
             return isSentenceInChatBorder;
-        }
-
-        private int lengthOfLastMessage(string i_lastMessage)
-        {
-            int lengthOfLastMessage = i_lastMessage.Length;
-            int countBigSymbols = 0;
-
-            foreach (char letter in i_lastMessage)
-            {
-                if (letter == '@' || letter == '#' || letter == '$' || letter == '%' || letter == '&')
-                {
-                    countBigSymbols++;
-                }
-            }
-
-            lengthOfLastMessage += countBigSymbols;
-
-            return lengthOfLastMessage;
         }
 
         private bool isKeyLetter(Keys i_key)
