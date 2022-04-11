@@ -35,6 +35,7 @@ namespace CasinoSharedLibary
         private bool isChatSelfUpdated = true;
 
         private List<Message> ChatData = new List<Message>();
+        private List<String> ChatMessage = new List<string>();
 
         private string lastMessage;
         private bool isNewMessage = false;
@@ -139,6 +140,8 @@ namespace CasinoSharedLibary
             position.Y = i_pos.Y;
             string returnMessage = lastMessage;
 
+            endingMessage = ChatMessage.Count;
+
             if (isChatVisible && isNewMessage)
             {
                 isNewMessage = false;
@@ -204,6 +207,78 @@ namespace CasinoSharedLibary
                         sendMessage();
                     }
                 }
+
+                if (isChatSelfUpdated && ChatData != null && ChatData.Count > 0)
+                {
+                    //endingMessage = ChatData.Count;
+                    endingMessage = ChatMessage.Count;
+                    if (endingMessage > requestedNumberOfVisibleMessages)
+                    {
+                        startingMessage = endingMessage - requestedNumberOfVisibleMessages;
+                    }
+                    else
+                    {
+                        startingMessage = 0;
+                    }
+                }
+
+                StringBuilder text = new StringBuilder();
+                for (int firstMessage = ChatMessage.Count; ChatData != null && firstMessage < ChatData.Count; firstMessage++)
+                {
+                    if (firstMessage == ChatData.Count)
+                    {
+                        break;
+                    }
+                    text.Append(ChatData[firstMessage].UserName);
+                    text.Append(": ");
+                    if (ChatData[firstMessage].UserName.Length + ChatData[firstMessage].Body.Length < 31)
+                    {
+                        text.Append(ChatData[firstMessage].Body);
+                        ChatMessage.Add(text.ToString());
+                        text.Clear();
+                    }
+                    else
+                    {
+                        string[] words = ChatData[firstMessage].Body.Split(' ');
+                        bool isFirstLine = true;
+                        int lineCounter = 0;
+
+                        foreach (string word in words)
+                        {
+                            if (word.Length > 15)
+                            {
+                                text.Append("...");
+                                ChatMessage.Add(text.ToString());
+                                text.Clear();
+                                break;
+                            }
+
+                            lineCounter += word.Length;
+
+                            //if (lineCounter < (30 - ChatData[firstMessage].UserName.Length - 2)) // - 2 for the : and space chars.
+                            if (isSentenceInChatBorder(isFirstLine, lineCounter, firstMessage))
+                            {
+                                text.Append(word);
+                            }
+                            //else if (lineCounter > (30 - ChatData[firstMessage].UserName.Length - 2))
+                            else
+                            {
+                                //text.Append("\n");
+                                ChatMessage.Add(text.ToString());
+                                text.Clear();
+                                lineCounter = 0;
+                                lineCounter += word.Length;
+                                isFirstLine = false;
+                                text.Append(word);
+                            }
+                            lineCounter++;
+                            text.Append(' ');
+                        }
+                        ChatMessage.Add(text.ToString());
+                    }
+                    //text.Append("\n");
+                }
+
             }
 
             return returnMessage;
@@ -290,69 +365,12 @@ namespace CasinoSharedLibary
                 MoveChatDownButton.Draw(i_gameTime, painter);
                 SendMessageButton.Draw(i_gameTime, painter);
 
-                if (isChatSelfUpdated && ChatData != null && ChatData.Count > 0)
+                for (int currentMessage = startingMessage; currentMessage < endingMessage && ChatMessage.Count > 0 && currentMessage < ChatMessage.Count; currentMessage++)
                 {
-                    endingMessage = ChatData.Count;
-                    if (endingMessage > requestedNumberOfVisibleMessages)
-                    {
-                        startingMessage = endingMessage - requestedNumberOfVisibleMessages;
-                    }
-                    else
-                    {
-                        startingMessage = 0;
-                    }
+                    painter.DrawString(storage.Fonts[1], ChatMessage[currentMessage], new Vector2((int)SendMessageButton.Position.X + 10, (int)SendMessageButton.Position.Y - 10 - ChatMessagesHeight + (20 * currentMessage)), Color.Black);
                 }
-
-                StringBuilder text = new StringBuilder();
-                for (int firstMessage = startingMessage; ChatData != null && firstMessage < endingMessage; firstMessage++)
-                {
-                    if (firstMessage == ChatData.Count)
-                    {
-                        break;
-                    }
-                    text.Append(ChatData[firstMessage].UserName);
-                    text.Append(": ");
-                    if(ChatData[firstMessage].UserName.Length + ChatData[firstMessage].Body.Length < 31)
-                    {
-                        text.Append(ChatData[firstMessage].Body);
-                    }
-                    else
-                    {
-                        string[] words = ChatData[firstMessage].Body.Split(' ');
-                        bool isFirstLine = true;
-                        int lineCounter = 0;
-
-                        foreach (string word in words)
-                        {
-                            if (word.Length > 15)
-                            {
-                                text.Append("...");
-                                break;
-                            }
-
-                            lineCounter += word.Length;
-
-                            //if (lineCounter < (30 - ChatData[firstMessage].UserName.Length - 2)) // - 2 for the : and space chars.
-                            if(isSentenceInChatBorder(isFirstLine, lineCounter, firstMessage))
-                            {
-                                text.Append(word);
-                            }
-                            //else if (lineCounter > (30 - ChatData[firstMessage].UserName.Length - 2))
-                            else
-                            {
-                                text.Append("\n");
-                                lineCounter = 0;
-                                lineCounter += word.Length;
-                                isFirstLine = false;
-                                text.Append(word);
-                            }
-                            lineCounter++;
-                            text.Append(' ');
-                        }
-                    }
-                    text.Append("\n");
-                }
-                painter.DrawString(storage.Fonts[1], text.ToString(), new Vector2((int)SendMessageButton.Position.X + 10, (int)SendMessageButton.Position.Y - 10 - ChatMessagesHeight), Color.Black);
+                
+                //painter.DrawString(storage.Fonts[1], text.ToString(), new Vector2((int)SendMessageButton.Position.X + 10, (int)SendMessageButton.Position.Y - 10 - ChatMessagesHeight), Color.Black);
             }
         }
 
