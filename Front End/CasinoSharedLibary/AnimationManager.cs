@@ -145,7 +145,6 @@ namespace CasinoSharedLibary
             }
         }
 
-        //The comments in this method are for a trial version of cutting the message.
         public void DrawAnimation(Vector2 i_drawingPosition, string i_lastMessage, Direction i_onlinePlayerDirection/*, int i_animationWidth, int i_animationHeight*/)
         {
             if (currentPicture != null)
@@ -176,31 +175,7 @@ namespace CasinoSharedLibary
 
                 if (i_lastMessage != null)
                 {
-                    Vector2 bubblePosition = new Vector2(-210, -240) + i_drawingPosition; // acording to defualt bubble size(300,300)
-                    //List<string> messageSentences;
-                    //int font, numberOfSentence = 0;
-                    //if(i_lastMessage.Length < 20)
-                    //{
-                    //    font = 2;
-                    //    messageSentences = createBubbleString(i_lastMessage, font);
-                    //}
-                    //else if(i_lastMessage.Length < 50)
-                    //{
-                    //    font = 3;
-                    //    messageSentences = createBubbleString(i_lastMessage, font);
-                    //}
-                    //else
-                    //{
-                    //    font = 4;
-                    //    messageSentences = createBubbleString(i_lastMessage, font);
-                    //}
-
-                    //painter.Draw(storage.SpeachBubble, new Rectangle((int)bubblePosition.X + 80, (int)bubblePosition.Y + 80, bubbleWidth, bubbleHeight), Color.White);
-                    //foreach (string sentence in messageSentences)
-                    //{
-                    //    painter.DrawString(storage.Fonts[font], sentence, new Vector2(120, 115 + numberOfSentence * storage.Fonts[font].MeasureString(sentence).Y) + bubblePosition, Color.Black);
-                    //    numberOfSentence++;
-                    //}
+                    Vector2 bubblePosition = new Vector2(-210, -240) + i_drawingPosition;
 
                     if (i_lastMessage.Length < 17)
                     {
@@ -221,45 +196,15 @@ namespace CasinoSharedLibary
             }
         }
 
-        //The comments in this method are for a trial version of cutting the message.
         private string createBubbleString(string i_message, int i_fontSize)
         {
-            //List<string> sentences = new List<string>();
             StringBuilder bubbleString = new StringBuilder();
 
             string[] words = i_message.Split(' ');
 
-            //Vector2 lineCounter = new Vector2();
-            //foreach (string word in words)
-            //{
-            //    //if ((storage.Fonts[1 + i_fontSize].MeasureString(word) + lineCounter).X < bubbleWidth)
-            //    //{
-            //        foreach (char letter in word)
-            //        {
-            //            bubbleString.Append(letter);
-            //            lineCounter += storage.Fonts[i_fontSize].MeasureString(letter.ToString());
-            //            if(lineCounter.X > bubbleWidth - 100)
-            //            {
-            //                sentences.Add(bubbleString.ToString());
-            //                bubbleString.Clear();
-            //            lineCounter = new Vector2();
-            //            }
-            //        }
-            //    bubbleString.Append(' ');
-            //    lineCounter += storage.Fonts[i_fontSize].MeasureString(' '.ToString());
-            //    //}
-            //}
-
-            //if(!string.IsNullOrWhiteSpace(bubbleString.ToString()))
-            //{
-            //    sentences.Add(bubbleString.ToString());
-            //}
             int lineCounter = 0;
             foreach (string word in words)
             {
-                //bubbleString.Append(word);
-                //lineCounter += word.Length;
-
                 if (lineCounter > 7 && i_fontSize == 1)
                 {
                     bubbleString.Append("\n");
@@ -312,7 +257,6 @@ namespace CasinoSharedLibary
             }
 
             return bubbleString.ToString();
-            //return sentences;
         }
 
         public void UpdateSkinType(PlayerSkin i_PlayerSkin)
