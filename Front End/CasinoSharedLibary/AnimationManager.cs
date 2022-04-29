@@ -247,6 +247,12 @@ namespace CasinoSharedLibary
                         break;
                     }
                 }
+                else if (word.Length > 7)
+                {
+                    bubbleString.Append(word.Substring(0, 5));
+                    bubbleString.Append("...");
+                    break;
+                }
                 else
                 {
                     bubbleString.Append(word);
