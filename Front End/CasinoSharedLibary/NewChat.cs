@@ -107,14 +107,6 @@ namespace CasinoSharedLibary
         private void MoveChatDownButton_Click(object sender, EventArgs e)
         {
             isChatSelfUpdated = true;
-            //if (ChatData.Count > requestedNumberOfVisibleMessages)
-            //{
-            //    if (endingMessage < ChatData.Count)
-            //    {
-            //        startingMessage++;
-            //        endingMessage++;
-            //    }
-            //}
 
             if (startingMessage + 1 + requestedNumberOfVisibleMessages < ChatMessage.Count)
             {
@@ -126,14 +118,6 @@ namespace CasinoSharedLibary
         private void MoveChatUpButton_Click(object sender, EventArgs e)
         {
             isChatSelfUpdated = false;
-            //if (ChatData.Count > requestedNumberOfVisibleMessages)
-            //{
-            //    if (startingMessage > 0)
-            //    {
-            //        startingMessage--;
-            //        endingMessage--;
-            //    }
-            //}
 
             if (startingMessage > 0)
             {
@@ -230,8 +214,6 @@ namespace CasinoSharedLibary
 
                 if (isChatSelfUpdated && ChatData != null && ChatData.Count > 0)
                 {
-                    //endingMessage = ChatData.Count;
-                    //endingMessage = ChatMessage.Count;
                     if (endingMessage > requestedNumberOfVisibleMessages)
                     {
                         startingMessage = endingMessage - requestedNumberOfVisibleMessages;
@@ -353,7 +335,6 @@ namespace CasinoSharedLibary
             return returnString;
         }
 
-        //should add sentences array for chat good ui
         public void Draw(GameTime i_gameTime)
         {
             if (isChatVisible)
@@ -390,7 +371,6 @@ namespace CasinoSharedLibary
                     painter.DrawString(storage.Fonts[1], ChatMessage[currentMessage], new Vector2((int)SendMessageButton.Position.X + 10, (int)SendMessageButton.Position.Y - 10 - ChatMessagesHeight + (20 * index)), Color.Black);
                 }
                 
-                //painter.DrawString(storage.Fonts[1], text.ToString(), new Vector2((int)SendMessageButton.Position.X + 10, (int)SendMessageButton.Position.Y - 10 - ChatMessagesHeight), Color.Black);
             }
         }
 
