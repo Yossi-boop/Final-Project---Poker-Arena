@@ -34,13 +34,15 @@ namespace CasinoSharedLibary
         private bool isChatVisible = false;
         private bool isChatSelfUpdated = true;
 
-        private List<Message> ChatData = new List<Message>();
-        private List<String> ChatMessage = new List<string>();
+        private List<Message> ChatData = new List<Message>(); //chat data is a list of all the messagse,
+        //The list ISN'T seperated to sentences.
+        private List<String> ChatMessage = new List<string>();//chat message is a list of the the messages,
+        //The list IS seperated into sentences.
 
         private string lastMessage;
         private bool isNewMessage = false;
 
-        private int requestedNumberOfVisibleMessages = 8;
+        private int requestedNumberOfVisibleMessages = 10;
 
         private int startingMessage = 0;
         private int endingMessage = 0;
@@ -105,13 +107,18 @@ namespace CasinoSharedLibary
         private void MoveChatDownButton_Click(object sender, EventArgs e)
         {
             isChatSelfUpdated = true;
-            if (ChatData.Count > requestedNumberOfVisibleMessages)
+            //if (ChatData.Count > requestedNumberOfVisibleMessages)
+            //{
+            //    if (endingMessage < ChatData.Count)
+            //    {
+            //        startingMessage++;
+            //        endingMessage++;
+            //    }
+            //}
+
+            if (startingMessage + 1 + requestedNumberOfVisibleMessages < ChatMessage.Count)
             {
-                if (endingMessage < ChatData.Count)
-                {
-                    startingMessage++;
-                    endingMessage++;
-                }
+                startingMessage++;
             }
 
         }
@@ -119,13 +126,18 @@ namespace CasinoSharedLibary
         private void MoveChatUpButton_Click(object sender, EventArgs e)
         {
             isChatSelfUpdated = false;
-            if (ChatData.Count > requestedNumberOfVisibleMessages)
+            //if (ChatData.Count > requestedNumberOfVisibleMessages)
+            //{
+            //    if (startingMessage > 0)
+            //    {
+            //        startingMessage--;
+            //        endingMessage--;
+            //    }
+            //}
+
+            if (startingMessage > 0)
             {
-                if (startingMessage > 0)
-                {
-                    startingMessage--;
-                    endingMessage--;
-                }
+                startingMessage--;
             }
         }
 
@@ -140,7 +152,15 @@ namespace CasinoSharedLibary
             position.Y = i_pos.Y;
             string returnMessage = lastMessage;
 
-            endingMessage = ChatMessage.Count;
+            if (startingMessage + requestedNumberOfVisibleMessages < ChatMessage.Count)
+            {
+                endingMessage = startingMessage + requestedNumberOfVisibleMessages;
+            }
+            else
+            {
+                endingMessage = startingMessage + (ChatMessage.Count - startingMessage);
+            }
+            
 
             if (isChatVisible && isNewMessage)
             {
@@ -211,7 +231,7 @@ namespace CasinoSharedLibary
                 if (isChatSelfUpdated && ChatData != null && ChatData.Count > 0)
                 {
                     //endingMessage = ChatData.Count;
-                    endingMessage = ChatMessage.Count;
+                    //endingMessage = ChatMessage.Count;
                     if (endingMessage > requestedNumberOfVisibleMessages)
                     {
                         startingMessage = endingMessage - requestedNumberOfVisibleMessages;
@@ -365,9 +385,9 @@ namespace CasinoSharedLibary
                 MoveChatDownButton.Draw(i_gameTime, painter);
                 SendMessageButton.Draw(i_gameTime, painter);
 
-                for (int currentMessage = startingMessage; currentMessage < endingMessage && ChatMessage.Count > 0 && currentMessage < ChatMessage.Count; currentMessage++)
+                for (int currentMessage = startingMessage, index = 0; currentMessage <= endingMessage && ChatMessage.Count > 0 && currentMessage < ChatMessage.Count; currentMessage++, index++)
                 {
-                    painter.DrawString(storage.Fonts[1], ChatMessage[currentMessage], new Vector2((int)SendMessageButton.Position.X + 10, (int)SendMessageButton.Position.Y - 10 - ChatMessagesHeight + (20 * currentMessage)), Color.Black);
+                    painter.DrawString(storage.Fonts[1], ChatMessage[currentMessage], new Vector2((int)SendMessageButton.Position.X + 10, (int)SendMessageButton.Position.Y - 10 - ChatMessagesHeight + (20 * index)), Color.Black);
                 }
                 
                 //painter.DrawString(storage.Fonts[1], text.ToString(), new Vector2((int)SendMessageButton.Position.X + 10, (int)SendMessageButton.Position.Y - 10 - ChatMessagesHeight), Color.Black);
