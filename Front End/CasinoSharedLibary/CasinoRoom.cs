@@ -496,7 +496,12 @@ namespace CasinoSharedLibary
             {
                 mainPlayer.LastActionTime = DateTime.Now;
                 mainPlayer.DrawBubble(lastMessage);
-                gameManager.server.SendMessageToCasinoChat("1234", mainPlayer.playerEmail, null, mainPlayer.PlayerName, lastMessage);
+                string serverAnswer;
+                do
+                {
+                    serverAnswer = gameManager.server.SendMessageToCasinoChat("1234", mainPlayer.playerEmail, null, mainPlayer.PlayerName, lastMessage);
+                }
+                while (serverAnswer == null);
                 lastMessage = null;
             }
 
