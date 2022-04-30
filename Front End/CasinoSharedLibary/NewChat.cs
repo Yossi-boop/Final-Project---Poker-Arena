@@ -38,6 +38,7 @@ namespace CasinoSharedLibary
         //The list ISN'T seperated to sentences.
         private List<String> ChatMessage = new List<string>();//chat message is a list of the the messages,
         //The list IS seperated into sentences.
+        private int lastUsedChatDataMessage = 0;
 
         private string lastMessage;
         private bool isNewMessage = false;
@@ -225,23 +226,23 @@ namespace CasinoSharedLibary
                 }
 
                 StringBuilder text = new StringBuilder();
-                for (int firstMessage = ChatMessage.Count; ChatData != null && firstMessage < ChatData.Count; firstMessage++)
+                for (int dataToSentence = lastUsedChatDataMessage; ChatData != null && dataToSentence < ChatData.Count; dataToSentence++, lastUsedChatDataMessage++)
                 {
-                    if (firstMessage == ChatData.Count)
+                    if (dataToSentence == ChatData.Count)
                     {
                         break;
                     }
-                    text.Append(ChatData[firstMessage].UserName);
+                    text.Append(ChatData[dataToSentence].UserName);
                     text.Append(": ");
-                    if (ChatData[firstMessage].UserName.Length + ChatData[firstMessage].Body.Length < 31)
+                    if (ChatData[dataToSentence].UserName.Length + ChatData[dataToSentence].Body.Length < 31)
                     {
-                        text.Append(ChatData[firstMessage].Body);
+                        text.Append(ChatData[dataToSentence].Body);
                         ChatMessage.Add(text.ToString());
                         text.Clear();
                     }
                     else
                     {
-                        string[] words = ChatData[firstMessage].Body.Split(' ');
+                        string[] words = ChatData[dataToSentence].Body.Split(' ');
                         bool isFirstLine = true;
                         int lineCounter = 0;
 
@@ -257,12 +258,12 @@ namespace CasinoSharedLibary
 
                             lineCounter += word.Length;
 
-                            //if (lineCounter < (30 - ChatData[firstMessage].UserName.Length - 2)) // - 2 for the : and space chars.
-                            if (isSentenceInChatBorder(isFirstLine, lineCounter, firstMessage))
+                            //if (lineCounter < (30 - ChatData[dataToSentence].UserName.Length - 2)) // - 2 for the : and space chars.
+                            if (isSentenceInChatBorder(isFirstLine, lineCounter, dataToSentence))
                             {
                                 text.Append(word);
                             }
-                            //else if (lineCounter > (30 - ChatData[firstMessage].UserName.Length - 2))
+                            //else if (lineCounter > (30 - ChatData[dataToSentence].UserName.Length - 2))
                             else
                             {
                                 //text.Append("\n");
@@ -374,13 +375,13 @@ namespace CasinoSharedLibary
             }
         }
 
-        private bool isSentenceInChatBorder(bool i_isFirstLine, int i_lineCounter, int i_firstMessage)
+        private bool isSentenceInChatBorder(bool i_isFirstLine, int i_lineCounter, int i_dataToSentence)
         {
             bool isSentenceInChatBorder = false;
 
             if (i_isFirstLine)
             {
-                isSentenceInChatBorder = i_lineCounter < (30 - ChatData[i_firstMessage].UserName.Length - 2);
+                isSentenceInChatBorder = i_lineCounter < (30 - ChatData[i_dataToSentence].UserName.Length - 2);
             }
             else 
             {
