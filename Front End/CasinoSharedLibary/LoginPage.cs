@@ -225,6 +225,8 @@ namespace CasinoSharedLibary
                     gameManager.casinoRoom = new CasinoRoom(gameManager, contentManager, storage);
                     gameManager.casinoRoom.Load(_spriteBatch);
                 }
+                userNameTextBox.Text = string.Empty;
+                passWordTextBox.Text = string.Empty;
             }
             else
             {
