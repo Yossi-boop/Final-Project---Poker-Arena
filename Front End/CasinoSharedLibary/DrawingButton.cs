@@ -97,6 +97,29 @@ namespace CasinoSharedLibary
             }
         }
 
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Color i_buttonColor)
+        {
+            if (IsVisible)
+            {
+                var colour = i_buttonColor;
+
+                MouseState mState = Mouse.GetState();
+
+                if (_isHovering)
+                    colour = Color.Gray;
+
+                spriteBatch.Draw(_texture, Rectangle, colour);
+
+                if (!string.IsNullOrEmpty(Text))
+                {
+                    var x = (Rectangle.X + (Rectangle.Width / 2)) - (_font.MeasureString(Text).X / 2);
+                    var y = (Rectangle.Y + (Rectangle.Height / 2)) - (_font.MeasureString(Text).Y / 2);
+
+                    spriteBatch.DrawString(_font, Text, new Vector2(x, y), PenColour);
+                }
+            }
+        }
+
         public void Update(GameTime gameTime, int width, int height)
         {
             if (IsEnabled)
