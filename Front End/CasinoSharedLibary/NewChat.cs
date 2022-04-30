@@ -275,6 +275,7 @@ namespace CasinoSharedLibary
                             text.Append(' ');
                         }
                         ChatMessage.Add(text.ToString());
+                        text.Clear();
                     }
                 }
 
