@@ -38,16 +38,14 @@ namespace CasinoSharedLibary
         //The list ISN'T seperated to sentences.
         private List<String> ChatMessage = new List<string>();//chat message is a list of the the messages,
         //The list IS seperated into sentences.
+        private int requestedNumberOfVisibleMessages = 10;
+        private int startingMessage = 0;
+        private int endingMessage = 0;
         private int lastUsedChatDataMessage = 0;
-        private int lastSeenMessage = 0;
+        private int lastSeenMessage = 10;
 
         private string lastMessage;
         private bool isNewMessage = false;
-
-        private int requestedNumberOfVisibleMessages = 10;
-
-        private int startingMessage = 0;
-        private int endingMessage = 0;
 
         public NewChat(SpritesStorage i_storage, int i_chatMessageWidth, int i_chatMessageHeight)
         {
@@ -114,9 +112,11 @@ namespace CasinoSharedLibary
             {
                 startingMessage++;
             }
-            else 
+            
+            if(startingMessage + requestedNumberOfVisibleMessages < ChatMessage.Count)
             {
-                lastSeenMessage = ChatMessage.Count - 1;
+                lastSeenMessage = startingMessage + requestedNumberOfVisibleMessages > 10 ? 
+                    startingMessage + requestedNumberOfVisibleMessages: 10;
             }
 
         }
@@ -366,7 +366,7 @@ namespace CasinoSharedLibary
                 }
                 
                 MoveChatUpButton.Draw(i_gameTime, painter);
-                if (lastSeenMessage == ChatMessage.Count - 1)
+                if (lastSeenMessage >= ChatMessage.Count - 1)
                 {
                     MoveChatDownButton.Draw(i_gameTime, painter);
                 }
