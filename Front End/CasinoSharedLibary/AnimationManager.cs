@@ -205,7 +205,7 @@ namespace CasinoSharedLibary
             int lineCounter = 0;
             foreach (string word in words)
             {
-                if (lineCounter > 7 && i_fontSize == 1)
+                if (lineCounter + word.Length > 7 && i_fontSize == 1)
                 {
                     bubbleString.Append("\n");
                     lineCounter = 0;
@@ -219,7 +219,7 @@ namespace CasinoSharedLibary
                         break;
                     }
                 }
-                else if (lineCounter > 10 && i_fontSize == 2)
+                else if (lineCounter + word.Length > 10 && i_fontSize == 2)
                 {
                     bubbleString.Append("\n");
                     lineCounter = 0;
@@ -233,7 +233,7 @@ namespace CasinoSharedLibary
                         break;
                     }
                 }
-                else if (lineCounter > 25 && i_fontSize == 3)
+                else if (lineCounter + word.Length > 20 && i_fontSize == 3)
                 {
                     bubbleString.Append("\n");
                     lineCounter = 0;
