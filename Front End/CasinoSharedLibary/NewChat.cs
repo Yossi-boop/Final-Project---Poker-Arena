@@ -226,23 +226,23 @@ namespace CasinoSharedLibary
                 }
 
                 StringBuilder text = new StringBuilder();
-                for (int dataToSentence = lastUsedChatDataMessage; ChatData != null && dataToSentence < ChatData.Count; dataToSentence++, lastUsedChatDataMessage++)
+                for (; ChatData != null && lastUsedChatDataMessage < ChatData.Count; lastUsedChatDataMessage++)
                 {
-                    if (dataToSentence == ChatData.Count)
+                    if (lastUsedChatDataMessage == ChatData.Count)
                     {
                         break;
                     }
-                    text.Append(ChatData[dataToSentence].UserName);
+                    text.Append(ChatData[lastUsedChatDataMessage].UserName);
                     text.Append(": ");
-                    if (ChatData[dataToSentence].UserName.Length + ChatData[dataToSentence].Body.Length < 31)
+                    if (ChatData[lastUsedChatDataMessage].UserName.Length + ChatData[lastUsedChatDataMessage].Body.Length < 31)
                     {
-                        text.Append(ChatData[dataToSentence].Body);
+                        text.Append(ChatData[lastUsedChatDataMessage].Body);
                         ChatMessage.Add(text.ToString());
                         text.Clear();
                     }
                     else
                     {
-                        string[] words = ChatData[dataToSentence].Body.Split(' ');
+                        string[] words = ChatData[lastUsedChatDataMessage].Body.Split(' ');
                         bool isFirstLine = true;
                         int lineCounter = 0;
 
@@ -258,7 +258,7 @@ namespace CasinoSharedLibary
 
                             lineCounter += word.Length;
 
-                            if (isSentenceInChatBorder(isFirstLine, lineCounter, dataToSentence))
+                            if (isSentenceInChatBorder(isFirstLine, lineCounter, lastUsedChatDataMessage))
                             {
                                 text.Append(word);
                             }
@@ -371,13 +371,13 @@ namespace CasinoSharedLibary
             }
         }
 
-        private bool isSentenceInChatBorder(bool i_isFirstLine, int i_lineCounter, int i_dataToSentence)
+        private bool isSentenceInChatBorder(bool i_isFirstLine, int i_lineCounter, int i_lastUsedChatDataMessage)
         {
             bool isSentenceInChatBorder = false;
 
             if (i_isFirstLine)
             {
-                isSentenceInChatBorder = i_lineCounter < (30 - ChatData[i_dataToSentence].UserName.Length - 2);
+                isSentenceInChatBorder = i_lineCounter < (30 - ChatData[i_lastUsedChatDataMessage].UserName.Length - 2);
             }
             else 
             {
