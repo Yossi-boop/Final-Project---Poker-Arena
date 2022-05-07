@@ -26,6 +26,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Game1.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)JoysStick.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyboardInput.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Logger.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LoginPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NewChat.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Player.cs" />
