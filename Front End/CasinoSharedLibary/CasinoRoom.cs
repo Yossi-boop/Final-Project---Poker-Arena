@@ -728,6 +728,8 @@ namespace CasinoSharedLibary
             casinoRoomNewChat.MoveChatDownButton.Update(i_gameTime, (int)camera.Position.X - 640, (int)camera.Position.Y - 360);
             casinoRoomNewChat.SendMessageButton.Position = new Vector2(-640, 313) + camera.Position;
             casinoRoomNewChat.SendMessageButton.Update(i_gameTime, (int)camera.Position.X - 640, (int)camera.Position.Y - 360);
+            casinoRoomNewChat.MoveChatToLastMessage.Position = new Vector2(-380, 300) + camera.Position;
+            casinoRoomNewChat.MoveChatToLastMessage.Update(i_gameTime, (int)camera.Position.X - 640, (int)camera.Position.Y - 360);
         }
 
         private void updateUpperBar(GameTime i_gameTime)

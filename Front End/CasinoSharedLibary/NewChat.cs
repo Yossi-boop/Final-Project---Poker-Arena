@@ -31,6 +31,8 @@ namespace CasinoSharedLibary
 
         public DrawingButton MoveChatDownButton { get; set; }
 
+        public DrawingButton MoveChatToLastMessage { get; set; }
+
         private bool isChatVisible = false;
         private bool isChatSelfUpdated = true;
 
@@ -70,6 +72,9 @@ namespace CasinoSharedLibary
             MoveChatDownButton = new DrawingButton(storage.GreenUI[2], storage.Fonts[0]);
             MoveChatDownButton.Click += MoveChatDownButton_Click;
 
+            MoveChatToLastMessage = new DrawingButton(storage.GreenUI[2], storage.Fonts[0]);
+            MoveChatToLastMessage.Click += MoveChatToLastMessage_Click;
+
             SendMessageButton = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
             SendMessageButton.Text = "Send";
             SendMessageButton.Size = new MonoGame.Extended.Size(ChatMessagesWidth, storage.GreenUI[0].Height);
@@ -86,6 +91,16 @@ namespace CasinoSharedLibary
                 {
                     startingMessage = 0;
                 }
+            }
+        }
+
+        private void MoveChatToLastMessage_Click(object sender, EventArgs e)
+        {
+            if (ChatMessage.Count >= requestedNumberOfVisibleMessages)
+            {
+                endingMessage = ChatMessage.Count - 1;
+                startingMessage = endingMessage - requestedNumberOfVisibleMessages;
+                lastSeenMessage = endingMessage;
             }
         }
 
@@ -366,13 +381,14 @@ namespace CasinoSharedLibary
                 }
                 
                 MoveChatUpButton.Draw(i_gameTime, painter);
+                MoveChatDownButton.Draw(i_gameTime, painter);
                 if (lastSeenMessage >= ChatMessage.Count - 1)
                 {
-                    MoveChatDownButton.Draw(i_gameTime, painter);
+                    MoveChatToLastMessage.Draw(i_gameTime, painter);
                 }
-                else
+                else 
                 {
-                    MoveChatDownButton.Draw(i_gameTime, painter, Color.Red);
+                    MoveChatToLastMessage.Draw(i_gameTime, painter, Color.Red);
                 }
                 SendMessageButton.Draw(i_gameTime, painter);
 
