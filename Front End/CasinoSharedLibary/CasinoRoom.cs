@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Media;
+using System.Threading.Tasks;
 
 using Classes;
 
@@ -363,8 +364,7 @@ namespace CasinoSharedLibary
                     file.WriteLine("CasinoRoom.initializeIntervals " + e.Message);
                 }
                 throw e;
-            }
-            
+            }   
         }
 
         private void CasinoTimer_Elapsed(object sender, ElapsedEventArgs e)

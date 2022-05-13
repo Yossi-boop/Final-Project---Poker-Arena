@@ -81,7 +81,7 @@ namespace Classes
 
         public bool ValidateNewLocation(int i_CurrentXPos, int i_CurrentYPos, int i_LastXPos, int i_LastYPos)
         {
-            return !(i_LastYPos < i_CurrentYPos + 20 || i_LastYPos > i_CurrentYPos - 20 || i_LastXPos < i_CurrentXPos + 20 || i_LastXPos > i_CurrentXPos - 20);
+            return !(i_LastYPos < i_CurrentYPos - 150 || i_LastYPos > i_CurrentYPos + 150 || i_LastXPos < i_CurrentXPos - 150 || i_LastXPos > i_CurrentXPos + 150);
         }
 
         public void AddMessage(string body)

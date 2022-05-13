@@ -81,6 +81,9 @@ namespace WebApiControllers.Controllers
                     }
                     else
                     {
+                        i_Character.LastXPos = i_Character.CurrentXPos;
+                        i_Character.LastYPos = i_Character.CurrentYPos;
+
                         casino.Users.Add(i_Character);
                     }
 
