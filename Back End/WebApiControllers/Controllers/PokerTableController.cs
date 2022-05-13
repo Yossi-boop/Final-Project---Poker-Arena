@@ -12,63 +12,69 @@ namespace WebApiControllers.Controllers
 {
     public class PokerTableController : ApiController
     {
-        // GET: api/PokerTable
+
         public IHttpActionResult Get()
         {
-            try
-            {
-                var values = new JArray();
-                values = JArray.FromObject(DataStorage.OpenTables);
+            
+                try
+                {
+                    var values = new JArray();
+                    values = JArray.FromObject(DataStorage.OpenTables);
 
-                return Ok(values);
-            }
-            catch (Exception e)
-            {
-                return BadRequest("NullReference");
-            }
+                    return Ok(values);
+                }
+                catch (Exception e)
+                {
+                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                    {
+                        file.WriteLine("PokerTableController.get/" + e.Message);
+                    }
+                    return BadRequest("Bad");
+                }
+            
         }
 
-        // GET: api/PokerTable/5
         public IHttpActionResult Get(string CasinoId, string TableId, string Email)
         {
-            try
-            {
-                Table table = DataStorage.GetTable(TableId, CasinoId);
-              
-                table.updateAction(Email);
-               
-
-                DataStorage.LogedInUser user = DataStorage.GetActiveUserByMail(Email);
-                if (user != null)
+           
+                try
                 {
-                    user.LastActionTime = DateTime.Now;
-                }
+                    Table table = DataStorage.GetTable(TableId, CasinoId);
 
-                if (table == null)
+                    table.updateAction(Email);
+
+
+                    DataStorage.LogedInUser user = DataStorage.GetActiveUserByMail(Email);
+                    if (user != null)
+                    {
+                        user.LastActionTime = DateTime.Now;
+                    }
+
+                    if (table == null)
+                    {
+                        return BadRequest("There Is No Table");
+                    }
+
+                    table.StartRound();
+                    if (table.CurrentRound != null && table.CurrentRound.Part != RoundPart.Result)
+                    {
+                        table.CurrentRound.CheckIfTimeout();
+                    }
+
+                    var values = new JObject();
+                    values = JObject.FromObject(table);
+
+                    return Ok(values);
+                }
+                catch (Exception e)
                 {
-                    return BadRequest("There Is No Table");
+                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                    {
+                        file.WriteLine("PokerTableController.post/" + e.Message);
+                    }
+                    return BadRequest("Bad");
                 }
-
-                table.StartRound();
-                if (table.CurrentRound != null && table.CurrentRound.Part != RoundPart.Result)
-                {
-                    table.CurrentRound.CheckIfTimeout();
-                }
-
-                var values = new JObject();
-                values = JObject.FromObject(table);
-
-                return Ok(values);
-            }
-            catch (Exception e)
-            {
-                return BadRequest("NullReference");
-            }
-        }
-
-        // POST: api/PokerTable
-        public void Post([FromBody]string value)
-        {
+            
         }
 
     }

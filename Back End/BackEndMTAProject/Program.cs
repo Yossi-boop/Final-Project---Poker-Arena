@@ -15,8 +15,8 @@ namespace BackEndMTAProject
 
         static void Main(string[] args)
         {
-            Proxy proxy = new Proxy();
-//            Console.WriteLine(proxy.SitOut("1234", "1234", "meir@gmail.com", null, true));
+            Proxy proxy = new Proxy("http://localhost:61968/");
+            Console.WriteLine(proxy.SitOut("1234", "1234", "meir@gmail.com", null, true));
             proxy.getCasinoMessages("1234");
             proxy.getCasinoMessages("1234");
             proxy.getCasinoMessages("1234");

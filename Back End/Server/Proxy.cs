@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -15,8 +14,8 @@ namespace Server
     public class Proxy
     {
         public List<KeyValuePair<string,string>> m_Parameters = new List<KeyValuePair<string, string>>();
-        //public string BaseURL = "http://localhost:61968/";
-        public string BaseURL;
+        public string BaseURL = "http://localhost:61968/";
+        //public string BaseURL;
 
         public HttpClient client;
         public Timer aTimer;
@@ -371,15 +370,16 @@ namespace Server
             }
         }
 
-        public void SitOut(string i_CasinoId,string i_TableId,string i_Email, string i_Signature, bool i_Now)
+        public string SitOut(string i_CasinoId,string i_TableId,string i_Email, string i_Signature, bool i_Now)
         {
             try
             {
-                string result = GetRequestAsync(BaseURL + "api/PokerTablePlayer?" + "CasinoId=" + i_CasinoId +"&&TableId="+ i_TableId+  "&&Email="+i_Email+"&&Signature=" + i_Signature+"&&Now=="+i_Now).Result;
-                
+                string result = DeleteRequestAsync(BaseURL + "api/PokerTablePlayer?CasinoId=" + i_CasinoId +"&&TableId="+ i_TableId+  "&&Email="+i_Email+"&&Signature=" + i_Signature).Result;
+                return result;
             }
             catch (Exception e)
             {
+                return null;
             }
         }
 
@@ -405,7 +405,7 @@ namespace Server
             {
                 var values = new JObject();
                 values.Add("TableId", i_TableId);
-                values.Add("CasinoId", i_TableId);
+                values.Add("CasinoId", i_CasinoId);
                 values.Add("Email", i_Email);
                 values.Add("Signature", i_Signature);
                 values.Add("UserName", i_UserName);

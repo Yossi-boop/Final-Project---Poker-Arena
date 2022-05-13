@@ -10,7 +10,7 @@ namespace Classes
     public class Table
     {
         public string Id { get; set; }
-    
+
         public List<PokerPlayer> Players { get; set; }
 
         public List<PokerPlayer> PlayersInTable { get; set; }
@@ -22,8 +22,11 @@ namespace Classes
         public Chat Chat { get; set; }
 
         public Setting GameSetting { get; set; }
-        
+
         public Round CurrentRound { get; set; }
+
+        private readonly object sitOutLock = new object();
+
 
         public class AddOn
         {
@@ -44,19 +47,30 @@ namespace Classes
 
         public void updateAction(string email)
         {
-            PokerPlayer player = GetPlayer(email);
-            if (player != null)
+            try
             {
-                player.LastActionTime = DateTime.Now;
-            }
-
-            if (CurrentRound != null)
-            {
-                player = CurrentRound.GetPlayer(email);
+                PokerPlayer player = GetPlayer(email);
                 if (player != null)
                 {
                     player.LastActionTime = DateTime.Now;
                 }
+
+                if (CurrentRound != null)
+                {
+                    player = CurrentRound.GetPlayer(email);
+                    if (player != null)
+                    {
+                        player.LastActionTime = DateTime.Now;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("Table.updateAction/" + e.Message);
+                }
+                throw e;
             }
         }
 
@@ -64,44 +78,85 @@ namespace Classes
 
         public Table()
         {
-            
+
         }
 
         public Table(int i_NumberOfSits)
         {
-            Id = "table" + SystemTools.RandomString(10);
-            Chat = new Chat();
-            ReBuyQueue = new List<AddOn>();
-            GetOutQueue = new List<int>();
-            IsRoundLive = false;
-            NumberOfSits = i_NumberOfSits;
-            Dealer = i_NumberOfSits -1;
-            initiateUserSits();
-            
-            GameSetting = new Setting(200,10000,20,10,30);
+            try
+            {
+                Id = "table" + SystemTools.RandomString(10);
+                Chat = new Chat();
+                ReBuyQueue = new List<AddOn>();
+                GetOutQueue = new List<int>();
+                IsRoundLive = false;
+                NumberOfSits = i_NumberOfSits;
+                Dealer = i_NumberOfSits - 1;
+                initiateUserSits();
+
+                GameSetting = new Setting(200, 10000, 20, 10, 30);
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("Table.Table/" + e.Message);
+                }
+                throw e;
+            }
         }
 
         private void initiateUserSits()
         {
-            Players = new List<PokerPlayer>(NumberOfSits);
-            PlayersInTable = new List<PokerPlayer>();
-            for (int i = 0; i < NumberOfSits; i++)
+            try
             {
-                Players.Add(null);
-                PlayersInTable.Add(null);
+                Players = new List<PokerPlayer>();
+                PlayersInTable = new List<PokerPlayer>();
+                for (int i = 0; i < NumberOfSits; i++)
+                {
+                    Players.Add(null);
+                    PlayersInTable.Add(null);
+                }
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("Table.initiateUserSits/" + e.Message);
+                }
+                throw e;
             }
         }
 
-        public void AddUser(string i_Email,string i_Name, int i_Money, int i_Index, Stats i_Stats, int i_Figure)
+        public void AddUser(string i_Email, string i_Name, int i_Money, int i_Index, Stats i_Stats, int i_Figure)
         {
-            PlayersInTable[i_Index] = new PokerPlayer(i_Money,i_Index,i_Name,i_Email,i_Stats, i_Figure);
+            try
+            {
+                lock(sitOutLock){
+
+                if(PlayersInTable[i_Index] == null)
+                {
+                    PlayersInTable[i_Index] = new PokerPlayer(i_Money, i_Index, i_Name, i_Email, i_Stats, i_Figure);
+                }
+                }
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("Table.AddUser/" + e.Message);
+                }
+                throw e;
+            }
         }
 
         public void StartRound()
         {
-            if (IsRoundLive)
+            try
             {
-              
+                if (IsRoundLive)
+                {
+
                     if (!CurrentRound.FinishResult())
                     {
                         return;
@@ -112,122 +167,211 @@ namespace Classes
                         reBuyAddOn();
                         ReBuyQueue.Clear();
                         checkIfPlayerOnline();
-                        GetOutAux();
-                        GetOutQueue.Clear();
-                        updatePlayerListAfterRound();
+                        // GetOutAux();
+                        // GetOutQueue.Clear();
+                        // updatePlayerListAfterRound();
                         IsRoundLive = false;
                     }
-                
-            }
 
-            if (checkIfEnough())
-            {
-                updatePlayerListAfterRound();
-                Dealer = nextPlayer(Dealer);
-                CurrentRound = new Round(Players,NumberOfSits,Dealer,GameSetting.SmallBlind);
-                IsRoundLive = true;
+                }
+
+                if (checkIfEnough())
+                {
+                    updatePlayerListAfterRound();
+                    Dealer = nextPlayer(Dealer);
+                    CurrentRound = new Round(Players, NumberOfSits, Dealer, GameSetting.SmallBlind);
+                    IsRoundLive = true;
+                }
+                else
+                {
+                    CurrentRound = null;
+                }
             }
-            else
+            catch (Exception e)
             {
-                CurrentRound = null;
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("Table.StartRound/" + e.Message);
+                }
+                throw e;
             }
         }
 
         private void updatePlayerListAfterRound()
         {
-            for (int i = 0; i < 9; i++)
+            try
             {
-                if((PlayersInTable[i] == null))
+                for (int i = 0; i < 9; i++)
                 {
-                    PlayersInTable[i] = Players[i];
+                    // if ((PlayersInTable[i] == null))
+                    // {
+                    //     PlayersInTable[i] = Players[i];
+                    // }
+                    // else 
+                    if (Players[i] == null || !Players[i].Email.Equals(PlayersInTable[i].Email))
+                    {
+                        Players[i] = PlayersInTable[i];
+                    }
+                    // else
+                    // {
+                    //     PlayersInTable[i] = Players[i];
+                    // }
+
                 }
-                else if (Players[i] == null || !Players[i].Email.Equals(PlayersInTable[i].Email))
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
                 {
-                    Players[i] = PlayersInTable[i];
+                    file.WriteLine("Table.updatePlayerListAfterRound/" + e.Message);
                 }
-                else
-                {
-                    PlayersInTable[i] = Players[i];
-                }
-                
+                throw e;
             }
         }
 
         private void checkIfPlayerOnline()
         {
-            for(int i = 0; i < 9; i++)
+            try
             {
-                if(Players[i] != null && (DateTime.Now.Subtract(Players[i].LastActionTime).TotalSeconds > 20
-                    ||!Players[i].ReadyToPlay|| Players[i].Money <= 0))
+                for (int i = 0; i < 9; i++)
                 {
-                    Players[i] = null;
+                    if (Players[i] != null && (DateTime.Now.Subtract(Players[i].LastActionTime).TotalSeconds > 20
+                        || !Players[i].ReadyToPlay || Players[i].Money <= 0))
+                    {
+                        Players[i] = null;
+                        PlayersInTable[i] = null;
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("Table.checkIfPlayerOnline/" + e.Message);
+                }
+                throw e;
             }
         }
 
-        private void GetOutAux()
-        {
-            foreach (var index in GetOutQueue)
-            {
-                Players[index] = null;
-            }
-        }
+        // private void GetOutAux()
+        // {
+        //     try
+        //     {
+        //         foreach (var index in GetOutQueue)
+        //         {
+        //             Players[index] = null;
+        //             PlayersInTable[index] = null;
+        //         }
+        //     }
+        //     catch (Exception e)
+        //     {
+        //         using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+        //         {
+        //             file.WriteLine("Table.GetOutAux/" + e.Message);
+        //         }
+        //         throw e;
+        //     }
+        //}
 
         private int nextPlayer(int i_LastIndex)
         {
-            i_LastIndex++;
-            for (int i = 0; i < NumberOfSits; i++)
+            try
             {
-                if (Players[(i_LastIndex + i) % NumberOfSits] != null)
+                i_LastIndex++;
+                for (int i = 0; i < NumberOfSits; i++)
                 {
-                    return (i_LastIndex + i) % NumberOfSits;
+                    if (Players[(i_LastIndex + i) % NumberOfSits] != null)
+                    {
+                        return (i_LastIndex + i) % NumberOfSits;
+                    }
                 }
-            }
 
-            return -1;
+                return -1;
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("Table.nextPlayer/" + e.Message);
+                }
+                throw e;
+            }
         }
 
         private bool checkIfEnough()
         {
-            int count = 0;
-            foreach (var player in PlayersInTable)
+            try
             {
-                if (player != null)
+                int count = 0;
+                foreach (var player in PlayersInTable)
                 {
-                    if (player.ReadyToPlay && player.Money > 0)
+                    if (player != null)
                     {
-                        count++;
-                        if (count > 1)
+                        if (player.ReadyToPlay && player.Money > 0)
                         {
-                            return true;
+                            count++;
+                            if (count > 1)
+                            {
+                                return true;
+                            }
                         }
                     }
                 }
-            }
 
-            return false;
+                return false;
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("Table.checkIfEnough/" + e.Message);
+                }
+                throw e;
+            }
         }
 
         public void ReBuyAddOnAddToQueue(int i_AmountToAdd, string i_Email)
         {
-            PokerPlayer player = GetPlayer(i_Email);
-            if (player.Stat.Money >= i_AmountToAdd &&
-                player.Money + i_AmountToAdd <= GameSetting.MaxBalance)
+            try
             {
-                ReBuyQueue.Add(new AddOn(i_AmountToAdd,i_Email));
+                PokerPlayer player = GetPlayer(i_Email);
+                if (player.Stat.Money >= i_AmountToAdd &&
+                    player.Money + i_AmountToAdd <= GameSetting.MaxBalance)
+                {
+                    ReBuyQueue.Add(new AddOn(i_AmountToAdd, i_Email));
+                }
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("Table.ReBuyAddOnAddToQueue/" + e.Message);
+                }
+                throw e;
             }
         }
 
         private void reBuyAddOn()
         {
-            foreach (var addOn in ReBuyQueue)
+            try
             {
-                PokerPlayer player = GetPlayer(addOn.Email);
-                if (player.Stat.Money >= addOn.Amount &&
-                    player.Money + addOn.Amount <= GameSetting.MaxBalance)
+                foreach (var addOn in ReBuyQueue)
                 {
-                    player.Rebuy(addOn.Amount);
+                    PokerPlayer player = GetPlayer(addOn.Email);
+                    if (player.Stat.Money >= addOn.Amount &&
+                        player.Money + addOn.Amount <= GameSetting.MaxBalance)
+                    {
+                        player.Rebuy(addOn.Amount);
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("Table.reBuyAddOn/" + e.Message);
+                }
+                throw e;
             }
         }
 
@@ -248,28 +392,56 @@ namespace Classes
 
         public PokerPlayer GetPlayer(string i_Email)
         {
-            foreach (var player in PlayersInTable)
+            try
             {
-                if (player != null)
+                foreach (var player in PlayersInTable)
                 {
-                    if (player.Email.Equals(i_Email))
+                    if (player != null)
                     {
-                        return player;
+                        if (player.Email.Equals(i_Email))
+                        {
+                            return player;
+                        }
                     }
                 }
-            }
 
-            return null;
+                return null;
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("Table.GetPlayer/" + e.Message);
+                }
+                throw e;
+            }
         }
 
         public void GetOut(string i_Email, bool i_Now)
         {
-            PokerPlayer player = GetPlayer(i_Email);
-            if (i_Now && CurrentRound != null) {
-                CurrentRound.GetOut(player.Position);
+            try
+            {
+                PokerPlayer player = GetPlayer(i_Email);
+                if (i_Now && CurrentRound != null)
+                {
+                    CurrentRound.GetOut(player.Position);
+                }
+                PlayersInTable[player.Position] = null;
+                if (CurrentRound == null)
+                {
+                    Players[player.Position] = null;
+
+                }
+                //GetOutQueue.Add(player.Position);
             }
-            PlayersInTable[player.Position] = null;
-            GetOutQueue.Add(player.Position);
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("Table.GetOut/" + e.Message);
+                }
+                throw e;
+            }
         }
     }
 }

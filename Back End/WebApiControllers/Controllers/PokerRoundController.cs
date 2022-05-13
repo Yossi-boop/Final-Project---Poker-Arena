@@ -13,47 +13,57 @@ namespace WebApiControllers.Controllers
 {
     public class PokerRoundController : ApiController
     {
-        
-        public IHttpActionResult Get(string CasinoId, string TableId)
+         public IHttpActionResult Get(string CasinoId, string TableId)
         {
-            try
-            {
-                Table table = DataStorage.GetTable(TableId, CasinoId);
-                if (table == null)
+           
+                try
                 {
-                    return BadRequest("There Is No Table");
+                    Table table = DataStorage.GetTable(TableId, CasinoId);
+                    if (table == null)
+                    {
+                        return BadRequest("There Is No Table");
+                    }
+
+                    var values = new JObject();
+                    values = JObject.FromObject(table.CurrentRound);
+
+                    return Ok(values);
                 }
-
-                var values = new JObject();
-                values = JObject.FromObject(table.CurrentRound);
-
-                return Ok(values);
-            }
-            catch (Exception e)
-            {
-                return BadRequest("NullReference");
-            }
+                catch (Exception e)
+                {
+                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                    {
+                        file.WriteLine("PokerRoundController.get/" + e.Message);
+                    }
+                    return BadRequest("Bad");
+                }
+            
         }
 
-        // POST: api/PokerRound
         public IHttpActionResult Post([FromBody]FinishRoundObject i_FinishRound)
         {
-            try
-            {
-                Table table = DataStorage.GetTable(i_FinishRound.TableId, i_FinishRound.CasinoId);
-                if (table == null)
+           
+                try
                 {
-                    return BadRequest("There Is No Table");
+                    Table table = DataStorage.GetTable(i_FinishRound.TableId, i_FinishRound.CasinoId);
+                    if (table == null)
+                    {
+                        return BadRequest("There Is No Table");
+                    }
+
+                    table.GetPlayer(i_FinishRound.Email).UpdateResult = true;
+
+                    return Ok("Updated");
                 }
-
-                table.GetPlayer(i_FinishRound.Email).UpdateResult = true;
-
-                return Ok("Updated");
-            }
-            catch (Exception e)
-            {
-                return BadRequest("NullReference");
-            }
+                catch (Exception e)
+                {
+                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                    {
+                        file.WriteLine("PokerRoundController.post/" + e.Message);
+                    }
+                    return BadRequest("Bad");
+                }
+            
         }
 
     }

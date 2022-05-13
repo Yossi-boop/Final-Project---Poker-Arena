@@ -13,35 +13,40 @@ namespace WebApiControllers.Controllers
 {
     public class LogInController : ApiController
     {
-        // POST: api/LogIn
-
+     
         public IHttpActionResult Post([FromBody]UserDetailsForCreation i_UserDetails)
         {
-            try
-            {
-                User user = DataStorage.GetUserByMail(i_UserDetails.Email);
-                if (user == null)
+           
+                try
                 {
-                    return BadRequest("Email doesn't exist");
-                }
+                    User user = DataStorage.GetUserByMail(i_UserDetails.Email);
+                    if (user == null)
+                    {
+                        return BadRequest("Email doesn't exist");
+                    }
 
-                if (DataStorage.checkIfUserOnline(i_UserDetails.Email))
+                    if (DataStorage.checkIfUserOnline(i_UserDetails.Email))
+                    {
+                        return BadRequest("User Allready playing");
+                    }
+
+                    if (user.Password.Equals(i_UserDetails.Password))
+                    {
+                        DataStorage.ActiveUsers.Add(new DataStorage.LogedInUser(user));
+                        return Ok("loggedIn complete");
+                    }
+
+                    return BadRequest("Incorrect password");
+                }
+                catch (Exception e)
                 {
-                    return BadRequest("User Allready playing");
+                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                    {
+                        file.WriteLine("LogInController.post/" + e.Message);
+                    }
+                    return BadRequest("Bad");
                 }
-
-                if (user.Password.Equals(i_UserDetails.Password))
-                {
-                    DataStorage.ActiveUsers.Add(new DataStorage.LogedInUser(user));
-                    return Ok("loggedIn complete");
-                }
-
-                return BadRequest("Incorrect password");
-            }
-            catch (Exception e)
-            {
-                return BadRequest("NullReference");
-            }
+            
         }
     }
 }

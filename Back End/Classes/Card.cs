@@ -27,52 +27,72 @@ namespace Classes
 
         public override string ToString()
         {
-            string tempValue = "";
-            string suitSentence = "";
-            switch (Value)
+            try
             {
-                case 11:
-                    tempValue = "Jack";
-                    break;
-                case 12:
-                    tempValue = "Queen";
-                    break;
-                case 13:
-                    tempValue = "King";
-                    break;
-                case 14:
-                    tempValue = "Ace";
-                    break;
-                default:
-                    tempValue = Value.ToString();
-                    break;
+                string tempValue = "";
+                string suitSentence = "";
+                switch (Value)
+                {
+                    case 11:
+                        tempValue = "Jack";
+                        break;
+                    case 12:
+                        tempValue = "Queen";
+                        break;
+                    case 13:
+                        tempValue = "King";
+                        break;
+                    case 14:
+                        tempValue = "Ace";
+                        break;
+                    default:
+                        tempValue = Value.ToString();
+                        break;
+                }
+                switch (Suit)
+                {
+                    case "Hearts":
+                        suitSentence = " of Hearts";
+                        break;
+                    case "Diamonds":
+                        suitSentence = " of Diamonds";
+                        break;
+                    case "Clubs":
+                        suitSentence = " of Clubs";
+                        break;
+                    case "Spades":
+                        suitSentence = " of Spades";
+                        break;
+                }
+                return tempValue + suitSentence;
             }
-            switch (Suit)
+            catch (Exception e)
             {
-                case "Hearts":
-                    suitSentence = " of Hearts";
-                    break;
-                case "Diamonds":
-                    suitSentence = " of Diamonds";
-                    break;
-                case "Clubs":
-                    suitSentence = " of Clubs";
-                    break;
-                case "Spades":
-                    suitSentence = " of Spades";
-                    break;
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("Card.ToString/" + e.Message);
+                }
+                throw e;
             }
-            return tempValue + suitSentence;
         }
 
         public int CompareTo(object obj)
         {
-            if (obj == null) return 1;
+            try { if (obj == null) return 1;
 
-            if (obj is Card otherCard)
-                return otherCard.Value - Value;
-            else
-                throw new ArgumentException("Object is not a Card");
+                if (obj is Card otherCard)
+                    return otherCard.Value - Value;
+                else
+                    throw new ArgumentException("Object is not a Card");
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("Card.CompareTo/" + e.Message);
+                }
+                throw e;
+            }
         }
     }
 

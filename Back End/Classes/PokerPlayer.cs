@@ -54,77 +54,121 @@ namespace Classes
 
         public PokerPlayer(int i_StartMoney, int i_Index, string i_Name, string i_Email, Stats i_Stats, int i_Figure)
         {
-            Stat = i_Stats;
-            Figure = i_Figure;
-            this.Money = i_StartMoney;
-            Position = i_Index;
-            Name = i_Name;
-            Email = i_Email;
-            Signature = SystemTools.RandomString(15);
-            ReadyToPlay = true;
-            UpdateResult = false;
-            LastActionTime = DateTime.Now;
-            
-            this.NewHand();
-            this.NewRound();
+            try
+            {
+                Stat = i_Stats;
+                Figure = i_Figure;
+                this.Money = i_StartMoney;
+                Position = i_Index;
+                Name = i_Name;
+                Email = i_Email;
+                Signature = SystemTools.RandomString(15);
+                ReadyToPlay = true;
+                UpdateResult = false;
+                LastActionTime = DateTime.Now;
+
+                this.NewHand();
+                this.NewRound();
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PokerPlayer.PokerPlayer/" + e.Message);
+                }
+                throw e;
+            }
         }
 
         public void UpdateStats(bool i_Winner, PokerHand i_UsersHand)
         {
-            Stat.NumberOfHandsPlay += 1;
-
-            if (i_Winner)
+            try
             {
-                if (Stat.BiggestPot < WinningAmount)
-                {
-                    Stat.BiggestPot = WinningAmount;
-                }
-                Stat.NumberOfHandsWon += 1;
-            }
+                Stat.NumberOfHandsPlay += 1;
 
-            if (Stat.Card1 != null)
+                if (i_Winner)
+                {
+                    if (Stat.BiggestPot < WinningAmount)
+                    {
+                        Stat.BiggestPot = WinningAmount;
+                    }
+                    Stat.NumberOfHandsWon += 1;
+                }
+
+                if (Stat.Card1 != null)
+                {
+                    List<Card> cards = new List<Card>();
+                    cards.Add(Deck.deck[(int)Stat.Card1]);
+                    cards.Add(Deck.deck[(int)Stat.Card2]);
+                    cards.Add(Deck.deck[(int)Stat.Card3]);
+                    cards.Add(Deck.deck[(int)Stat.Card4]);
+                    cards.Add(Deck.deck[(int)Stat.Card5]);
+                    PokerHand bestHand = new PokerHand(cards);
+                    if (bestHand.CompareTo(i_UsersHand) >= 0)
+                    {
+                        i_UsersHand = bestHand;
+                    }
+                }
+
+                Stat.ConvertHandToInts(i_UsersHand);
+                Stat.Money += Money;
+                Stat.VictoryPercentage = (float)Stat.NumberOfHandsWon / (float)Stat.NumberOfHandsPlay;
+
+                writeInDataBase();
+            }
+            catch (Exception e)
             {
-                List<Card> cards = new List<Card>();
-                cards.Add(Deck.deck[(int)Stat.Card1]);
-                cards.Add(Deck.deck[(int)Stat.Card2]);
-                cards.Add(Deck.deck[(int)Stat.Card3]);
-                cards.Add(Deck.deck[(int)Stat.Card4]);
-                cards.Add(Deck.deck[(int)Stat.Card5]);
-                PokerHand bestHand = new PokerHand(cards);
-                if (bestHand.CompareTo(i_UsersHand) >= 0)
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
                 {
-                    i_UsersHand = bestHand;
+                    file.WriteLine("PokerPlayer.UpdateStats/" + e.Message);
                 }
+                throw e;
             }
-
-            Stat.ConvertHandToInts(i_UsersHand);
-            Stat.Money += Money;
-            Stat.VictoryPercentage = (float)Stat.NumberOfHandsWon / (float)Stat.NumberOfHandsPlay;
-
-            writeInDataBase();
         }
 
         private void writeInDataBase()
         {
-            var values = new JObject();
-            values = JObject.FromObject(Stat);
-            HttpContent content = new StringContent(values.ToString(), Encoding.UTF8, "application/json");
-            putRequestAsync("https://pokerarenaapi.azurewebsites.net/api/Stats?i_Email=" + Email, content);
+            try {
+                var values = new JObject();
+                values = JObject.FromObject(Stat);
+                HttpContent content = new StringContent(values.ToString(), Encoding.UTF8, "application/json");
+                putRequestAsync("http://localhost:61968/api/Stats?i_Email=" + Email, content);
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PokerPlayer.writeInDataBase/" + e.Message);
+                }
+                throw e;
+            }
         }
+
 
         private async void putRequestAsync(string i_Url, HttpContent i_Content)
         {
-            string result = String.Empty;
-            using (HttpClient client = new HttpClient())
+            try
             {
-
-                using (HttpResponseMessage response = await client.PutAsync(i_Url, i_Content))
+                string result = String.Empty;
+                using (HttpClient client = new HttpClient())
                 {
-                    using (HttpContent content = response.Content)
+
+                    using (HttpResponseMessage response = await client.PutAsync(i_Url, i_Content))
                     {
-                        result = await content.ReadAsStringAsync();
+                        using (HttpContent content = response.Content)
+                        {
+                            result = await content.ReadAsStringAsync();
+                        }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PokerPlayer.putRequestAsync/" + e.Message);
+                }
+                throw e;
             }
         }
 
@@ -156,17 +200,28 @@ namespace Classes
 
         public void PlaceMoney(int money)
         {
-            if (money <= Money)
+            try
             {
-                this.CurrentRoundBet += money;
-                this.CurrentlyInPot += money;
-                this.Money -= money;
+                if (money <= Money)
+                {
+                    this.CurrentRoundBet += money;
+                    this.CurrentlyInPot += money;
+                    this.Money -= money;
+                }
+                else
+                {
+                    this.CurrentRoundBet += Money;
+                    this.CurrentlyInPot += Money;
+                    this.Money -= Money;
+                }
             }
-            else
+            catch (Exception e)
             {
-                this.CurrentRoundBet += Money;
-                this.CurrentlyInPot += Money;
-                this.Money -= Money;
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PokerPlayer.PlaceMoney/" + e.Message);
+                }
+                throw e;
             }
         }
 
@@ -178,14 +233,25 @@ namespace Classes
 
         public override string ToString()
         {
-            StringBuilder result = new StringBuilder();
-            result.AppendLine(Name + ":");
-            result.AppendLine("Money" + ":" + Money);
-            result.AppendLine("CurrentlyInPot" + ":" + CurrentlyInPot);
-            result.AppendLine("CurrentRoundBet" + ":" + CurrentRoundBet);
-            result.AppendLine("ShouldPlayInRound" + ":" + ShouldPlayInRound);
+            try
+            {
+                StringBuilder result = new StringBuilder();
+                result.AppendLine(Name + ":");
+                result.AppendLine("Money" + ":" + Money);
+                result.AppendLine("CurrentlyInPot" + ":" + CurrentlyInPot);
+                result.AppendLine("CurrentRoundBet" + ":" + CurrentRoundBet);
+                result.AppendLine("ShouldPlayInRound" + ":" + ShouldPlayInRound);
 
-            return result.ToString();
+                return result.ToString();
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PokerPlayer.ToString/" + e.Message);
+                }
+                throw e;
+            }
         }
     }
 }

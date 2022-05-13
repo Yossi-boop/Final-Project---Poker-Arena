@@ -130,280 +130,293 @@ namespace CasinoSharedLibary
 
         public PokerTable(Game1 i_gameManager, GraphicsDevice i_graphics, SpriteBatch i_Painter, SpritesStorage i_Storage, ContentManager i_contentManager, string i_CasinoId, string i_TableId, string i_Email, string i_Name)
         {
-            userEmail = i_Email;
-            userName = i_Name;
-            casinoId = i_CasinoId;
-            tableId = i_TableId;
-            gameManager = i_gameManager;
-            _graphics = i_graphics;
-            painter = i_Painter;
-            storage = i_Storage;
-            contentManager = i_contentManager;
+            try
+            {
+                userEmail = i_Email;
+                userName = i_Name;
+                casinoId = i_CasinoId;
+                tableId = i_TableId;
+                gameManager = i_gameManager;
+                _graphics = i_graphics;
+                painter = i_Painter;
+                storage = i_Storage;
+                contentManager = i_contentManager;
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PokerTable.PokerTable " + e.Message);
+                }
+                throw e;
+            }
         }
 
         public void Load()
         {
-            initializeIntervals();
-            table = gameManager.server.GetTableById(tableId, casinoId, userEmail);
-            playerInformation = gameManager.server.GetUserDetails(userEmail);
-
-            width = gameManager.UserScreenWidth / 1280;
-            height = gameManager.UserScreenHeight / 720;
-
-            pokerTableChat = new NewChat(storage, 250, 250);
-            pokerTableChat.Load(painter);
-
-            keyboard = new KeyboardInput();
-
-            playersLocations.Add(new Vector2(850 * width, 90 * height));
-            playersLocations.Add(new Vector2(1040 * width, 220 * height));
-            playersLocations.Add(new Vector2(1050 * width, 370 * height));
-            playersLocations.Add(new Vector2(885 * width, 510 * height));
-            playersLocations.Add(new Vector2(585 * width, 510 * height));
-            playersLocations.Add(new Vector2(285 * width, 510 * height));
-            playersLocations.Add(new Vector2(150 * width, 370 * height));
-            playersLocations.Add(new Vector2(140 * width, 220 * height));
-            playersLocations.Add(new Vector2(330 * width, 90 * height));
-
-            chipLocations.Add(new Vector2(playersLocations[0].X - width * 100, (int)playersLocations[0].Y));
-            chipLocations.Add(new Vector2(playersLocations[1].X - width * 100, (int)playersLocations[1].Y));
-            chipLocations.Add(new Vector2((int)(playersLocations[2].X - width * 100), (int)playersLocations[2].Y));
-            chipLocations.Add(new Vector2((int)(playersLocations[3].X), (int)(playersLocations[3].Y - 90 * height)));
-            chipLocations.Add(new Vector2((int)(playersLocations[4].X), (int)(playersLocations[4].Y - 90 * height)));
-            chipLocations.Add(new Vector2((int)(playersLocations[5].X), (int)(playersLocations[5].Y - 90 * height)));
-            chipLocations.Add(new Vector2((int)(playersLocations[6].X + width * 100), (int)playersLocations[6].Y));
-            chipLocations.Add(new Vector2((int)(playersLocations[7].X + width * 100), (int)playersLocations[7].Y));
-            chipLocations.Add(new Vector2((int)(playersLocations[8].X + width * 100), (int)playersLocations[8].Y));
-            chipLocations.Add(new Vector2(585 * (int)width, 190 * (int)height));
-
-            restartChipLocations();
-
-            minimumRaise = 0;
-
-            DefaultViewportAdapter viewportAdapter = new DefaultViewportAdapter(_graphics);
-            GuiSpriteBatchRenderer guiRenderer = new GuiSpriteBatchRenderer(_graphics, () => Matrix.Identity);
-            var font = contentManager.Load<BitmapFont>("Sensation");
-            BitmapFont.UseKernings = false;
-            Skin.CreateDefault(font);
-
-            handsRatingButton = new Button();
-            handsRatingButton.Size = new Size(150, 50);
-            handsRatingButton.Content = "Hands Rating";
-            handsRatingButton.HorizontalAlignment = HorizontalAlignment.Centre;
-            handsRatingButton.VerticalAlignment = VerticalAlignment.Centre;
-            handsRatingButton.Clicked += HandsRatingButton_Clicked;
-
-            playerRemainingTime = new ProgressBar();
-            playerRemainingTime.Progress = 1f;
-            playerRemainingTime.Size = new Size(150, 50);
-            playerRemainingTime.BarColor = Color.Green;
-            playerRemainingTime.IsVisible = false;
-            playerRemainingTime.HorizontalAlignment = HorizontalAlignment.Centre;
-            playerRemainingTime.VerticalAlignment = VerticalAlignment.Centre;
-
-            callButton = new Button();
-            callButton.Size = new Size(150, 50);
-            callButton.Content = "Call";
-            callButton.Name = "1";
-            callButton.HorizontalAlignment = HorizontalAlignment.Centre;
-            callButton.VerticalAlignment = VerticalAlignment.Centre;
-            callButton.Clicked += MakeAction_Clicked;
-
-            foldButton = new Button();
-            foldButton.Size = new Size(150, 50);
-            foldButton.Content = "Fold";
-            foldButton.Name = "3";
-            foldButton.HorizontalAlignment = HorizontalAlignment.Centre;
-            foldButton.VerticalAlignment = VerticalAlignment.Centre;
-            foldButton.Clicked += MakeAction_Clicked;
-
-            raiseButton = new Button();
-            raiseButton.Size = new Size(150, 50);
-            raiseButton.Content = "Raise";
-            raiseButton.Name = "2";
-            raiseButton.HorizontalAlignment = HorizontalAlignment.Centre;
-            raiseButton.VerticalAlignment = VerticalAlignment.Centre;
-            raiseButton.Clicked += RaiseButton_Clicked;
-
-            raiseUpButton = new Button();
-            raiseUpButton.Size = new Size(50, 50);
-            raiseUpButton.Content = ">";
-            raiseUpButton.HorizontalAlignment = HorizontalAlignment.Centre;
-            raiseUpButton.VerticalAlignment = VerticalAlignment.Centre;
-            raiseUpButton.IsVisible = false;
-            raiseUpButton.IsEnabled = false;
-            raiseUpButton.Clicked += RaiseUpButton_Clicked;
-
-            raiseDownButton = new Button();
-            raiseDownButton.Size = new Size(50, 50);
-            raiseDownButton.Content = "<";
-            raiseDownButton.HorizontalAlignment = HorizontalAlignment.Centre;
-            raiseDownButton.VerticalAlignment = VerticalAlignment.Centre;
-            raiseDownButton.IsVisible = false;
-            raiseDownButton.IsEnabled = true;
-            raiseDownButton.Clicked += RaiseDownButton_Clicked;
-
-            allInButton = new Button();
-            allInButton.Size = new Size(50, 50);
-            allInButton.Content = "All In";
-            allInButton.HorizontalAlignment = HorizontalAlignment.Centre;
-            allInButton.VerticalAlignment = VerticalAlignment.Centre;
-            allInButton.IsVisible = false;
-            allInButton.IsEnabled = false;
-            allInButton.Clicked += allInButton_Clicked;
-
-            raiseAmountTextbox = new TextBox(minimumRaise.ToString());
-            raiseAmountTextbox.Size = new Size(100, 50);
-            raiseAmountTextbox.IsVisible = false;
-            raiseAmountTextbox.IsEnabled = true;
-            raiseAmountTextbox.HorizontalAlignment = HorizontalAlignment.Centre;
-            raiseAmountTextbox.VerticalAlignment = VerticalAlignment.Centre;
-            raiseAmountTextbox.TextChanged += raiseAmountTextbox_TextChanged;
-
-            addAmountTextbox = new TextBox("0");
-            addAmountTextbox.Size = new Size(100, 50);
-            addAmountTextbox.IsVisible = true;
-            addAmountTextbox.IsEnabled = true;
-            addAmountTextbox.HorizontalAlignment = HorizontalAlignment.Centre;
-            addAmountTextbox.VerticalAlignment = VerticalAlignment.Centre;
-
-            exitButton = new Button();
-            exitButton.Size = new Size(200, 50);
-            exitButton.Content = "Exit Back To Casino";
-            exitButton.HorizontalAlignment = HorizontalAlignment.Centre;
-            exitButton.VerticalAlignment = VerticalAlignment.Centre;
-            exitButton.Clicked += ExitButton_Clicked;
-
-            closeHandsRatingButton = new DrawingButton(storage.GreenUI[7], storage.Fonts[1]);
-            closeHandsRatingButton.Position = new Vector2(1070, 80);
-            closeHandsRatingButton.Size = new Size(50, 50);
-            closeHandsRatingButton.IsEnabled = false;
-            closeHandsRatingButton.IsVisible = false;
-            closeHandsRatingButton.Click += CloseHandsRatingButton_Click;
-
-            closeStatsPanelButton = new DrawingButton(storage.GreyUI[7], storage.Fonts[1]);
-            closeStatsPanelButton.Position = new Vector2(765, 125);
-            closeStatsPanelButton.Size = new Size(50, 50);
-            closeStatsPanelButton.Click += CloseStatsPanel_Click;
-
-            sit0Button = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
-            sit0Button.Text = "Sit";
-            sit0Button.Name = "0";
-            sit0Button.Size = new Size(100, 50);
-            sit0Button.Position = playersLocations[0];
-            sit0Button.Click += SitButton_Clicked;
-
-            sit1Button = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
-            sit1Button.Text = "Sit";
-            sit1Button.Name = "1";
-            sit1Button.Size = new Size(100, 50);
-            sit1Button.Position = playersLocations[1];
-            sit1Button.Click += SitButton_Clicked;
-
-            sit2Button = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
-            sit2Button.Text = "Sit";
-            sit2Button.Name = "2";
-            sit2Button.Size = new Size(100, 50);
-            sit2Button.Position = playersLocations[2];
-            sit2Button.Click += SitButton_Clicked;
-
-            sit3Button = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
-            sit3Button.Text = "Sit";
-            sit3Button.Name = "3";
-            sit3Button.Size = new Size(100, 50);
-            sit3Button.Position = playersLocations[3];
-            sit3Button.Click += SitButton_Clicked;
-
-            sit4Button = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
-            sit4Button.Text = "Sit";
-            sit4Button.Name = "4";
-            sit4Button.Size = new Size(100, 50);
-            sit4Button.Position = playersLocations[4];
-            sit4Button.Click += SitButton_Clicked;
-
-            sit5Button = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
-            sit5Button.Text = "Sit";
-            sit5Button.Name = "5";
-            sit5Button.Size = new Size(100, 50);
-            sit5Button.Position = playersLocations[5];
-            sit5Button.Click += SitButton_Clicked;
-
-            sit6Button = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
-            sit6Button.Text = "Sit";
-            sit6Button.Name = "6";
-            sit6Button.Size = new Size(100, 50);
-            sit6Button.Position = playersLocations[6];
-            sit6Button.Click += SitButton_Clicked;
-
-            sit7Button = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
-            sit7Button.Text = "Sit";
-            sit7Button.Name = "7";
-            sit7Button.Size = new Size(100, 50);
-            sit7Button.Position = playersLocations[7];
-            sit7Button.Click += SitButton_Clicked;
-
-            sit8Button = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
-            sit8Button.Text = "Sit";
-            sit8Button.Name = "8";
-            sit8Button.Size = new Size(100, 50);
-            sit8Button.Position = playersLocations[8];
-            sit8Button.Click += SitButton_Clicked;
-
-            sitButtons = new List<DrawingButton> { sit0Button, sit1Button, sit2Button, sit3Button, sit4Button, sit5Button, sit6Button, sit7Button, sit8Button };
-
-            enterMoneyRaiseUp = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
-            enterMoneyRaiseUp.Text = "+";
-            enterMoneyRaiseUp.Click += AddUpButton_Clicked;
-
-            enterMoneyRaiseDown = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
-            enterMoneyRaiseDown.Text = "-";
-            enterMoneyRaiseDown.Click += AddDownButton_Clicked;
-
-            enterMoneyConfirm = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
-            enterMoneyConfirm.Text = "Confirm";
-            enterMoneyConfirm.Click += AddButton_Clicked;
-
-            enterMoneyExit = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
-            enterMoneyExit.Text = "Exit";
-            enterMoneyExit.Click += exitRebuyPanel_Clicked;
-
-            enterMoneyTextbox = new DrawingTextbox(150, 50, storage.GreenUI[6], storage.Fonts[1]);
-
-            enterMoneyRectangle = new Rectangle(450, 130, 400, 400);
-
-            volumeOnOffButton = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
-            if (MediaPlayer.Volume == 1f)
+            try
             {
-                volumeOnOffButton.Text = "Sound On";
-            }
-            else
-            {
-                volumeOnOffButton.Text = "Sound Off";
-            }
-            volumeOnOffButton.Click += VolumeOnOffButton_Click;
+                initializeIntervals();
+                table = gameManager.server.GetTableById(tableId, casinoId, userEmail);
+                playerInformation = gameManager.server.GetUserDetails(userEmail);
 
-            StackPanel fixedButtonsPanel = new StackPanel()
-            {
-                Margin = 5,
-                Spacing = 5,
-                Orientation = Orientation.Vertical,
-                HorizontalAlignment = HorizontalAlignment.Right,
-                VerticalAlignment = VerticalAlignment.Centre,
-                Items =
+                width = gameManager.UserScreenWidth / 1280;
+                height = gameManager.UserScreenHeight / 720;
+
+                pokerTableChat = new NewChat(storage, 250, 250);
+                pokerTableChat.Load(painter);
+
+                keyboard = new KeyboardInput();
+
+                playersLocations.Add(new Vector2(850 * width, 90 * height));
+                playersLocations.Add(new Vector2(1040 * width, 220 * height));
+                playersLocations.Add(new Vector2(1050 * width, 370 * height));
+                playersLocations.Add(new Vector2(885 * width, 510 * height));
+                playersLocations.Add(new Vector2(585 * width, 510 * height));
+                playersLocations.Add(new Vector2(285 * width, 510 * height));
+                playersLocations.Add(new Vector2(150 * width, 370 * height));
+                playersLocations.Add(new Vector2(140 * width, 220 * height));
+                playersLocations.Add(new Vector2(330 * width, 90 * height));
+
+                chipLocations.Add(new Vector2(playersLocations[0].X - width * 100, (int)playersLocations[0].Y));
+                chipLocations.Add(new Vector2(playersLocations[1].X - width * 100, (int)playersLocations[1].Y));
+                chipLocations.Add(new Vector2((int)(playersLocations[2].X - width * 100), (int)playersLocations[2].Y));
+                chipLocations.Add(new Vector2((int)(playersLocations[3].X), (int)(playersLocations[3].Y - 90 * height)));
+                chipLocations.Add(new Vector2((int)(playersLocations[4].X), (int)(playersLocations[4].Y - 90 * height)));
+                chipLocations.Add(new Vector2((int)(playersLocations[5].X), (int)(playersLocations[5].Y - 90 * height)));
+                chipLocations.Add(new Vector2((int)(playersLocations[6].X + width * 100), (int)playersLocations[6].Y));
+                chipLocations.Add(new Vector2((int)(playersLocations[7].X + width * 100), (int)playersLocations[7].Y));
+                chipLocations.Add(new Vector2((int)(playersLocations[8].X + width * 100), (int)playersLocations[8].Y));
+                chipLocations.Add(new Vector2(585 * (int)width, 190 * (int)height));
+
+                restartChipLocations();
+
+                minimumRaise = 0;
+
+                DefaultViewportAdapter viewportAdapter = new DefaultViewportAdapter(_graphics);
+                GuiSpriteBatchRenderer guiRenderer = new GuiSpriteBatchRenderer(_graphics, () => Matrix.Identity);
+                var font = contentManager.Load<BitmapFont>("Sensation");
+                BitmapFont.UseKernings = false;
+                Skin.CreateDefault(font);
+
+                handsRatingButton = new Button();
+                handsRatingButton.Size = new Size(150, 50);
+                handsRatingButton.Content = "Hands Rating";
+                handsRatingButton.HorizontalAlignment = HorizontalAlignment.Centre;
+                handsRatingButton.VerticalAlignment = VerticalAlignment.Centre;
+                handsRatingButton.Clicked += HandsRatingButton_Clicked;
+
+                playerRemainingTime = new ProgressBar();
+                playerRemainingTime.Progress = 1f;
+                playerRemainingTime.Size = new Size(150, 50);
+                playerRemainingTime.BarColor = Color.Green;
+                playerRemainingTime.IsVisible = false;
+                playerRemainingTime.HorizontalAlignment = HorizontalAlignment.Centre;
+                playerRemainingTime.VerticalAlignment = VerticalAlignment.Centre;
+
+                callButton = new Button();
+                callButton.Size = new Size(150, 50);
+                callButton.Content = "Call";
+                callButton.Name = "1";
+                callButton.HorizontalAlignment = HorizontalAlignment.Centre;
+                callButton.VerticalAlignment = VerticalAlignment.Centre;
+                callButton.Clicked += MakeAction_Clicked;
+
+                foldButton = new Button();
+                foldButton.Size = new Size(150, 50);
+                foldButton.Content = "Fold";
+                foldButton.Name = "3";
+                foldButton.HorizontalAlignment = HorizontalAlignment.Centre;
+                foldButton.VerticalAlignment = VerticalAlignment.Centre;
+                foldButton.Clicked += MakeAction_Clicked;
+
+                raiseButton = new Button();
+                raiseButton.Size = new Size(150, 50);
+                raiseButton.Content = "Raise";
+                raiseButton.Name = "2";
+                raiseButton.HorizontalAlignment = HorizontalAlignment.Centre;
+                raiseButton.VerticalAlignment = VerticalAlignment.Centre;
+                raiseButton.Clicked += RaiseButton_Clicked;
+
+                raiseUpButton = new Button();
+                raiseUpButton.Size = new Size(50, 50);
+                raiseUpButton.Content = ">";
+                raiseUpButton.HorizontalAlignment = HorizontalAlignment.Centre;
+                raiseUpButton.VerticalAlignment = VerticalAlignment.Centre;
+                raiseUpButton.IsVisible = false;
+                raiseUpButton.IsEnabled = false;
+                raiseUpButton.Clicked += RaiseUpButton_Clicked;
+
+                raiseDownButton = new Button();
+                raiseDownButton.Size = new Size(50, 50);
+                raiseDownButton.Content = "<";
+                raiseDownButton.HorizontalAlignment = HorizontalAlignment.Centre;
+                raiseDownButton.VerticalAlignment = VerticalAlignment.Centre;
+                raiseDownButton.IsVisible = false;
+                raiseDownButton.IsEnabled = true;
+                raiseDownButton.Clicked += RaiseDownButton_Clicked;
+
+                allInButton = new Button();
+                allInButton.Size = new Size(50, 50);
+                allInButton.Content = "All In";
+                allInButton.HorizontalAlignment = HorizontalAlignment.Centre;
+                allInButton.VerticalAlignment = VerticalAlignment.Centre;
+                allInButton.IsVisible = false;
+                allInButton.IsEnabled = false;
+                allInButton.Clicked += allInButton_Clicked;
+
+                raiseAmountTextbox = new TextBox(minimumRaise.ToString());
+                raiseAmountTextbox.Size = new Size(100, 50);
+                raiseAmountTextbox.IsVisible = false;
+                raiseAmountTextbox.IsEnabled = true;
+                raiseAmountTextbox.HorizontalAlignment = HorizontalAlignment.Centre;
+                raiseAmountTextbox.VerticalAlignment = VerticalAlignment.Centre;
+                raiseAmountTextbox.TextChanged += raiseAmountTextbox_TextChanged;
+
+                addAmountTextbox = new TextBox("0");
+                addAmountTextbox.Size = new Size(100, 50);
+                addAmountTextbox.IsVisible = true;
+                addAmountTextbox.IsEnabled = true;
+                addAmountTextbox.HorizontalAlignment = HorizontalAlignment.Centre;
+                addAmountTextbox.VerticalAlignment = VerticalAlignment.Centre;
+
+                exitButton = new Button();
+                exitButton.Size = new Size(200, 50);
+                exitButton.Content = "Exit Back To Casino";
+                exitButton.HorizontalAlignment = HorizontalAlignment.Centre;
+                exitButton.VerticalAlignment = VerticalAlignment.Centre;
+                exitButton.Clicked += ExitButton_Clicked;
+
+                closeHandsRatingButton = new DrawingButton(storage.GreenUI[7], storage.Fonts[1]);
+                closeHandsRatingButton.Position = new Vector2(1070, 80);
+                closeHandsRatingButton.Size = new Size(50, 50);
+                closeHandsRatingButton.IsEnabled = false;
+                closeHandsRatingButton.IsVisible = false;
+                closeHandsRatingButton.Click += CloseHandsRatingButton_Click;
+
+                closeStatsPanelButton = new DrawingButton(storage.GreyUI[7], storage.Fonts[1]);
+                closeStatsPanelButton.Position = new Vector2(765, 125);
+                closeStatsPanelButton.Size = new Size(50, 50);
+                closeStatsPanelButton.Click += CloseStatsPanel_Click;
+
+                sit0Button = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
+                sit0Button.Text = "Sit";
+                sit0Button.Name = "0";
+                sit0Button.Size = new Size(100, 50);
+                sit0Button.Position = playersLocations[0];
+                sit0Button.Click += SitButton_Clicked;
+
+                sit1Button = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
+                sit1Button.Text = "Sit";
+                sit1Button.Name = "1";
+                sit1Button.Size = new Size(100, 50);
+                sit1Button.Position = playersLocations[1];
+                sit1Button.Click += SitButton_Clicked;
+
+                sit2Button = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
+                sit2Button.Text = "Sit";
+                sit2Button.Name = "2";
+                sit2Button.Size = new Size(100, 50);
+                sit2Button.Position = playersLocations[2];
+                sit2Button.Click += SitButton_Clicked;
+
+                sit3Button = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
+                sit3Button.Text = "Sit";
+                sit3Button.Name = "3";
+                sit3Button.Size = new Size(100, 50);
+                sit3Button.Position = playersLocations[3];
+                sit3Button.Click += SitButton_Clicked;
+
+                sit4Button = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
+                sit4Button.Text = "Sit";
+                sit4Button.Name = "4";
+                sit4Button.Size = new Size(100, 50);
+                sit4Button.Position = playersLocations[4];
+                sit4Button.Click += SitButton_Clicked;
+
+                sit5Button = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
+                sit5Button.Text = "Sit";
+                sit5Button.Name = "5";
+                sit5Button.Size = new Size(100, 50);
+                sit5Button.Position = playersLocations[5];
+                sit5Button.Click += SitButton_Clicked;
+
+                sit6Button = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
+                sit6Button.Text = "Sit";
+                sit6Button.Name = "6";
+                sit6Button.Size = new Size(100, 50);
+                sit6Button.Position = playersLocations[6];
+                sit6Button.Click += SitButton_Clicked;
+
+                sit7Button = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
+                sit7Button.Text = "Sit";
+                sit7Button.Name = "7";
+                sit7Button.Size = new Size(100, 50);
+                sit7Button.Position = playersLocations[7];
+                sit7Button.Click += SitButton_Clicked;
+
+                sit8Button = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
+                sit8Button.Text = "Sit";
+                sit8Button.Name = "8";
+                sit8Button.Size = new Size(100, 50);
+                sit8Button.Position = playersLocations[8];
+                sit8Button.Click += SitButton_Clicked;
+
+                sitButtons = new List<DrawingButton> { sit0Button, sit1Button, sit2Button, sit3Button, sit4Button, sit5Button, sit6Button, sit7Button, sit8Button };
+
+                enterMoneyRaiseUp = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
+                enterMoneyRaiseUp.Text = "+";
+                enterMoneyRaiseUp.Click += AddUpButton_Clicked;
+
+                enterMoneyRaiseDown = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
+                enterMoneyRaiseDown.Text = "-";
+                enterMoneyRaiseDown.Click += AddDownButton_Clicked;
+
+                enterMoneyConfirm = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
+                enterMoneyConfirm.Text = "Confirm";
+                enterMoneyConfirm.Click += AddButton_Clicked;
+
+                enterMoneyExit = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
+                enterMoneyExit.Text = "Exit";
+                enterMoneyExit.Click += exitRebuyPanel_Clicked;
+
+                enterMoneyTextbox = new DrawingTextbox(150, 50, storage.GreenUI[6], storage.Fonts[1]);
+
+                enterMoneyRectangle = new Rectangle(450, 130, 400, 400);
+
+                volumeOnOffButton = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
+                if (MediaPlayer.Volume == 1f)
+                {
+                    volumeOnOffButton.Text = "Sound On";
+                }
+                else
+                {
+                    volumeOnOffButton.Text = "Sound Off";
+                }
+                volumeOnOffButton.Click += VolumeOnOffButton_Click;
+
+                StackPanel fixedButtonsPanel = new StackPanel()
+                {
+                    Margin = 5,
+                    Spacing = 5,
+                    Orientation = Orientation.Vertical,
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                    VerticalAlignment = VerticalAlignment.Centre,
+                    Items =
                 {
                     playerRemainingTime,
                     handsRatingButton
                 }
-            };
+                };
 
-            bottomButtonsPanel = new StackPanel()
-            {
-                Spacing = 5,
-                Orientation = Orientation.Horizontal,
-                HorizontalAlignment = HorizontalAlignment.Centre,
-                VerticalAlignment = VerticalAlignment.Centre,
-                Height = 100,
-                Items =
+                bottomButtonsPanel = new StackPanel()
+                {
+                    Spacing = 5,
+                    Orientation = Orientation.Horizontal,
+                    HorizontalAlignment = HorizontalAlignment.Centre,
+                    VerticalAlignment = VerticalAlignment.Centre,
+                    Height = 100,
+                    Items =
                 {
                     callButton,
                     foldButton,
@@ -413,47 +426,56 @@ namespace CasinoSharedLibary
                     allInButton,
                     raiseAmountTextbox
                 }
-            };
+                };
 
-            StackPanel bottomPanel = new StackPanel()
-            {
-                Orientation = Orientation.Vertical,
-                AttachedProperties = { { DockPanel.DockProperty, Dock.Bottom } },
-                Items =
+                StackPanel bottomPanel = new StackPanel()
+                {
+                    Orientation = Orientation.Vertical,
+                    AttachedProperties = { { DockPanel.DockProperty, Dock.Bottom } },
+                    Items =
                 {
                     fixedButtonsPanel,
                     bottomButtonsPanel
                 }
-            };
+                };
 
-            StackPanel topButtonPanel = new StackPanel()
-            {
-                HorizontalAlignment = HorizontalAlignment.Right,
-                VerticalAlignment = VerticalAlignment.Top,
-                AttachedProperties = { { DockPanel.DockProperty, Dock.Top } },
-                Items =
+                StackPanel topButtonPanel = new StackPanel()
+                {
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                    VerticalAlignment = VerticalAlignment.Top,
+                    AttachedProperties = { { DockPanel.DockProperty, Dock.Top } },
+                    Items =
                 {
                     exitButton
                 }
-            };
+                };
 
-            DockPanel pokerTablePanel = new DockPanel()
-            {
-                LastChildFill = false,
-                BackgroundRegion = storage.PokerBackGround,
-                Items =
+                DockPanel pokerTablePanel = new DockPanel()
+                {
+                    LastChildFill = false,
+                    BackgroundRegion = storage.PokerBackGround,
+                    Items =
                 {
                     topButtonPanel,
                     bottomPanel
                 }
-            };
+                };
 
-            Screen pokerTableScreen = new Screen()
+                Screen pokerTableScreen = new Screen()
+                {
+                    Content = pokerTablePanel
+                };
+
+                _guiSystem = new GuiSystem(viewportAdapter, guiRenderer) { ActiveScreen = pokerTableScreen };
+            }
+            catch (Exception e)
             {
-                Content = pokerTablePanel
-            };
-
-            _guiSystem = new GuiSystem(viewportAdapter, guiRenderer) { ActiveScreen = pokerTableScreen };
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PokerTable.Load " + e.Message);
+                }
+                throw e;
+            }
         }
 
         private void VolumeOnOffButton_Click(object sender, EventArgs e)
@@ -678,114 +700,136 @@ namespace CasinoSharedLibary
 
         public void Update(GameTime i_gametime)
         {
-            currentInput = keyboard.Update();
-            lastMessage = pokerTableChat.Update(i_gametime, new Vector2(640, 360), currentInput, keyboard.isCapsLockOn, keyboard.isShiftOn);
-            if (lastMessage != null)
+            try
             {
-                gameManager.server.SendMessageToTableChat(tableId, casinoId, userEmail, signature, userName, lastMessage);
-            }
-            updateChat(i_gametime);
-
-            updateDrawHandsRating(i_gametime);
-
-            updateStatsPanel(i_gametime);
-
-            volumeOnOffButton.Update(i_gametime, 0, 0);
-
-            activateBettingButtons();
-            foreach (DrawingButton button in sitButtons)
-            {
-                button.Update(i_gametime, 0, 0);
-            }
-
-            if (table != null)
-            {
-                index = checkIfInTable();
-                if (index == -1)
+                currentInput = keyboard.Update();
+                lastMessage = pokerTableChat.Update(i_gametime, new Vector2(640, 360), currentInput, keyboard.isCapsLockOn, keyboard.isShiftOn);
+                if (lastMessage != null)
                 {
-
-                    myPlayer = null;
-
+                    gameManager.server.SendMessageToTableChat(tableId, casinoId, userEmail, signature, userName, lastMessage);
                 }
-                else
+                updateChat(i_gametime);
+
+                updateDrawHandsRating(i_gametime);
+
+                updateStatsPanel(i_gametime);
+
+                volumeOnOffButton.Update(i_gametime, 0, 0);
+
+                activateBettingButtons();
+                foreach (DrawingButton button in sitButtons)
                 {
-                    if (table.Players[index] != null)
+                    button.Update(i_gametime, 0, 0);
+                }
+
+                if (table != null)
+                {
+                    index = checkIfInTable();
+                    if (index == -1)
                     {
-                        myPlayer = table.Players[index];
-                        SittingPlayer = table.Players[index];
-                        signature = myPlayer.Signature;
+
+                        myPlayer = null;
+
                     }
-                }
-
-                if (round != null)
-                {
-                    movingChipsInEndOfPart();
-                    if (currentRoundPart == RoundPart.Result)
+                    else
                     {
-                        playerRemainingTime.IsVisible = false;
-                        if (!updateEndRound)
+                        if (table.Players[index] != null)
                         {
-                            Task.Delay(8000).ContinueWith(task => gameManager.server.ConfirmEndRound(tableId, casinoId, userEmail));
-                            updateEndRound = true;
-                            if (myPlayer != null)
+                            myPlayer = table.Players[index];
+                            SittingPlayer = table.Players[index];
+                            signature = myPlayer.Signature;
+                        }
+                    }
+
+                    if (round != null)
+                    {
+                        movingChipsInEndOfPart();
+                        if (currentRoundPart == RoundPart.Result)
+                        {
+                            playerRemainingTime.IsVisible = false;
+                            if (!updateEndRound)
                             {
-                                CheckIfNeedReBuy();
+                                Task.Delay(8000).ContinueWith(task => gameManager.server.ConfirmEndRound(tableId, casinoId, userEmail));
+                                updateEndRound = true;
+                                if (myPlayer != null)
+                                {
+                                    CheckIfNeedReBuy();
+                                }
+                                hideBettingButtons();
                             }
-                            hideBettingButtons();
+                        }
+                        else
+                        {
+                            roundEnd = false;
+                            if (myPlayer != null && myPlayer.InHand &&
+                                currentPlayer.Email.Equals(myPlayer.Email))
+                            {
+                                updateEndRound = false;
+                                bottomButtonsPanel.IsEnabled = true;
+                                bottomButtonsPanel.IsVisible = true;
+                                CheckOrCall();
+                            }
+                            else
+                            {
+                                bottomButtonsPanel.IsEnabled = false;
+                                bottomButtonsPanel.IsVisible = false;
+                            }
+
+                            if (currentPlayerIndex != currentBettingRound.CurrentPlayerIndex || currentRoundPart != lastRoundPart)
+                            {
+                                currentPlayerIndex = currentBettingRound.CurrentPlayerIndex;
+                                currentTurnTime = DateTime.Now;
+                            }
+                            playerRemainingTime.IsVisible = true;
+                            playerRemainingTime.Progress = (float)DateTime.Now.Subtract(currentTurnTime).TotalMilliseconds / 15000;
+                            if (playerRemainingTime.Progress > 1f)
+                            {
+                                playerRemainingTime.Progress = 1f;
+                            }
                         }
                     }
                     else
                     {
-                        roundEnd = false;
-                        if (myPlayer != null && myPlayer.InHand &&
-                            currentPlayer.Email.Equals(myPlayer.Email))
-                        {
-                            updateEndRound = false;
-                            bottomButtonsPanel.IsEnabled = true;
-                            bottomButtonsPanel.IsVisible = true;
-                            CheckOrCall();
-                        }
-                        else
-                        {
-                            bottomButtonsPanel.IsEnabled = false;
-                            bottomButtonsPanel.IsVisible = false;
-                        }
-
-                        if (currentPlayerIndex != currentBettingRound.CurrentPlayerIndex || currentRoundPart != lastRoundPart)
-                        {
-                            currentPlayerIndex = currentBettingRound.CurrentPlayerIndex;
-                            currentTurnTime = DateTime.Now;
-                        }
-                        playerRemainingTime.IsVisible = true;
-                        playerRemainingTime.Progress = (float)DateTime.Now.Subtract(currentTurnTime).TotalMilliseconds / 15000;
-                        if (playerRemainingTime.Progress > 1f)
-                        {
-                            playerRemainingTime.Progress = 1f;
-                        }
+                        bottomButtonsPanel.IsEnabled = false;
+                        bottomButtonsPanel.IsVisible = false;
                     }
                 }
-                else
-                {
-                    bottomButtonsPanel.IsEnabled = false;
-                    bottomButtonsPanel.IsVisible = false;
-                }
-            }
 
-            _guiSystem.Update(i_gametime);
-            updateEnterMoneyPanel(i_gametime, currentInput);
+                _guiSystem.Update(i_gametime);
+                updateEnterMoneyPanel(i_gametime, currentInput);
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PokerTable.Update " + e.Message);
+                }
+                throw e;
+            }
         }
 
         private int checkIfInTable()
         {
-            for (int i = 0; i < 9; i++)
+            try
             {
-                if (table.PlayersInTable[i] != null && table.PlayersInTable[i].Email.Equals(userEmail))
+                for (int i = 0; i < 9; i++)
                 {
-                    return i;
+                    if (table.PlayersInTable[i] != null && table.PlayersInTable[i].Email.Equals(userEmail))
+                    {
+                        return i;
+                    }
                 }
-            }
 
-            return -1;
+                return -1;
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PokerTable.CheckIfInTable " + e.Message);
+                }
+                throw e;
+            }
         }
 
         private void movingChipsInEndOfPart()
@@ -834,51 +878,84 @@ namespace CasinoSharedLibary
 
         private bool totalBetStopMoving()
         {
-            int numberOfChipsLocations = chipMovingLocation.Count - 1;
-            while (round.WinnersIndex.Count + 8 != numberOfChipsLocations)
+            try
             {
-                chipMovingLocation.Add(new Vector2(chipLocations[9].X, chipLocations[9].Y));
-                numberOfChipsLocations++;
-            }
-            for (int i = 0; i < round.WinnersIndex.Count; i++)
-            {
-                if (!(chipMovingLocation[9 + i].X <= (chipLocations[round.WinnersIndex[i]].X + 5) && chipMovingLocation[9].X >= (chipLocations[round.WinnersIndex[i]].X - 5)))
+                int numberOfChipsLocations = chipMovingLocation.Count - 1;
+                while (round.WinnersIndex.Count + 8 != numberOfChipsLocations)
                 {
-                    return false;
+                    chipMovingLocation.Add(new Vector2(chipLocations[9].X, chipLocations[9].Y));
+                    numberOfChipsLocations++;
                 }
+                for (int i = 0; i < round.WinnersIndex.Count; i++)
+                {
+                    if (!(chipMovingLocation[9 + i].X <= (chipLocations[round.WinnersIndex[i]].X + 5) && chipMovingLocation[9].X >= (chipLocations[round.WinnersIndex[i]].X - 5)))
+                    {
+                        return false;
+                    }
 
+                }
+                return true;
             }
-            return true;
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PokerTable.totalBetStopMoving " + e.Message);
+                }
+                throw e;
+            }
         }
 
         private void restartChipLocations()
         {
-            chipMovingLocation.Clear();
-            chipMovingLocation.Add(new Vector2(playersLocations[0].X - width * 100, (int)playersLocations[0].Y));
-            chipMovingLocation.Add(new Vector2(playersLocations[1].X - width * 100, (int)playersLocations[1].Y));
-            chipMovingLocation.Add(new Vector2((int)(playersLocations[2].X - width * 100), (int)playersLocations[2].Y));
-            chipMovingLocation.Add(new Vector2((int)(playersLocations[3].X), (int)(playersLocations[3].Y - 90 * height)));
-            chipMovingLocation.Add(new Vector2((int)(playersLocations[4].X), (int)(playersLocations[4].Y - 90 * height)));
-            chipMovingLocation.Add(new Vector2((int)(playersLocations[5].X), (int)(playersLocations[5].Y - 90 * height)));
-            chipMovingLocation.Add(new Vector2((int)(playersLocations[6].X + width * 100), (int)playersLocations[6].Y));
-            chipMovingLocation.Add(new Vector2((int)(playersLocations[7].X + width * 100), (int)playersLocations[7].Y));
-            chipMovingLocation.Add(new Vector2((int)(playersLocations[8].X + width * 100), (int)playersLocations[8].Y));
-            chipMovingLocation.Add(new Vector2(585 * (int)width, 190 * (int)height));
+            try
+            {
+                chipMovingLocation.Clear();
+                chipMovingLocation.Add(new Vector2(playersLocations[0].X - width * 100, (int)playersLocations[0].Y));
+                chipMovingLocation.Add(new Vector2(playersLocations[1].X - width * 100, (int)playersLocations[1].Y));
+                chipMovingLocation.Add(new Vector2((int)(playersLocations[2].X - width * 100), (int)playersLocations[2].Y));
+                chipMovingLocation.Add(new Vector2((int)(playersLocations[3].X), (int)(playersLocations[3].Y - 90 * height)));
+                chipMovingLocation.Add(new Vector2((int)(playersLocations[4].X), (int)(playersLocations[4].Y - 90 * height)));
+                chipMovingLocation.Add(new Vector2((int)(playersLocations[5].X), (int)(playersLocations[5].Y - 90 * height)));
+                chipMovingLocation.Add(new Vector2((int)(playersLocations[6].X + width * 100), (int)playersLocations[6].Y));
+                chipMovingLocation.Add(new Vector2((int)(playersLocations[7].X + width * 100), (int)playersLocations[7].Y));
+                chipMovingLocation.Add(new Vector2((int)(playersLocations[8].X + width * 100), (int)playersLocations[8].Y));
+                chipMovingLocation.Add(new Vector2(585 * (int)width, 190 * (int)height));
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PokerTable.restartChipLocations " + e.Message);
+                }
+                throw e;
+            }
         }
         private bool chipsStopMoving()
         {
-            for (int i = 0; i < 9; i++)
+            try
             {
-                if (!(chipMovingLocation[i].X <= (chipLocations[9].X + 5) && chipMovingLocation[i].X >= (chipLocations[9].X - 5)))
+                for (int i = 0; i < 9; i++)
                 {
-                    if (round.ActivePlayersIndex[i] != null)
+                    if (!(chipMovingLocation[i].X <= (chipLocations[9].X + 5) && chipMovingLocation[i].X >= (chipLocations[9].X - 5)))
                     {
-                        return false;
+                        if (round.ActivePlayersIndex[i] != null)
+                        {
+                            return false;
+                        }
                     }
-                }
 
+                }
+                return true;
             }
-            return true;
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PokerTable.chipsStopMoving " + e.Message);
+                }
+                throw e;
+            }
         }
 
         private void collectMoneyFromPlayer()
@@ -929,61 +1006,91 @@ namespace CasinoSharedLibary
 
         private void updateDrawHandsRating(GameTime i_gameTime)
         {
-            if (isHandsRatingVisible)
+            try
             {
-                closeHandsRatingButton.Update(i_gameTime, 0, 0);
+                if (isHandsRatingVisible)
+                {
+                    closeHandsRatingButton.Update(i_gameTime, 0, 0);
+                }
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PokerTable.updateDrawHandsRating " + e.Message);
+                }
             }
         }
 
         private void updateEnterMoneyPanel(GameTime i_gameTime, Keys i_input)
         {
-            if (isEnterMoneyPanelVisible)
+            try
             {
-                enterMoneyRaiseUp.IsEnabled = true;
-                enterMoneyRaiseUp.IsVisible = true;
-                enterMoneyRaiseDown.IsEnabled = true;
-                enterMoneyRaiseDown.IsVisible = true;
-                enterMoneyConfirm.IsEnabled = true;
-                enterMoneyConfirm.IsVisible = true;
-                enterMoneyExit.IsEnabled = true;
-                enterMoneyExit.IsVisible = true;
-                enterMoneyRaiseUp.Position = new Vector2(enterMoneyRectangle.X + 290, enterMoneyRectangle.Y + 150);
-                enterMoneyRaiseUp.Size = new Size(80, 50);
-                enterMoneyRaiseUp.Update(i_gameTime, 0, 0);
-                enterMoneyRaiseDown.Position = new Vector2(enterMoneyRectangle.X + 30, enterMoneyRectangle.Y + 150);
-                enterMoneyRaiseDown.Size = new Size(80, 50);
-                enterMoneyRaiseDown.Update(i_gameTime, 0, 0);
-                enterMoneyConfirm.Position = new Vector2(enterMoneyRectangle.X + 30, enterMoneyRectangle.Y + 330);
-                enterMoneyConfirm.Size = new Size(150, 50);
-                enterMoneyConfirm.Update(i_gameTime, 0, 0);
-                enterMoneyExit.Position = new Vector2(enterMoneyRectangle.X + 250, enterMoneyRectangle.Y + 330);
-                enterMoneyExit.Size = new Size(120, 50);
-                enterMoneyExit.Update(i_gameTime, 0, 0);
-                enterMoneyTextbox.Update(i_input, new Vector2(enterMoneyRaiseDown.Position.X + 93, enterMoneyRaiseDown.Position.Y));
+                if (isEnterMoneyPanelVisible)
+                {
+                    enterMoneyRaiseUp.IsEnabled = true;
+                    enterMoneyRaiseUp.IsVisible = true;
+                    enterMoneyRaiseDown.IsEnabled = true;
+                    enterMoneyRaiseDown.IsVisible = true;
+                    enterMoneyConfirm.IsEnabled = true;
+                    enterMoneyConfirm.IsVisible = true;
+                    enterMoneyExit.IsEnabled = true;
+                    enterMoneyExit.IsVisible = true;
+                    enterMoneyRaiseUp.Position = new Vector2(enterMoneyRectangle.X + 290, enterMoneyRectangle.Y + 150);
+                    enterMoneyRaiseUp.Size = new Size(80, 50);
+                    enterMoneyRaiseUp.Update(i_gameTime, 0, 0);
+                    enterMoneyRaiseDown.Position = new Vector2(enterMoneyRectangle.X + 30, enterMoneyRectangle.Y + 150);
+                    enterMoneyRaiseDown.Size = new Size(80, 50);
+                    enterMoneyRaiseDown.Update(i_gameTime, 0, 0);
+                    enterMoneyConfirm.Position = new Vector2(enterMoneyRectangle.X + 30, enterMoneyRectangle.Y + 330);
+                    enterMoneyConfirm.Size = new Size(150, 50);
+                    enterMoneyConfirm.Update(i_gameTime, 0, 0);
+                    enterMoneyExit.Position = new Vector2(enterMoneyRectangle.X + 250, enterMoneyRectangle.Y + 330);
+                    enterMoneyExit.Size = new Size(120, 50);
+                    enterMoneyExit.Update(i_gameTime, 0, 0);
+                    enterMoneyTextbox.Update(i_input, new Vector2(enterMoneyRaiseDown.Position.X + 93, enterMoneyRaiseDown.Position.Y));
+                }
+                else
+                {
+                    enterMoneyRaiseUp.IsEnabled = false;
+                    enterMoneyRaiseUp.IsVisible = false;
+                    enterMoneyRaiseDown.IsEnabled = false;
+                    enterMoneyRaiseDown.IsVisible = false;
+                    enterMoneyConfirm.IsEnabled = false;
+                    enterMoneyConfirm.IsVisible = false;
+                    enterMoneyExit.IsEnabled = false;
+                    enterMoneyExit.IsVisible = false;
+                }
             }
-            else
+            catch (Exception e)
             {
-                enterMoneyRaiseUp.IsEnabled = false;
-                enterMoneyRaiseUp.IsVisible = false;
-                enterMoneyRaiseDown.IsEnabled = false;
-                enterMoneyRaiseDown.IsVisible = false;
-                enterMoneyConfirm.IsEnabled = false;
-                enterMoneyConfirm.IsVisible = false;
-                enterMoneyExit.IsEnabled = false;
-                enterMoneyExit.IsVisible = false;
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PokerTable.updateEnterMoneyPanel " + e.Message);
+                }
             }
         }
 
         private void updateChat(GameTime i_gametime)
         {
-            pokerTableChat.ChatButton.Position = new Vector2(1280 - storage.GreenUI[0].Width, 720 - storage.GreenUI[0].Height);
-            pokerTableChat.ChatButton.Update(i_gametime, 0, 0);
-            pokerTableChat.MoveChatUpButton.Position = new Vector2(pokerTableChat.ChatMessagesWidth + 10, 410);
-            pokerTableChat.MoveChatUpButton.Update(i_gametime, 0, 0);
-            pokerTableChat.MoveChatDownButton.Position = new Vector2(pokerTableChat.ChatMessagesWidth + 10, 605);
-            pokerTableChat.MoveChatDownButton.Update(i_gametime, 0, 0);
-            pokerTableChat.SendMessageButton.Position = new Vector2(0, 680);
-            pokerTableChat.SendMessageButton.Update(i_gametime, 0, 0);
+            try
+            {
+                pokerTableChat.ChatButton.Position = new Vector2(1280 - storage.GreenUI[0].Width, 720 - storage.GreenUI[0].Height);
+                pokerTableChat.ChatButton.Update(i_gametime, 0, 0);
+                pokerTableChat.MoveChatUpButton.Position = new Vector2(pokerTableChat.ChatMessagesWidth + 10, 410);
+                pokerTableChat.MoveChatUpButton.Update(i_gametime, 0, 0);
+                pokerTableChat.MoveChatDownButton.Position = new Vector2(pokerTableChat.ChatMessagesWidth + 10, 605);
+                pokerTableChat.MoveChatDownButton.Update(i_gametime, 0, 0);
+                pokerTableChat.SendMessageButton.Position = new Vector2(0, 680);
+                pokerTableChat.SendMessageButton.Update(i_gametime, 0, 0);
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PokerTable.updateChat " + e.Message);
+                }
+            }
         }
 
         private void CheckIfNeedReBuy()
@@ -1001,661 +1108,808 @@ namespace CasinoSharedLibary
 
         private void hideBettingButtons()
         {
-            callButton.IsVisible = false;
-            callButton.IsEnabled = false;
-            raiseButton.IsVisible = false;
-            raiseButton.IsEnabled = false;
-            foldButton.IsVisible = false;
-            foldButton.IsEnabled = false;
-            raiseAmountTextbox.IsVisible = false;
-            raiseAmountTextbox.IsEnabled = false;
+            try
+            {
+                callButton.IsVisible = false;
+                callButton.IsEnabled = false;
+                raiseButton.IsVisible = false;
+                raiseButton.IsEnabled = false;
+                foldButton.IsVisible = false;
+                foldButton.IsEnabled = false;
+                raiseAmountTextbox.IsVisible = false;
+                raiseAmountTextbox.IsEnabled = false;
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PokerTable.hideBettingButtons " + e.Message);
+                }
+            }
         }
 
         private void activateBettingButtons()
         {
-            callButton.IsVisible = true;
-            callButton.IsEnabled = true;
-            raiseButton.IsVisible = true;
-            raiseButton.IsEnabled = true;
-            foldButton.IsVisible = true;
-            foldButton.IsEnabled = true;
-            raiseAmountTextbox.IsVisible = true;
-            raiseAmountTextbox.IsEnabled = true;
+            try
+            {
+                callButton.IsVisible = true;
+                callButton.IsEnabled = true;
+                raiseButton.IsVisible = true;
+                raiseButton.IsEnabled = true;
+                foldButton.IsVisible = true;
+                foldButton.IsEnabled = true;
+                raiseAmountTextbox.IsVisible = true;
+                raiseAmountTextbox.IsEnabled = true;
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PokerTable.activeBettingButtons " + e.Message);
+                }
+            }
         }
 
         private void CheckOrCall()
         {
-            if (myPlayer != null)
+            try
             {
-                if (myPlayer.CurrentRoundBet < currentBettingRound.BiggestMoneyInPot)
+                if (myPlayer != null)
                 {
-                    callButton.Content = "Call";
-                    callButton.Name = "1";
+                    if (myPlayer.CurrentRoundBet < currentBettingRound.BiggestMoneyInPot)
+                    {
+                        callButton.Content = "Call";
+                        callButton.Name = "1";
+                    }
+                    else
+                    {
+                        callButton.Content = "Check";
+                        callButton.Name = "0";
+                    }
                 }
-                else
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
                 {
-                    callButton.Content = "Check";
-                    callButton.Name = "0";
+                    file.WriteLine("PokerTable.CheckOrCall " + e.Message);
                 }
             }
         }
 
         public void Draw(GameTime i_gametime)
         {
-            painter.Draw(storage.Furnitures[6], new Rectangle(new Point(0, 0), new Point(1280, 620)), Color.White);
-            foreach (DrawingButton button in sitButtons)
+            try
             {
-                button.Draw(i_gametime, painter);
+                painter.Draw(storage.Furnitures[6], new Rectangle(new Point(0, 0), new Point(1280, 620)), Color.White);
+                foreach (DrawingButton button in sitButtons)
+                {
+                    button.Draw(i_gametime, painter);
+                }
+
+                pokerTableChat.ChatButton.Draw(i_gametime, painter);
+                pokerTableChat.Draw(i_gametime);
+
+                volumeOnOffButton.Draw(i_gametime, painter);
+
+                PaintPlayersAndSits();
+                DrawCards();
+
+                drawTotalBets(i_gametime);
+
+                drawHandsRating(i_gametime);
+
+                drawStatsPanel(i_gametime);
+
+                _guiSystem.Draw(i_gametime);
+                drawEnterMoneyPanel(i_gametime);
             }
-
-            pokerTableChat.ChatButton.Draw(i_gametime, painter);
-            pokerTableChat.Draw(i_gametime);
-
-            volumeOnOffButton.Draw(i_gametime, painter);
-
-            PaintPlayersAndSits();
-            DrawCards();
-
-            drawTotalBets(i_gametime);
-
-            drawHandsRating(i_gametime);
-
-            drawStatsPanel(i_gametime);
-
-            _guiSystem.Draw(i_gametime);
-            drawEnterMoneyPanel(i_gametime);
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PokerTable.Draw " + e.Message);
+                }
+                throw e;
+            }
 
         }
 
         private void drawTotalBets(GameTime i_gametime)
         {
-            if (round != null)
+            try
             {
-                round.CalculateTotalBets();
-                if (currentRoundPart == lastRoundPart && currentRoundPart == RoundPart.Result && !roundEnd)
+                if (round != null)
                 {
-                    for (int i = 0; i < round.WinnersIndex.Count; i++)
+                    round.CalculateTotalBets();
+                    if (currentRoundPart == lastRoundPart && currentRoundPart == RoundPart.Result && !roundEnd)
                     {
-                        painter.Draw(storage.PokerChips[4], new Rectangle((int)chipMovingLocation[9].X, (int)chipMovingLocation[9].Y, 25 * (int)width, 25 * (int)height), Color.White);
-                        painter.DrawString(storage.Fonts[0], round.TotalBets.ToString(), new Vector2(chipMovingLocation[9].X + 30 * width, chipMovingLocation[9].Y - 10 * height), Color.White);
+                        for (int i = 0; i < round.WinnersIndex.Count; i++)
+                        {
+                            painter.Draw(storage.PokerChips[4], new Rectangle((int)chipMovingLocation[9].X, (int)chipMovingLocation[9].Y, 25 * (int)width, 25 * (int)height), Color.White);
+                            painter.DrawString(storage.Fonts[0], round.TotalBets.ToString(), new Vector2(chipMovingLocation[9].X + 30 * width, chipMovingLocation[9].Y - 10 * height), Color.White);
 
+                        }
+                    }
+                    else if (!roundEnd)
+                    {
+                        painter.Draw(storage.PokerChips[4], new Rectangle((int)(585 * width), (int)(190 * height), 25 * (int)width, 25 * (int)height), Color.White);
+                        painter.DrawString(storage.Fonts[0], round.TotalBets.ToString(), new Vector2(615 * (int)width, 180 * (int)height), Color.White);
                     }
                 }
-                else if (!roundEnd)
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
                 {
-                    painter.Draw(storage.PokerChips[4], new Rectangle((int)(585 * width), (int)(190 * height), 25 * (int)width, 25 * (int)height), Color.White);
-                    painter.DrawString(storage.Fonts[0], round.TotalBets.ToString(), new Vector2(615 * (int)width, 180 * (int)height), Color.White);
-
+                    file.WriteLine("PokerTable.drawTotalBets " + e.Message);
                 }
-
             }
         }
 
         private void drawStatsPanel(GameTime i_gameTime)
         {
-            if (isStatsPanelVisible)
+            try
             {
-                PokerPlayer currentStatPlayer = table.Players[currentStatsPlayer];
-                if (currentStatPlayer.Stat.Card1 == null)
+                if (isStatsPanelVisible)
                 {
-                    painter.Draw(storage.GreyUI[5], new Rectangle(450, 100, 400, 480), Color.White);
-                    painter.DrawString(storage.Fonts[0], "Player didn't win yet.", new Vector2(480, 390), Color.Black);
-                    painter.Draw(storage.Cards[52], new Vector2(480, 430), Color.White);
-                    painter.Draw(storage.Cards[52], new Vector2(480 + storage.Cards[0].Width, 430), Color.White);
-                    painter.Draw(storage.Cards[52], new Vector2(480 + storage.Cards[0].Width * 2, 430), Color.White);
-                    painter.Draw(storage.Cards[52], new Vector2(480 + storage.Cards[0].Width * 3, 430), Color.White);
-                    painter.Draw(storage.Cards[52], new Vector2(480 + storage.Cards[0].Width * 4, 430), Color.White);
-                }
-                else
-                {
-                    painter.Draw(storage.GreyUI[5], new Rectangle(450, 100, 400, 400), Color.White);
-                    painter.Draw(storage.Cards[(int)currentStatPlayer.Stat.Card1], new Vector2(480, 390), Color.White);
-                    painter.Draw(storage.Cards[(int)currentStatPlayer.Stat.Card2], new Vector2(480 + storage.Cards[0].Width, 390), Color.White);
-                    painter.Draw(storage.Cards[(int)currentStatPlayer.Stat.Card3], new Vector2(480 + storage.Cards[0].Width * 2, 390), Color.White);
-                    painter.Draw(storage.Cards[(int)currentStatPlayer.Stat.Card4], new Vector2(480 + storage.Cards[0].Width * 3, 390), Color.White);
-                    painter.Draw(storage.Cards[(int)currentStatPlayer.Stat.Card5], new Vector2(480 + storage.Cards[0].Width * 4, 390), Color.White);
-                }
+                    PokerPlayer currentStatPlayer = table.Players[currentStatsPlayer];
+                    if (currentStatPlayer.Stat.Card1 == null)
+                    {
+                        painter.Draw(storage.GreyUI[5], new Rectangle(450, 100, 400, 480), Color.White);
+                        painter.DrawString(storage.Fonts[0], "Player didn't win yet.", new Vector2(480, 390), Color.Black);
+                        painter.Draw(storage.Cards[52], new Vector2(480, 430), Color.White);
+                        painter.Draw(storage.Cards[52], new Vector2(480 + storage.Cards[0].Width, 430), Color.White);
+                        painter.Draw(storage.Cards[52], new Vector2(480 + storage.Cards[0].Width * 2, 430), Color.White);
+                        painter.Draw(storage.Cards[52], new Vector2(480 + storage.Cards[0].Width * 3, 430), Color.White);
+                        painter.Draw(storage.Cards[52], new Vector2(480 + storage.Cards[0].Width * 4, 430), Color.White);
+                    }
+                    else
+                    {
+                        painter.Draw(storage.GreyUI[5], new Rectangle(450, 100, 400, 400), Color.White);
+                        painter.Draw(storage.Cards[(int)currentStatPlayer.Stat.Card1], new Vector2(480, 390), Color.White);
+                        painter.Draw(storage.Cards[(int)currentStatPlayer.Stat.Card2], new Vector2(480 + storage.Cards[0].Width, 390), Color.White);
+                        painter.Draw(storage.Cards[(int)currentStatPlayer.Stat.Card3], new Vector2(480 + storage.Cards[0].Width * 2, 390), Color.White);
+                        painter.Draw(storage.Cards[(int)currentStatPlayer.Stat.Card4], new Vector2(480 + storage.Cards[0].Width * 3, 390), Color.White);
+                        painter.Draw(storage.Cards[(int)currentStatPlayer.Stat.Card5], new Vector2(480 + storage.Cards[0].Width * 4, 390), Color.White);
+                    }
 
-                closeStatsPanelButton.Draw(i_gameTime, painter);
-                painter.DrawString(storage.Fonts[0], currentStatPlayer.Name + " Stats:", new Vector2(550, 110), Color.Black);
-                painter.DrawString(storage.Fonts[0], "Money: " + currentStatPlayer.Stat.Money.ToString(), new Vector2(480, 150), Color.Black);
-                painter.DrawString(storage.Fonts[0], "Hands Play: " + currentStatPlayer.Stat.NumberOfHandsPlay.ToString(), new Vector2(480, 190), Color.Black);
-                painter.DrawString(storage.Fonts[0], "Hands Won: " + currentStatPlayer.Stat.NumberOfHandsWon.ToString(), new Vector2(480, 230), Color.Black);
-                painter.DrawString(storage.Fonts[0], "Victory Percentage: " + (int)(currentStatPlayer.Stat.VictoryPercentage * 100) + "%", new Vector2(480, 270), Color.Black);
-                painter.DrawString(storage.Fonts[0], "Biggest Pot: " + currentStatPlayer.Stat.BiggestPot.ToString(), new Vector2(480, 310), Color.Black);
-                painter.DrawString(storage.Fonts[0], "Best Hand Played: ", new Vector2(480, 350), Color.Black);
+                    closeStatsPanelButton.Draw(i_gameTime, painter);
+                    painter.DrawString(storage.Fonts[0], currentStatPlayer.Name + " Stats:", new Vector2(550, 110), Color.Black);
+                    painter.DrawString(storage.Fonts[0], "Money: " + currentStatPlayer.Stat.Money.ToString(), new Vector2(480, 150), Color.Black);
+                    painter.DrawString(storage.Fonts[0], "Hands Play: " + currentStatPlayer.Stat.NumberOfHandsPlay.ToString(), new Vector2(480, 190), Color.Black);
+                    painter.DrawString(storage.Fonts[0], "Hands Won: " + currentStatPlayer.Stat.NumberOfHandsWon.ToString(), new Vector2(480, 230), Color.Black);
+                    painter.DrawString(storage.Fonts[0], "Victory Percentage: " + (int)(currentStatPlayer.Stat.VictoryPercentage * 100) + "%", new Vector2(480, 270), Color.Black);
+                    painter.DrawString(storage.Fonts[0], "Biggest Pot: " + currentStatPlayer.Stat.BiggestPot.ToString(), new Vector2(480, 310), Color.Black);
+                    painter.DrawString(storage.Fonts[0], "Best Hand Played: ", new Vector2(480, 350), Color.Black);
+                }
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PokerTable.drawStatsPanel " + e.Message);
+                }
             }
         }
 
         private void drawHandsRating(GameTime i_gameTime)
         {
-            if (isHandsRatingVisible)
+            try
             {
-                painter.Draw(storage.HandsRating, new Rectangle(135, 65, 1000, 490), Color.White);
-                closeHandsRatingButton.Draw(i_gameTime, painter);
+                if (isHandsRatingVisible)
+                {
+                    painter.Draw(storage.HandsRating, new Rectangle(135, 65, 1000, 490), Color.White);
+                    closeHandsRatingButton.Draw(i_gameTime, painter);
+                }
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PokerTable.frawHandsRating " + e.Message);
+                }
             }
         }
 
         private void drawEnterMoneyPanel(GameTime i_gameTime)
         {
-            if (isEnterMoneyPanelVisible)
+            try
             {
-                painter.Draw(storage.GreenUI[5], enterMoneyRectangle, Color.White);
-                painter.DrawString(storage.Fonts[0], "Buy Into Game", new Vector2(enterMoneyRectangle.X + 100, enterMoneyRectangle.Y + 20), Color.Black);
-                painter.DrawString(storage.Fonts[0], "Min: 200K", new Vector2(enterMoneyRectangle.X + 30, enterMoneyRectangle.Y + 60), Color.Black);
-                painter.DrawString(storage.Fonts[0], "Max: 1M", new Vector2(enterMoneyRectangle.X + 250, enterMoneyRectangle.Y + 60), Color.Black);
-                enterMoneyRaiseDown.Draw(i_gameTime, painter);
-                enterMoneyTextbox.Draw(painter);
-                enterMoneyRaiseUp.Draw(i_gameTime, painter);
-                painter.DrawString(storage.Fonts[0], "Your Account Balance:", new Vector2(enterMoneyRectangle.X + 40, enterMoneyRectangle.Y + 200), Color.Black);
-                painter.DrawString(storage.Fonts[0], myPlayer.Stat.Money.ToString(), new Vector2(enterMoneyRectangle.X + 140, enterMoneyRectangle.Y + 240), Color.Black);
-                enterMoneyConfirm.Draw(i_gameTime, painter);
-                enterMoneyExit.Draw(i_gameTime, painter);
+                if (isEnterMoneyPanelVisible)
+                {
+                    painter.Draw(storage.GreenUI[5], enterMoneyRectangle, Color.White);
+                    painter.DrawString(storage.Fonts[0], "Buy Into Game", new Vector2(enterMoneyRectangle.X + 100, enterMoneyRectangle.Y + 20), Color.Black);
+                    painter.DrawString(storage.Fonts[0], "Min: 200K", new Vector2(enterMoneyRectangle.X + 30, enterMoneyRectangle.Y + 60), Color.Black);
+                    painter.DrawString(storage.Fonts[0], "Max: 1M", new Vector2(enterMoneyRectangle.X + 250, enterMoneyRectangle.Y + 60), Color.Black);
+                    enterMoneyRaiseDown.Draw(i_gameTime, painter);
+                    enterMoneyTextbox.Draw(painter);
+                    enterMoneyRaiseUp.Draw(i_gameTime, painter);
+                    painter.DrawString(storage.Fonts[0], "Your Account Balance:", new Vector2(enterMoneyRectangle.X + 40, enterMoneyRectangle.Y + 200), Color.Black);
+                    painter.DrawString(storage.Fonts[0], myPlayer.Stat.Money.ToString(), new Vector2(enterMoneyRectangle.X + 140, enterMoneyRectangle.Y + 240), Color.Black);
+                    enterMoneyConfirm.Draw(i_gameTime, painter);
+                    enterMoneyExit.Draw(i_gameTime, painter);
+                }
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PokerTable.drawEnterMoneyPanel " + e.Message);
+                }
             }
         }
 
         private void DrawCards()
         {
-            if (table != null)
+            try
             {
-
-                if (round != null)
+                if (table != null)
                 {
-
-                    darwDealerButton();
-
-                    if (!isEnterMoneyPanelVisible)
+                    if (round != null)
                     {
-                        drawSharedCards(currentRoundPart);
+                        darwDealerButton();
+                        if (!isEnterMoneyPanelVisible)
+                        {
+                            drawSharedCards(currentRoundPart);
+                        }
                     }
+                }
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PokerTable.drawCards " + e.Message);
                 }
             }
         }
 
         private void drawSharedCards(RoundPart roundPart)
         {
-            Card card1 = round.SharedCards[0];
-            Card card2 = round.SharedCards[1];
-            Card card3 = round.SharedCards[2];
-            Card card4 = round.SharedCards[3];
-            Card card5 = round.SharedCards[4];
-
-            switch (roundPart)
+            try
             {
-                case RoundPart.PreFlop:
-                    {
-                        numberOfSharedCardDrawed = 0;
-                        if (numberOfCardServed <= cardDrawingLocations.Count)
+                Card card1 = round.SharedCards[0];
+                Card card2 = round.SharedCards[1];
+                Card card3 = round.SharedCards[2];
+                Card card4 = round.SharedCards[3];
+                Card card5 = round.SharedCards[4];
+
+                switch (roundPart)
+                {
+                    case RoundPart.PreFlop:
                         {
-                            if (numberOfSharedCardDrawed == 0)
+                            numberOfSharedCardDrawed = 0;
+                            if (numberOfCardServed <= cardDrawingLocations.Count)
                             {
-                                MediaPlayer.Play(storage.PokerCardSound);
-                            }
-                            for (int j = 0; j < numberOfCardServed; j++)
-                            {
-                                int i = cardDrawingLocations[j] % 10;
-                                bool secoundCard = cardDrawingLocations[j] >= 10;
-                                if (table.Players[i].Email.Equals(userEmail) || table.CurrentRound.Part == RoundPart.Result)
+                                if (numberOfSharedCardDrawed == 0)
                                 {
-                                    painter.Draw(storage.Cards[convertCardsToint(table.CurrentRound.UsersCards[i][0])], new Rectangle((int)playersLocations[i].X, (int)playersLocations[i].Y, 64 * (int)width, 89 * (int)height), Color.White);
-                                    if (secoundCard)
+                                    MediaPlayer.Play(storage.PokerCardSound);
+                                }
+                                for (int j = 0; j < numberOfCardServed; j++)
+                                {
+                                    int i = cardDrawingLocations[j] % 10;
+                                    bool secoundCard = cardDrawingLocations[j] >= 10;
+                                    if (table.Players[i].Email.Equals(userEmail) || table.CurrentRound.Part == RoundPart.Result)
                                     {
-                                        painter.Draw(storage.Cards[convertCardsToint(table.CurrentRound.UsersCards[i][1])], new Rectangle((int)playersLocations[i].X + (int)(storage.Cards[1].Width / 2), (int)playersLocations[i].Y, 64 * (int)width, 89 * (int)height), Color.White);
+                                        painter.Draw(storage.Cards[convertCardsToint(table.CurrentRound.UsersCards[i][0])], new Rectangle((int)playersLocations[i].X, (int)playersLocations[i].Y, 64 * (int)width, 89 * (int)height), Color.White);
+                                        if (secoundCard)
+                                        {
+                                            painter.Draw(storage.Cards[convertCardsToint(table.CurrentRound.UsersCards[i][1])], new Rectangle((int)playersLocations[i].X + (int)(storage.Cards[1].Width / 2), (int)playersLocations[i].Y, 64 * (int)width, 89 * (int)height), Color.White);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        painter.Draw(storage.Cards[52], new Vector2(playersLocations[i].X, playersLocations[i].Y), Color.White);
+                                        if (secoundCard)
+                                        {
+                                            painter.Draw(storage.Cards[52], new Vector2(playersLocations[i].X + (storage.Cards[1].Width / 2), playersLocations[i].Y), Color.White);
+                                        }
                                     }
                                 }
-                                else
+                                if (DateTime.Now.Subtract(timeBetweenCards).TotalMilliseconds >= 200)
                                 {
-                                    painter.Draw(storage.Cards[52], new Vector2(playersLocations[i].X, playersLocations[i].Y), Color.White);
-                                    if (secoundCard)
-                                    {
-                                        painter.Draw(storage.Cards[52], new Vector2(playersLocations[i].X + (storage.Cards[1].Width / 2), playersLocations[i].Y), Color.White);
-                                    }
+                                    MediaPlayer.Play(storage.PokerCardSound);
+                                    timeBetweenCards = DateTime.Now;
+                                    numberOfCardServed++;
                                 }
                             }
-                            if (DateTime.Now.Subtract(timeBetweenCards).TotalMilliseconds >= 200)
+                            else
                             {
-                                MediaPlayer.Play(storage.PokerCardSound);
-                                timeBetweenCards = DateTime.Now;
-                                numberOfCardServed++;
+                                drawPlayerCard();
                             }
+                            break;
                         }
-                        else
+                    case RoundPart.Flop:
                         {
                             drawPlayerCard();
-                        }
-                        break;
-                    }
-                case RoundPart.Flop:
-                    {
-                        drawPlayerCard();
-                        if (numberOfSharedCardDrawed == 0)
-                        {
-                            painter.Draw(storage.Cards[convertCardsToint(card1)], new Vector2(width * 480, height * 250), Color.White);
-                            MediaPlayer.Play(storage.PokerCardSound);
-                            numberOfSharedCardDrawed++;
-                            timeBetweenCards = DateTime.Now;
-                        }
-                        else if (numberOfSharedCardDrawed == 1)
-                        {
-                            painter.Draw(storage.Cards[convertCardsToint(card1)], new Vector2(width * 480, height * 250), Color.White);
-                            if (DateTime.Now.Subtract(timeBetweenCards).TotalMilliseconds >= 200)
+                            if (numberOfSharedCardDrawed == 0)
                             {
-                                painter.Draw(storage.Cards[convertCardsToint(card2)], new Vector2(480 * width + (storage.Cards[1].Width + 5), height * 250), Color.White);
+                                painter.Draw(storage.Cards[convertCardsToint(card1)], new Vector2(width * 480, height * 250), Color.White);
                                 MediaPlayer.Play(storage.PokerCardSound);
                                 numberOfSharedCardDrawed++;
                                 timeBetweenCards = DateTime.Now;
                             }
+                            else if (numberOfSharedCardDrawed == 1)
+                            {
+                                painter.Draw(storage.Cards[convertCardsToint(card1)], new Vector2(width * 480, height * 250), Color.White);
+                                if (DateTime.Now.Subtract(timeBetweenCards).TotalMilliseconds >= 200)
+                                {
+                                    painter.Draw(storage.Cards[convertCardsToint(card2)], new Vector2(480 * width + (storage.Cards[1].Width + 5), height * 250), Color.White);
+                                    MediaPlayer.Play(storage.PokerCardSound);
+                                    numberOfSharedCardDrawed++;
+                                    timeBetweenCards = DateTime.Now;
+                                }
 
-                        }
-                        else if (numberOfSharedCardDrawed == 2)
-                        {
-                            painter.Draw(storage.Cards[convertCardsToint(card1)], new Vector2(width * 480, height * 250), Color.White);
-                            painter.Draw(storage.Cards[convertCardsToint(card2)], new Vector2(480 * width + (storage.Cards[1].Width + 5), height * 250), Color.White);
-                            if (DateTime.Now.Subtract(timeBetweenCards).TotalMilliseconds >= 200)
-                            {
-                                painter.Draw(storage.Cards[convertCardsToint(card3)], new Vector2(480 * width + (storage.Cards[1].Width + 5) * 2, height * 250), Color.White);
-                                MediaPlayer.Play(storage.PokerCardSound);
-                                numberOfSharedCardDrawed++;
-                                timeBetweenCards = DateTime.Now;
                             }
+                            else if (numberOfSharedCardDrawed == 2)
+                            {
+                                painter.Draw(storage.Cards[convertCardsToint(card1)], new Vector2(width * 480, height * 250), Color.White);
+                                painter.Draw(storage.Cards[convertCardsToint(card2)], new Vector2(480 * width + (storage.Cards[1].Width + 5), height * 250), Color.White);
+                                if (DateTime.Now.Subtract(timeBetweenCards).TotalMilliseconds >= 200)
+                                {
+                                    painter.Draw(storage.Cards[convertCardsToint(card3)], new Vector2(480 * width + (storage.Cards[1].Width + 5) * 2, height * 250), Color.White);
+                                    MediaPlayer.Play(storage.PokerCardSound);
+                                    numberOfSharedCardDrawed++;
+                                    timeBetweenCards = DateTime.Now;
+                                }
+                            }
+                            else
+                            {
+                                painter.Draw(storage.Cards[convertCardsToint(card1)], new Vector2(width * 480, height * 250), Color.White);
+                                painter.Draw(storage.Cards[convertCardsToint(card2)], new Vector2(480 * width + (storage.Cards[1].Width + 5), height * 250), Color.White);
+                                painter.Draw(storage.Cards[convertCardsToint(card3)], new Vector2(480 * width + (storage.Cards[1].Width + 5) * 2, height * 250), Color.White);
+                            }
+                            break;
                         }
-                        else
+                    case RoundPart.Turn:
                         {
+                            drawPlayerCard();
                             painter.Draw(storage.Cards[convertCardsToint(card1)], new Vector2(width * 480, height * 250), Color.White);
                             painter.Draw(storage.Cards[convertCardsToint(card2)], new Vector2(480 * width + (storage.Cards[1].Width + 5), height * 250), Color.White);
                             painter.Draw(storage.Cards[convertCardsToint(card3)], new Vector2(480 * width + (storage.Cards[1].Width + 5) * 2, height * 250), Color.White);
-                        }
-                        break;
-                    }
-                case RoundPart.Turn:
-                    {
-                        drawPlayerCard();
-                        painter.Draw(storage.Cards[convertCardsToint(card1)], new Vector2(width * 480, height * 250), Color.White);
-                        painter.Draw(storage.Cards[convertCardsToint(card2)], new Vector2(480 * width + (storage.Cards[1].Width + 5), height * 250), Color.White);
-                        painter.Draw(storage.Cards[convertCardsToint(card3)], new Vector2(480 * width + (storage.Cards[1].Width + 5) * 2, height * 250), Color.White);
 
-                        if (numberOfSharedCardDrawed == 3)
-                        {
-                            if (DateTime.Now.Subtract(timeBetweenCards).TotalMilliseconds >= 200)
+                            if (numberOfSharedCardDrawed == 3)
+                            {
+                                if (DateTime.Now.Subtract(timeBetweenCards).TotalMilliseconds >= 200)
+                                {
+                                    painter.Draw(storage.Cards[convertCardsToint(card4)], new Vector2(480 * width + (storage.Cards[1].Width + 5) * 3, height * 250), Color.White);
+                                    numberOfSharedCardDrawed++;
+                                    timeBetweenCards = DateTime.Now;
+                                    MediaPlayer.Play(storage.PokerCardSound);
+                                }
+                            }
+                            else
                             {
                                 painter.Draw(storage.Cards[convertCardsToint(card4)], new Vector2(480 * width + (storage.Cards[1].Width + 5) * 3, height * 250), Color.White);
-                                numberOfSharedCardDrawed++;
-                                timeBetweenCards = DateTime.Now;
-                                MediaPlayer.Play(storage.PokerCardSound);
                             }
+
+
+                            break;
                         }
-                        else
+                    case RoundPart.River:
                         {
+                            drawPlayerCard();
+                            painter.Draw(storage.Cards[convertCardsToint(card1)], new Vector2(width * 480, height * 250), Color.White);
+                            painter.Draw(storage.Cards[convertCardsToint(card2)], new Vector2(480 * width + (storage.Cards[1].Width + 5), height * 250), Color.White);
+                            painter.Draw(storage.Cards[convertCardsToint(card3)], new Vector2(480 * width + (storage.Cards[1].Width + 5) * 2, height * 250), Color.White);
                             painter.Draw(storage.Cards[convertCardsToint(card4)], new Vector2(480 * width + (storage.Cards[1].Width + 5) * 3, height * 250), Color.White);
-                        }
 
-
-                        break;
-                    }
-                case RoundPart.River:
-                    {
-                        drawPlayerCard();
-                        painter.Draw(storage.Cards[convertCardsToint(card1)], new Vector2(width * 480, height * 250), Color.White);
-                        painter.Draw(storage.Cards[convertCardsToint(card2)], new Vector2(480 * width + (storage.Cards[1].Width + 5), height * 250), Color.White);
-                        painter.Draw(storage.Cards[convertCardsToint(card3)], new Vector2(480 * width + (storage.Cards[1].Width + 5) * 2, height * 250), Color.White);
-                        painter.Draw(storage.Cards[convertCardsToint(card4)], new Vector2(480 * width + (storage.Cards[1].Width + 5) * 3, height * 250), Color.White);
-
-                        if (numberOfSharedCardDrawed == 4)
-                        {
-                            if (DateTime.Now.Subtract(timeBetweenCards).TotalMilliseconds >= 200)
+                            if (numberOfSharedCardDrawed == 4)
                             {
-                                timeBetweenCards = DateTime.Now;
-                                MediaPlayer.Play(storage.PokerCardSound);
-                                numberOfSharedCardDrawed++;
+                                if (DateTime.Now.Subtract(timeBetweenCards).TotalMilliseconds >= 200)
+                                {
+                                    timeBetweenCards = DateTime.Now;
+                                    MediaPlayer.Play(storage.PokerCardSound);
+                                    numberOfSharedCardDrawed++;
+                                    painter.Draw(storage.Cards[convertCardsToint(card5)], new Vector2(480 * width + (storage.Cards[1].Width + 5) * 4, height * 250), Color.White);
+                                }
+                            }
+                            else
+                            {
                                 painter.Draw(storage.Cards[convertCardsToint(card5)], new Vector2(480 * width + (storage.Cards[1].Width + 5) * 4, height * 250), Color.White);
                             }
+                            break;
                         }
-                        else
+                    default:
                         {
-                            painter.Draw(storage.Cards[convertCardsToint(card5)], new Vector2(480 * width + (storage.Cards[1].Width + 5) * 4, height * 250), Color.White);
-                        }
-                        break;
-                    }
-                default:
-                    {
-                        if (lastRoundPart != RoundPart.PreFlop)
-                        {
-                            switch (numberOfSharedCardDrawed)
+                            if (lastRoundPart != RoundPart.PreFlop)
                             {
-                                case 0:
-                                    {
-                                        drawSharedCards(RoundPart.Flop);
-                                        break;
-                                    }
-                                case 1:
-                                    {
-                                        drawSharedCards(RoundPart.Flop);
-                                        break;
-                                    }
-                                case 2:
-                                    {
-                                        drawSharedCards(RoundPart.Flop);
-                                        break;
-                                    }
-                                case 3:
-                                    {
-                                        drawSharedCards(RoundPart.Turn);
-                                        break;
-                                    }
-                                default:
-                                    {
-                                        drawSharedCards(RoundPart.River);
-                                        break;
-                                    }
+                                switch (numberOfSharedCardDrawed)
+                                {
+                                    case 0:
+                                        {
+                                            drawSharedCards(RoundPart.Flop);
+                                            break;
+                                        }
+                                    case 1:
+                                        {
+                                            drawSharedCards(RoundPart.Flop);
+                                            break;
+                                        }
+                                    case 2:
+                                        {
+                                            drawSharedCards(RoundPart.Flop);
+                                            break;
+                                        }
+                                    case 3:
+                                        {
+                                            drawSharedCards(RoundPart.Turn);
+                                            break;
+                                        }
+                                    default:
+                                        {
+                                            drawSharedCards(RoundPart.River);
+                                            break;
+                                        }
+                                }
                             }
+                            break;
                         }
-                        break;
-                    }
+                }
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PokerTable.drawSharedCards " + e.Message);
+                }
             }
         }
 
         private void drawPlayerCard()
         {
-            for (int i = 0; i < 9; i++)
+            try
             {
-                if (table.Players[i] != null && table.Players[i].InHand)
+                for (int i = 0; i < 9; i++)
                 {
+                    if (table.Players[i] != null && table.Players[i].InHand)
+                    {
 
-                    if (table.Players[i].Email.Equals(userEmail) || table.CurrentRound.Part == RoundPart.Result)
-                    {
-                        painter.Draw(storage.Cards[convertCardsToint(table.CurrentRound.UsersCards[i][0])], new Rectangle((int)playersLocations[i].X, (int)playersLocations[i].Y, 64 * (int)width, 89 * (int)height), Color.White);
-                        painter.Draw(storage.Cards[convertCardsToint(table.CurrentRound.UsersCards[i][1])], new Rectangle((int)playersLocations[i].X + (int)(storage.Cards[1].Width / 2), (int)playersLocations[i].Y, 64 * (int)width, 89 * (int)height), Color.White);
+                        if (table.Players[i].Email.Equals(userEmail) || table.CurrentRound.Part == RoundPart.Result)
+                        {
+                            painter.Draw(storage.Cards[convertCardsToint(table.CurrentRound.UsersCards[i][0])], new Rectangle((int)playersLocations[i].X, (int)playersLocations[i].Y, 64 * (int)width, 89 * (int)height), Color.White);
+                            painter.Draw(storage.Cards[convertCardsToint(table.CurrentRound.UsersCards[i][1])], new Rectangle((int)playersLocations[i].X + (int)(storage.Cards[1].Width / 2), (int)playersLocations[i].Y, 64 * (int)width, 89 * (int)height), Color.White);
+                        }
+                        else
+                        {
+                            painter.Draw(storage.Cards[52], new Vector2(playersLocations[i].X, playersLocations[i].Y), Color.White);
+                            painter.Draw(storage.Cards[52], new Vector2(playersLocations[i].X + (storage.Cards[1].Width / 2), playersLocations[i].Y), Color.White);
+                        }
                     }
-                    else
-                    {
-                        painter.Draw(storage.Cards[52], new Vector2(playersLocations[i].X, playersLocations[i].Y), Color.White);
-                        painter.Draw(storage.Cards[52], new Vector2(playersLocations[i].X + (storage.Cards[1].Width / 2), playersLocations[i].Y), Color.White);
-                    }
+                }
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PokerTable.drawPlayerCard " + e.Message);
                 }
             }
         }
         private void darwDealerButton()
         {
-            int dealerButton = table.CurrentRound.Dealer;
-            switch (dealerButton)
+            try
             {
-                case 0:
-                    {
-                        painter.Draw(storage.PokerChips[0], new Rectangle((int)(playersLocations[0].X - width * 100), (int)playersLocations[0].Y + 60, 25 * (int)width, 25 * (int)height), Color.White);
-                        break;
-                    }
-                case 1:
-                    {
-                        painter.Draw(storage.PokerChips[0], new Rectangle((int)(playersLocations[1].X - width * 100), (int)playersLocations[1].Y + 60, 25 * (int)width, 25 * (int)height), Color.White);
-                        break;
-                    }
-                case 2:
-                    {
-                        painter.Draw(storage.PokerChips[0], new Rectangle((int)(playersLocations[2].X - width * 100), (int)playersLocations[2].Y + 60, 25 * (int)width, 25 * (int)height), Color.White);
-                        break;
-                    }
-                case 3:
-                    {
-                        painter.Draw(storage.PokerChips[0], new Rectangle((int)(playersLocations[3].X + 70), (int)(playersLocations[3].Y - 110 * height), 20 * (int)width, 20 * (int)height), Color.White);
-                        break;
-                    }
-                case 4:
-                    {
-                        painter.Draw(storage.PokerChips[0], new Rectangle((int)(playersLocations[4].X + 70), (int)(playersLocations[4].Y - 110 * height), 20 * (int)width, 20 * (int)height), Color.White);
-                        break;
-                    }
-                case 5:
-                    {
-                        painter.Draw(storage.PokerChips[0], new Rectangle((int)(playersLocations[5].X + 70), (int)(playersLocations[5].Y - 110 * height), 20 * (int)width, 20 * (int)height), Color.White);
-                        break;
-                    }
-                case 6:
-                    {
-                        painter.Draw(storage.PokerChips[0], new Rectangle((int)(playersLocations[6].X + width * 100), (int)playersLocations[6].Y + 60, 25 * (int)width, 25 * (int)height), Color.White);
-                        break;
-                    }
-                case 7:
-                    {
-                        painter.Draw(storage.PokerChips[0], new Rectangle((int)(playersLocations[7].X + width * 100), (int)playersLocations[7].Y + 60, 25 * (int)width, 25 * (int)height), Color.White);
-                        break;
-                    }
-                case 8:
-                    {
-                        painter.Draw(storage.PokerChips[0], new Rectangle((int)(playersLocations[8].X + width * 100), (int)playersLocations[8].Y + 60, 25 * (int)width, 25 * (int)height), Color.White);
-                        break;
-                    }
+                int dealerButton = table.CurrentRound.Dealer;
+                switch (dealerButton)
+                {
+                    case 0:
+                        {
+                            painter.Draw(storage.PokerChips[0], new Rectangle((int)(playersLocations[0].X - width * 100), (int)playersLocations[0].Y + 60, 25 * (int)width, 25 * (int)height), Color.White);
+                            break;
+                        }
+                    case 1:
+                        {
+                            painter.Draw(storage.PokerChips[0], new Rectangle((int)(playersLocations[1].X - width * 100), (int)playersLocations[1].Y + 60, 25 * (int)width, 25 * (int)height), Color.White);
+                            break;
+                        }
+                    case 2:
+                        {
+                            painter.Draw(storage.PokerChips[0], new Rectangle((int)(playersLocations[2].X - width * 100), (int)playersLocations[2].Y + 60, 25 * (int)width, 25 * (int)height), Color.White);
+                            break;
+                        }
+                    case 3:
+                        {
+                            painter.Draw(storage.PokerChips[0], new Rectangle((int)(playersLocations[3].X + 70), (int)(playersLocations[3].Y - 110 * height), 20 * (int)width, 20 * (int)height), Color.White);
+                            break;
+                        }
+                    case 4:
+                        {
+                            painter.Draw(storage.PokerChips[0], new Rectangle((int)(playersLocations[4].X + 70), (int)(playersLocations[4].Y - 110 * height), 20 * (int)width, 20 * (int)height), Color.White);
+                            break;
+                        }
+                    case 5:
+                        {
+                            painter.Draw(storage.PokerChips[0], new Rectangle((int)(playersLocations[5].X + 70), (int)(playersLocations[5].Y - 110 * height), 20 * (int)width, 20 * (int)height), Color.White);
+                            break;
+                        }
+                    case 6:
+                        {
+                            painter.Draw(storage.PokerChips[0], new Rectangle((int)(playersLocations[6].X + width * 100), (int)playersLocations[6].Y + 60, 25 * (int)width, 25 * (int)height), Color.White);
+                            break;
+                        }
+                    case 7:
+                        {
+                            painter.Draw(storage.PokerChips[0], new Rectangle((int)(playersLocations[7].X + width * 100), (int)playersLocations[7].Y + 60, 25 * (int)width, 25 * (int)height), Color.White);
+                            break;
+                        }
+                    case 8:
+                        {
+                            painter.Draw(storage.PokerChips[0], new Rectangle((int)(playersLocations[8].X + width * 100), (int)playersLocations[8].Y + 60, 25 * (int)width, 25 * (int)height), Color.White);
+                            break;
+                        }
+                }
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PokerTable.drawDealerButton " + e.Message);
+                }
             }
         }
 
         private void drawActionBar(int i_PlayerIndex, eAction eAction)
         {
-            bool isChipsMoving = currentRoundPart != lastRoundPart;
-            if (eAction == eAction.None && !isChipsMoving || roundEnd)
+            try
             {
-                return;
+                bool isChipsMoving = currentRoundPart != lastRoundPart;
+                if (eAction == eAction.None && !isChipsMoving || roundEnd)
+                {
+                    return;
+                }
+
+                switch (i_PlayerIndex)
+                {
+                    case 0:
+                        {
+                            if (isChipsMoving)
+                            {
+                                painter.Draw(storage.PokerChips[4], new Rectangle((int)(chipMovingLocation[0].X), (int)chipMovingLocation[0].Y, 20 * (int)width, 20 * (int)height), Color.White);
+
+                            }
+                            else
+                            {
+                                painter.Draw(storage.PokerSigns[(int)eAction], new Rectangle((int)(playersLocations[0].X - width * 100), (int)playersLocations[0].Y, 20 * (int)width, 20 * (int)height), Color.White);
+                                if (eAction != eAction.Fold && eAction != eAction.Check)
+                                {
+                                    painter.DrawString(storage.Fonts[0], table.CurrentRound.ActivePlayersIndex[0].CurrentRoundBet.ToString() + "$", new Vector2((int)(playersLocations[0].X - width * 75), (int)playersLocations[0].Y - 10 * height), Color.White);
+                                }
+                            }
+
+
+                            break;
+                        }
+                    case 1:
+                        {
+                            if (isChipsMoving)
+                            {
+                                painter.Draw(storage.PokerChips[4], new Rectangle((int)(chipMovingLocation[1].X), (int)chipMovingLocation[1].Y, 20 * (int)width, 20 * (int)height), Color.White);
+
+                            }
+                            else
+                            {
+                                painter.Draw(storage.PokerSigns[(int)eAction], new Rectangle((int)(playersLocations[1].X - width * 100), (int)playersLocations[1].Y, 20 * (int)width, 20 * (int)height), Color.White);
+                                if (eAction != eAction.Fold && eAction != eAction.Check)
+                                {
+                                    painter.DrawString(storage.Fonts[0], table.CurrentRound.ActivePlayersIndex[1].CurrentRoundBet.ToString() + "$", new Vector2((int)(playersLocations[1].X - width * 75), (int)playersLocations[1].Y - 10 * height), Color.White);
+                                }
+                            }
+                            break;
+                        }
+                    case 2:
+                        {
+                            if (isChipsMoving)
+                            {
+                                painter.Draw(storage.PokerChips[4], new Rectangle((int)(chipMovingLocation[2].X), (int)chipMovingLocation[2].Y, 20 * (int)width, 20 * (int)height), Color.White);
+
+                            }
+                            else
+                            {
+                                painter.Draw(storage.PokerSigns[(int)eAction], new Rectangle((int)(playersLocations[2].X - width * 100), (int)playersLocations[2].Y, 20 * (int)width, 20 * (int)height), Color.White);
+                                if (eAction != eAction.Fold && eAction != eAction.Check)
+                                {
+                                    painter.DrawString(storage.Fonts[0], table.CurrentRound.ActivePlayersIndex[2].CurrentRoundBet.ToString() + "$", new Vector2((int)(playersLocations[2].X - width * 75), (int)playersLocations[2].Y - 10 * height), Color.White);
+                                }
+                            }
+                            break;
+                        }
+                    case 3:
+                        {
+                            if (isChipsMoving)
+                            {
+                                painter.Draw(storage.PokerChips[4], new Rectangle((int)(chipMovingLocation[3].X), (int)chipMovingLocation[3].Y, 20 * (int)width, 20 * (int)height), Color.White);
+
+                            }
+                            else
+                            {
+                                painter.Draw(storage.PokerSigns[(int)eAction], new Rectangle((int)(playersLocations[3].X), (int)(playersLocations[3].Y - 90 * height), 20 * (int)width, 20 * (int)height), Color.White);
+                                if (eAction != eAction.Fold && eAction != eAction.Check)
+                                {
+                                    painter.DrawString(storage.Fonts[0], table.CurrentRound.ActivePlayersIndex[3].CurrentRoundBet.ToString() + "$", new Vector2((int)(playersLocations[3].X + width * 25), (int)playersLocations[3].Y - 100 * height), Color.White);
+                                }
+                            }
+                            break;
+                        }
+                    case 4:
+                        {
+                            if (isChipsMoving)
+                            {
+                                painter.Draw(storage.PokerChips[4], new Rectangle((int)(chipMovingLocation[4].X), (int)chipMovingLocation[4].Y, 20 * (int)width, 20 * (int)height), Color.White);
+
+                            }
+                            else
+                            {
+                                painter.Draw(storage.PokerSigns[(int)eAction], new Rectangle((int)(playersLocations[4].X), (int)(playersLocations[4].Y - 90 * height), 20 * (int)width, 20 * (int)height), Color.White);
+                                if (eAction != eAction.Fold && eAction != eAction.Check)
+                                {
+                                    painter.DrawString(storage.Fonts[0], table.CurrentRound.ActivePlayersIndex[4].CurrentRoundBet.ToString() + "$", new Vector2((int)(playersLocations[4].X + width * 25), (int)playersLocations[4].Y - 100 * height), Color.White);
+                                }
+                            }
+                            break;
+                        }
+                    case 5:
+                        {
+                            if (isChipsMoving)
+                            {
+                                painter.Draw(storage.PokerChips[4], new Rectangle((int)(chipMovingLocation[5].X), (int)chipMovingLocation[5].Y, 20 * (int)width, 20 * (int)height), Color.White);
+
+                            }
+                            else
+                            {
+                                painter.Draw(storage.PokerSigns[(int)eAction], new Rectangle((int)(playersLocations[5].X), (int)(playersLocations[5].Y - 90 * height), 20 * (int)width, 20 * (int)height), Color.White);
+                                if (eAction != eAction.Fold && eAction != eAction.Check)
+                                {
+                                    painter.DrawString(storage.Fonts[0], table.CurrentRound.ActivePlayersIndex[5].CurrentRoundBet.ToString() + "$", new Vector2((int)(playersLocations[5].X + width * 25), (int)playersLocations[5].Y - 100 * height), Color.White);
+                                }
+                            }
+                            break;
+                        }
+                    case 6:
+                        {
+                            if (isChipsMoving)
+                            {
+                                painter.Draw(storage.PokerChips[4], new Rectangle((int)(chipMovingLocation[6].X), (int)chipMovingLocation[6].Y, 20 * (int)width, 20 * (int)height), Color.White);
+
+                            }
+                            else
+                            {
+                                painter.Draw(storage.PokerSigns[(int)eAction], new Rectangle((int)(playersLocations[6].X + width * 100), (int)playersLocations[6].Y, 20 * (int)width, 20 * (int)height), Color.White);
+                                if (eAction != eAction.Fold && eAction != eAction.Check)
+                                {
+                                    painter.DrawString(storage.Fonts[0], table.CurrentRound.ActivePlayersIndex[6].CurrentRoundBet.ToString() + "$", new Vector2((int)(playersLocations[6].X + width * 125), (int)playersLocations[6].Y - 10 * height), Color.White);
+                                }
+                            }
+                            break;
+                        }
+                    case 7:
+                        {
+                            if (isChipsMoving)
+                            {
+                                painter.Draw(storage.PokerChips[4], new Rectangle((int)(chipMovingLocation[7].X), (int)chipMovingLocation[7].Y, 20 * (int)width, 20 * (int)height), Color.White);
+
+                            }
+                            else
+                            {
+                                painter.Draw(storage.PokerSigns[(int)eAction], new Rectangle((int)(playersLocations[7].X + width * 100), (int)playersLocations[7].Y, 20 * (int)width, 20 * (int)height), Color.White);
+                                if (eAction != eAction.Fold && eAction != eAction.Check)
+                                {
+                                    painter.DrawString(storage.Fonts[0], table.CurrentRound.ActivePlayersIndex[7].CurrentRoundBet.ToString() + "$", new Vector2((int)(playersLocations[7].X + width * 125), (int)playersLocations[7].Y - 10 * height), Color.White);
+                                }
+                            }
+                            break;
+                        }
+                    case 8:
+                        {
+                            if (isChipsMoving)
+                            {
+                                painter.Draw(storage.PokerChips[4], new Rectangle((int)(chipMovingLocation[8].X), (int)chipMovingLocation[8].Y, 20 * (int)width, 20 * (int)height), Color.White);
+
+                            }
+                            else
+                            {
+                                painter.Draw(storage.PokerSigns[(int)eAction], new Rectangle((int)(playersLocations[8].X + width * 100), (int)playersLocations[8].Y, 20 * (int)width, 20 * (int)height), Color.White);
+                                if (eAction != eAction.Fold && eAction != eAction.Check)
+                                {
+                                    painter.DrawString(storage.Fonts[0], table.CurrentRound.ActivePlayersIndex[8].CurrentRoundBet.ToString() + "$", new Vector2((int)(playersLocations[8].X + width * 125), (int)playersLocations[8].Y - 10 * height), Color.White);
+                                }
+                            }
+                            break;
+                        }
+                }
             }
-
-            switch (i_PlayerIndex)
+            catch (Exception e)
             {
-                case 0:
-                    {
-                        if (isChipsMoving)
-                        {
-                            painter.Draw(storage.PokerChips[4], new Rectangle((int)(chipMovingLocation[0].X), (int)chipMovingLocation[0].Y, 20 * (int)width, 20 * (int)height), Color.White);
-
-                        }
-                        else
-                        {
-                            painter.Draw(storage.PokerSigns[(int)eAction], new Rectangle((int)(playersLocations[0].X - width * 100), (int)playersLocations[0].Y, 20 * (int)width, 20 * (int)height), Color.White);
-                            if (eAction != eAction.Fold && eAction != eAction.Check)
-                            {
-                                painter.DrawString(storage.Fonts[0], table.CurrentRound.ActivePlayersIndex[0].CurrentRoundBet.ToString() + "$", new Vector2((int)(playersLocations[0].X - width * 75), (int)playersLocations[0].Y - 10 * height), Color.White);
-                            }
-                        }
-
-
-                        break;
-                    }
-                case 1:
-                    {
-                        if (isChipsMoving)
-                        {
-                            painter.Draw(storage.PokerChips[4], new Rectangle((int)(chipMovingLocation[1].X), (int)chipMovingLocation[1].Y, 20 * (int)width, 20 * (int)height), Color.White);
-
-                        }
-                        else
-                        {
-                            painter.Draw(storage.PokerSigns[(int)eAction], new Rectangle((int)(playersLocations[1].X - width * 100), (int)playersLocations[1].Y, 20 * (int)width, 20 * (int)height), Color.White);
-                            if (eAction != eAction.Fold && eAction != eAction.Check)
-                            {
-                                painter.DrawString(storage.Fonts[0], table.CurrentRound.ActivePlayersIndex[1].CurrentRoundBet.ToString() + "$", new Vector2((int)(playersLocations[1].X - width * 75), (int)playersLocations[1].Y - 10 * height), Color.White);
-                            }
-                        }
-                        break;
-                    }
-                case 2:
-                    {
-                        if (isChipsMoving)
-                        {
-                            painter.Draw(storage.PokerChips[4], new Rectangle((int)(chipMovingLocation[2].X), (int)chipMovingLocation[2].Y, 20 * (int)width, 20 * (int)height), Color.White);
-
-                        }
-                        else
-                        {
-                            painter.Draw(storage.PokerSigns[(int)eAction], new Rectangle((int)(playersLocations[2].X - width * 100), (int)playersLocations[2].Y, 20 * (int)width, 20 * (int)height), Color.White);
-                            if (eAction != eAction.Fold && eAction != eAction.Check)
-                            {
-                                painter.DrawString(storage.Fonts[0], table.CurrentRound.ActivePlayersIndex[2].CurrentRoundBet.ToString() + "$", new Vector2((int)(playersLocations[2].X - width * 75), (int)playersLocations[2].Y - 10 * height), Color.White);
-                            }
-                        }
-                        break;
-                    }
-                case 3:
-                    {
-                        if (isChipsMoving)
-                        {
-                            painter.Draw(storage.PokerChips[4], new Rectangle((int)(chipMovingLocation[3].X), (int)chipMovingLocation[3].Y, 20 * (int)width, 20 * (int)height), Color.White);
-
-                        }
-                        else
-                        {
-                            painter.Draw(storage.PokerSigns[(int)eAction], new Rectangle((int)(playersLocations[3].X), (int)(playersLocations[3].Y - 90 * height), 20 * (int)width, 20 * (int)height), Color.White);
-                            if (eAction != eAction.Fold && eAction != eAction.Check)
-                            {
-                                painter.DrawString(storage.Fonts[0], table.CurrentRound.ActivePlayersIndex[3].CurrentRoundBet.ToString() + "$", new Vector2((int)(playersLocations[3].X + width * 25), (int)playersLocations[3].Y - 100 * height), Color.White);
-                            }
-                        }
-                        break;
-                    }
-                case 4:
-                    {
-                        if (isChipsMoving)
-                        {
-                            painter.Draw(storage.PokerChips[4], new Rectangle((int)(chipMovingLocation[4].X), (int)chipMovingLocation[4].Y, 20 * (int)width, 20 * (int)height), Color.White);
-
-                        }
-                        else
-                        {
-                            painter.Draw(storage.PokerSigns[(int)eAction], new Rectangle((int)(playersLocations[4].X), (int)(playersLocations[4].Y - 90 * height), 20 * (int)width, 20 * (int)height), Color.White);
-                            if (eAction != eAction.Fold && eAction != eAction.Check)
-                            {
-                                painter.DrawString(storage.Fonts[0], table.CurrentRound.ActivePlayersIndex[4].CurrentRoundBet.ToString() + "$", new Vector2((int)(playersLocations[4].X + width * 25), (int)playersLocations[4].Y - 100 * height), Color.White);
-                            }
-                        }
-                        break;
-                    }
-                case 5:
-                    {
-                        if (isChipsMoving)
-                        {
-                            painter.Draw(storage.PokerChips[4], new Rectangle((int)(chipMovingLocation[5].X), (int)chipMovingLocation[5].Y, 20 * (int)width, 20 * (int)height), Color.White);
-
-                        }
-                        else
-                        {
-                            painter.Draw(storage.PokerSigns[(int)eAction], new Rectangle((int)(playersLocations[5].X), (int)(playersLocations[5].Y - 90 * height), 20 * (int)width, 20 * (int)height), Color.White);
-                            if (eAction != eAction.Fold && eAction != eAction.Check)
-                            {
-                                painter.DrawString(storage.Fonts[0], table.CurrentRound.ActivePlayersIndex[5].CurrentRoundBet.ToString() + "$", new Vector2((int)(playersLocations[5].X + width * 25), (int)playersLocations[5].Y - 100 * height), Color.White);
-                            }
-                        }
-                        break;
-                    }
-                case 6:
-                    {
-                        if (isChipsMoving)
-                        {
-                            painter.Draw(storage.PokerChips[4], new Rectangle((int)(chipMovingLocation[6].X), (int)chipMovingLocation[6].Y, 20 * (int)width, 20 * (int)height), Color.White);
-
-                        }
-                        else
-                        {
-                            painter.Draw(storage.PokerSigns[(int)eAction], new Rectangle((int)(playersLocations[6].X + width * 100), (int)playersLocations[6].Y, 20 * (int)width, 20 * (int)height), Color.White);
-                            if (eAction != eAction.Fold && eAction != eAction.Check)
-                            {
-                                painter.DrawString(storage.Fonts[0], table.CurrentRound.ActivePlayersIndex[6].CurrentRoundBet.ToString() + "$", new Vector2((int)(playersLocations[6].X + width * 125), (int)playersLocations[6].Y - 10 * height), Color.White);
-                            }
-                        }
-                        break;
-                    }
-                case 7:
-                    {
-                        if (isChipsMoving)
-                        {
-                            painter.Draw(storage.PokerChips[4], new Rectangle((int)(chipMovingLocation[7].X), (int)chipMovingLocation[7].Y, 20 * (int)width, 20 * (int)height), Color.White);
-
-                        }
-                        else
-                        {
-                            painter.Draw(storage.PokerSigns[(int)eAction], new Rectangle((int)(playersLocations[7].X + width * 100), (int)playersLocations[7].Y, 20 * (int)width, 20 * (int)height), Color.White);
-                            if (eAction != eAction.Fold && eAction != eAction.Check)
-                            {
-                                painter.DrawString(storage.Fonts[0], table.CurrentRound.ActivePlayersIndex[7].CurrentRoundBet.ToString() + "$", new Vector2((int)(playersLocations[7].X + width * 125), (int)playersLocations[7].Y - 10 * height), Color.White);
-                            }
-                        }
-                        break;
-                    }
-                case 8:
-                    {
-                        if (isChipsMoving)
-                        {
-                            painter.Draw(storage.PokerChips[4], new Rectangle((int)(chipMovingLocation[8].X), (int)chipMovingLocation[8].Y, 20 * (int)width, 20 * (int)height), Color.White);
-
-                        }
-                        else
-                        {
-                            painter.Draw(storage.PokerSigns[(int)eAction], new Rectangle((int)(playersLocations[8].X + width * 100), (int)playersLocations[8].Y, 20 * (int)width, 20 * (int)height), Color.White);
-                            if (eAction != eAction.Fold && eAction != eAction.Check)
-                            {
-                                painter.DrawString(storage.Fonts[0], table.CurrentRound.ActivePlayersIndex[8].CurrentRoundBet.ToString() + "$", new Vector2((int)(playersLocations[8].X + width * 125), (int)playersLocations[8].Y - 10 * height), Color.White);
-                            }
-                        }
-                        break;
-                    }
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PokerTable.drawActionBar " + e.Message);
+                }
             }
         }
 
         private int convertCardsToint(Card i_Card)
         {
-            int count = i_Card.Value - 2;
-            string suit = i_Card.Suit;
-            switch (suit)
+            try
             {
-                case "Diamonds":
-                    count += 13;
-                    break;
-                case "Clubs":
-                    count += 26;
-                    break;
-                case "Spades":
-                    count += 39;
-                    break;
+                int count = i_Card.Value - 2;
+                string suit = i_Card.Suit;
+                switch (suit)
+                {
+                    case "Diamonds":
+                        count += 13;
+                        break;
+                    case "Clubs":
+                        count += 26;
+                        break;
+                    case "Spades":
+                        count += 39;
+                        break;
+                }
+                return count;
             }
-            return count;
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PokerTable.convertCardsToint " + e.Message);
+                }
+                throw e;
+            }
         }
         private void PaintPlayersAndSits()
         {
-            if (table != null)
+            try
             {
-                if (table.Players != null)
+                if (table != null)
                 {
-                    for (int i = 0; i < 9; i++)
+                    if (table.Players != null)
                     {
-                        if (table.PlayersInTable[i] != null)
+                        for (int i = 0; i < 9; i++)
                         {
-                            sitButtons[i].IsVisible = false;
-                            sitButtons[i].IsEnabled = false;
-                            painter.Draw(storage.PlayerFaces[table.PlayersInTable[i].Figure][0], new Rectangle((int)(playersLocations[i].X * width), (int)(playersLocations[i].Y - 60 * height), (int)(75 * width), (int)(70 * height)), Color.White);
-                            painter.DrawString(storage.Fonts[0], table.PlayersInTable[i].Name, new Vector2(playersLocations[i].X + (int)(75 * width), playersLocations[i].Y - 50 * height), Color.White);
-                            painter.DrawString(storage.Fonts[0], table.PlayersInTable[i].Money.ToString() + "$", new Vector2(playersLocations[i].X, playersLocations[i].Y + storage.Cards[0].Height), Color.White);
-                            if (table.CurrentRound != null && table.CurrentRound.UsersCards[i] != null && table.CurrentRound.ActivePlayersIndex[i].InHand)
-                            {
-                                if (table.Players[i] != null)
-                                {
-                                    drawActionBar(i, table.Players[i].LastAction);
-                                    if (table.CurrentRound.Part != RoundPart.Result)
-                                    {
-                                        painter.Draw(storage.CurrentPlayerMark, new Rectangle((int)playersLocations[table.CurrentRound.currentBettingRound.CurrentPlayerIndex].X - (int)width * 2, (int)playersLocations[table.CurrentRound.currentBettingRound.CurrentPlayerIndex].Y - 2 * (int)height, 100 * (int)width, 93 * (int)height), Color.White);
-                                        painter.Draw(storage.CurrentPlayerMark, new Rectangle((int)playersLocations[table.CurrentRound.currentBettingRound.CurrentPlayerIndex].X - (int)width * 4, (int)playersLocations[table.CurrentRound.currentBettingRound.CurrentPlayerIndex].Y - (int)height * 4, 104 * (int)width, 97 * (int)height), Color.White);
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-
-                            if (index == -1)
-                            {
-                                sitButtons[i].IsVisible = true;
-                                sitButtons[i].IsEnabled = true;
-                            }
-                            else
+                            if (table.PlayersInTable[i] != null)
                             {
                                 sitButtons[i].IsVisible = false;
                                 sitButtons[i].IsEnabled = false;
+                                painter.Draw(storage.PlayerFaces[table.PlayersInTable[i].Figure][0], new Rectangle((int)(playersLocations[i].X * width), (int)(playersLocations[i].Y - 60 * height), (int)(75 * width), (int)(70 * height)), Color.White);
+                                painter.DrawString(storage.Fonts[0], table.PlayersInTable[i].Name, new Vector2(playersLocations[i].X + (int)(75 * width), playersLocations[i].Y - 50 * height), Color.White);
+                                painter.DrawString(storage.Fonts[0], table.PlayersInTable[i].Money.ToString() + "$", new Vector2(playersLocations[i].X, playersLocations[i].Y + storage.Cards[0].Height), Color.White);
+                                if (table.CurrentRound != null && table.CurrentRound.UsersCards[i] != null && table.CurrentRound.ActivePlayersIndex[i].InHand)
+                                {
+                                    if (table.Players[i] != null)
+                                    {
+                                        drawActionBar(i, table.Players[i].LastAction);
+                                        if (table.CurrentRound.Part != RoundPart.Result)
+                                        {
+                                            painter.Draw(storage.CurrentPlayerMark, new Rectangle((int)playersLocations[table.CurrentRound.currentBettingRound.CurrentPlayerIndex].X - (int)width * 2, (int)playersLocations[table.CurrentRound.currentBettingRound.CurrentPlayerIndex].Y - 2 * (int)height, 100 * (int)width, 93 * (int)height), Color.White);
+                                            painter.Draw(storage.CurrentPlayerMark, new Rectangle((int)playersLocations[table.CurrentRound.currentBettingRound.CurrentPlayerIndex].X - (int)width * 4, (int)playersLocations[table.CurrentRound.currentBettingRound.CurrentPlayerIndex].Y - (int)height * 4, 104 * (int)width, 97 * (int)height), Color.White);
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+
+                                if (index == -1)
+                                {
+                                    sitButtons[i].IsVisible = true;
+                                    sitButtons[i].IsEnabled = true;
+                                }
+                                else
+                                {
+                                    sitButtons[i].IsVisible = false;
+                                    sitButtons[i].IsEnabled = false;
+                                }
                             }
                         }
                     }
+                }
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PokerTable.PaintPlayersAndSits " + e.Message);
                 }
             }
         }

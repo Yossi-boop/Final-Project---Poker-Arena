@@ -64,42 +64,52 @@ namespace Classes
 
         public void ConvertHandToInts(PokerHand i_Hand)
         {
-            for (int i = 0; i < 5; i++)
+            try
             {
-                int count = i_Hand.Hand[i].Value - 2;
-                string suit = i_Hand.Hand[i].Suit;
-                switch (suit)
+                for (int i = 0; i < 5; i++)
                 {
-                    case "Diamonds":
-                        count += 13;
-                        break;
-                    case "Clubs":
-                        count += 26;
-                        break;
-                    case "Spades":
-                        count += 39;
-                        break;
-                }
-                switch (i)
-                {
-                    case 0:
-                        Card1 = count;
-                        break;
-                    case 1:
-                        Card2 = count;
-                        break;
-                    case 2:
-                        Card3 = count;
-                        break;
-                    case 3:
-                        Card4 = count;
-                        break;
-                    case 4:
-                        Card5 = count;
-                        break;
+                    int count = i_Hand.Hand[i].Value - 2;
+                    string suit = i_Hand.Hand[i].Suit;
+                    switch (suit)
+                    {
+                        case "Diamonds":
+                            count += 13;
+                            break;
+                        case "Clubs":
+                            count += 26;
+                            break;
+                        case "Spades":
+                            count += 39;
+                            break;
+                    }
+                    switch (i)
+                    {
+                        case 0:
+                            Card1 = count;
+                            break;
+                        case 1:
+                            Card2 = count;
+                            break;
+                        case 2:
+                            Card3 = count;
+                            break;
+                        case 3:
+                            Card4 = count;
+                            break;
+                        case 4:
+                            Card5 = count;
+                            break;
+                    }
                 }
             }
-            
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("Stats.ConvertHandToInts/" + e.Message);
+                }
+                throw e;
+            }
         }
     }
 }

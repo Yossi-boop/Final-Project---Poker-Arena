@@ -68,6 +68,7 @@
     <Compile Include="Deck.cs" />
     <Compile Include="FurnitureInstance.cs" />
     <Compile Include="Instance.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="LoginProp.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="PokerHand.cs" />

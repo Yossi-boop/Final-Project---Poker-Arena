@@ -12,6 +12,7 @@ namespace WebApiControllers.Controllers
 {
     public class UserLocationController : ApiController
     {
+
         // GET: api/UserLocation
         //public IHttpActionResult Get(string i_CasinoId)
         //{
@@ -26,27 +27,34 @@ namespace WebApiControllers.Controllers
         // GET: api/UserLocation/5
         public IHttpActionResult Get(string i_CasinoId, string i_Email)
         {
-            try
-            {
-                Casino casino = DataStorage.GetCasino(i_CasinoId);
-
-                DataStorage.LogedInUser user = DataStorage.GetActiveUserByMail(i_Email);
-                if (user != null)
+            
+                try
                 {
-                    user.LastActionTime = DateTime.Now;
-                }
 
-                List<CharacterInstance> usersPosition = casino.GetUsersPositions(i_Email);
-                casino.CheckIfAllPlayerOnline();
-                casino.CheckIfTimeForChest();
-                var values = new JArray();
-                values = JArray.FromObject(usersPosition);
-                return Ok(values);
-            }
-            catch (Exception e)
-            {
-                return BadRequest("NullReference");
-            }
+                    Casino casino = DataStorage.GetCasino(i_CasinoId);
+
+                    DataStorage.LogedInUser user = DataStorage.GetActiveUserByMail(i_Email);
+                    if (user != null)
+                    {
+                        user.LastActionTime = DateTime.Now;
+                    }
+
+                    List<CharacterInstance> usersPosition = casino.GetUsersPositions(i_Email);
+                    casino.CheckIfAllPlayerOnline();
+                    casino.CheckIfTimeForChest();
+                    var values = new JArray();
+                    values = JArray.FromObject(usersPosition);
+                    return Ok(values);
+                }
+                catch (Exception e)
+                {
+                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                    {
+                        file.WriteLine("UserLocationController.get/" + e.Message);
+                    }
+                    return BadRequest("Bad");
+                }
+            
         }
 
         //public IHttpActionResult Get(string i_CasinoId, string i_Email, int i_Radios)
@@ -58,19 +66,34 @@ namespace WebApiControllers.Controllers
 
         // POST: api/UserLocation
         public IHttpActionResult Post([FromBody]CharacterInstance i_Character)
-        {
-            Casino casino = DataStorage.GetCasino(i_Character.CasinoId);
-            CharacterInstance character;
-            if ((character = casino.UserInCasino(i_Character.Email)) != null)
-            {
-                character.UpdatePosition(i_Character.CurrentXPos, i_Character.CurrentYPos,i_Character.Direction,i_Character.Skin);
-            }
-            else
-            {
-                casino.Users.Add(i_Character);
-            }
+        {  
+            
+                try
+                {
+                    Casino casino = DataStorage.GetCasino(i_Character.CasinoId);
+                    CharacterInstance character;
+                    if ((character = casino.UserInCasino(i_Character.Email)) != null)
+                    {
+                        if (!character.UpdatePosition(i_Character.CurrentXPos, i_Character.CurrentYPos, i_Character.Direction, i_Character.Skin))
+                        {
+                            return BadRequest("Invalid movement");
+                        }
+                    }
+                    else
+                    {
+                        casino.Users.Add(i_Character);
+                    }
 
-            return Ok("Updated");
+                    return Ok("Updated");
+                }
+                catch(Exception e) {
+                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                    {
+                        file.WriteLine("UserLocationController.post/" +e.Message);
+                    }
+                    return BadRequest("Bad");
+                }
+            
         }
     }
 }

@@ -12,57 +12,42 @@ namespace WebApiControllers.Controllers
 {
     public class PokerActionController : ApiController
     {
-        // GET: api/PokerAction
-       
-        public IEnumerable<string> Get()
-        {
-            Casino m = DataStorage.Casinos[0];
-            return new string[] { m.Id, m.Furnitures[0].Type.ToString() };
-        }
 
-        // GET: api/PokerAction/5
-        public string Get(int id)
-        {
-            return "value";
-        }
 
-        // POST: api/PokerAction
         public IHttpActionResult Post([FromBody] ActionPoker Action)
         {
-           
-            try
-            {
-                if (Security.CheckIfSignatureValid(Action.TableId, Action.CasinoId, Action.Email, Action.PlayerSignature))
+            
+                try
                 {
-                    Table table = DataStorage.GetTable(Action.TableId, Action.CasinoId);
-                    if (table == null)
+                    if (Security.CheckIfSignatureValid(Action.TableId, Action.CasinoId, Action.Email, Action.PlayerSignature))
                     {
-                        return BadRequest("There Is No Table");
+                        Table table = DataStorage.GetTable(Action.TableId, Action.CasinoId);
+                        if (table == null)
+                        {
+                            return BadRequest("There Is No Table");
+                        }
+
+                        Round round = table.CurrentRound;
+                        if (round == null)
+                        {
+                            return BadRequest("There Is No round");
+                        }
+                        round.MakeAnAction(Action.PlayerSignature, Action.Action, Action.RaiseAmount);
+
+                        return Ok("OK");
                     }
 
-                    Round round = table.CurrentRound;
-                       
-                    round.MakeAnAction(Action.PlayerSignature, Action.Action, Action.RaiseAmount);
-                   
-                    return Ok("OK");
+                    return BadRequest("Invalid Signature");
                 }
-
-                return BadRequest("Invalid Signature");
-            }
-            catch (Exception e)
-            {
-                return BadRequest("NullReference");
-            }
-        }
-
-        // PUT: api/PokerAction/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE: api/PokerAction/5
-        public void Delete(int id)
-        {
-        }
+                catch (Exception e)
+                {
+                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                    {
+                        file.WriteLine("PokerActionController.post/" + e.Message);
+                    }
+                    return BadRequest("Bad");
+                }
+            
+        }    
     }
 }

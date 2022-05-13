@@ -31,6 +31,9 @@ namespace Classes
 
         public DateTime LastUpdate { get; set; } = DateTime.Now;
 
+        private readonly object MovementLock = new object();
+
+
         public CharacterInstance()
         {
             
@@ -49,20 +52,36 @@ namespace Classes
             Skin = i_Skin;
         }
 
-        public void UpdatePosition(int i_CurrentXPos, int i_CurrentYPos, int i_Direction, int i_Skin)
+        public bool UpdatePosition(int i_CurrentXPos, int i_CurrentYPos, int i_Direction, int i_Skin)
         {
            if (DateTime.Now.Subtract(LastMessageTime).TotalSeconds >= 3)
            {
                 LastMessage = null;
            }
+            lock(MovementLock)
+            {
+                if (ValidateNewLocation(i_CurrentXPos, i_CurrentYPos, this.LastXPos, this.LastYPos))
+            {
+                this.LastXPos = this.CurrentXPos;
+                this.LastYPos = this.CurrentYPos;
+                this.CurrentXPos = i_CurrentXPos;
+                this.CurrentYPos = i_CurrentYPos;
+                Direction = i_Direction;
+                Skin = i_Skin;
 
-            this.LastXPos = this.CurrentXPos;
-            this.LastYPos = this.CurrentYPos;
-            this.CurrentXPos = i_CurrentXPos;
-            this.CurrentYPos = i_CurrentYPos;
-            Direction = i_Direction;
-            Skin = i_Skin;
-            LastUpdate = DateTime.Now;
+                LastUpdate = DateTime.Now;
+                return true;
+            }
+             else
+            {
+                return false;
+            }
+            }
+        }
+
+        public bool ValidateNewLocation(int i_CurrentXPos, int i_CurrentYPos, int i_LastXPos, int i_LastYPos)
+        {
+            return !(i_LastYPos < i_CurrentYPos + 20 || i_LastYPos > i_CurrentYPos - 20 || i_LastXPos < i_CurrentXPos + 20 || i_LastXPos > i_CurrentXPos - 20);
         }
 
         public void AddMessage(string body)

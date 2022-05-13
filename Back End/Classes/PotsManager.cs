@@ -17,96 +17,151 @@ namespace Classes
 
         public PotsManager(IList<PokerPlayer> players)
         {
-            this.players = players;
-            this.MainPot = createMainPot();
-            this.SidePots = createSidePots();
+            try
+            {
+                this.players = players;
+                this.MainPot = createMainPot();
+                this.SidePots = createSidePots();
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PotsManager.PotsManager/" + e.Message);
+                }
+                throw e;
+            }
         }
 
         public Pot MainPot { get; set; }
 
         private Pot createMainPot()
         {
-            var levels = this.Levels();
-            var upperLimit = levels.First();
-            return this.Create(0, upperLimit);
+            try
+            {
+                var levels = this.Levels();
+                var upperLimit = levels.First();
+                return this.Create(0, upperLimit);
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PotsManager.createMainPot/" + e.Message);
+                }
+                throw e;
+            }
         }
 
         private List<Pot> createSidePots()
         {
-            var pots = new List<Pot>();
-            var levels = this.Levels();
-
-            if (levels.Count > 1)
+            try
             {
-                var list = levels.ToList();
+                var pots = new List<Pot>();
+                var levels = this.Levels();
 
-                for (int i = 0; i < list.Count - 1; i++)
+                if (levels.Count > 1)
                 {
-                    var pot = this.Create(list[i], list[i + 1]);
+                    var list = levels.ToList();
 
-                    if (pot.AmountOfMoney != 0)
+                    for (int i = 0; i < list.Count - 1; i++)
                     {
-                        pots.Add(pot);
+                        var pot = this.Create(list[i], list[i + 1]);
+
+                        if (pot.AmountOfMoney != 0)
+                        {
+                            pots.Add(pot);
+                        }
                     }
                 }
-            }
 
-            return pots;
+                return pots;
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PotsManager.createSidePots/" + e.Message);
+                }
+                throw e;
+            }
         }
 
         public List<Pot> SidePots { get; set; }
 
         private SortedSet<int> Levels()
         {
-            if (this.players == null)
+            try
             {
-                return null;
-            }
-            var levels = new SortedSet<int> { int.MaxValue };
-
-            foreach (var item in this.players)
-            {
-                if (item != null && item.Money <= 0)
+                if (this.players == null)
                 {
-                    levels.Add(item.CurrentlyInPot);
+                    return null;
                 }
-            }
+                var levels = new SortedSet<int> { int.MaxValue };
 
-            return levels;
+                foreach (var item in this.players)
+                {
+                    if (item != null && item.Money <= 0)
+                    {
+                        levels.Add(item.CurrentlyInPot);
+                    }
+                }
+
+                return levels;
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PotsManager.Levels/" + e.Message);
+                }
+                throw e;
+            }
         }
 
         private Pot Create(int lowerLimit, int upperLimit)
         {
-            var amountOfMoney = 0;
-            var activePlayerIndex = new List<int>();
-
-            foreach (var item in this.players)
+            try
             {
-                if (item == null)
-                {
-                    continue;
-                }
-                if (item.CurrentlyInPot > lowerLimit && item.CurrentlyInPot <= upperLimit)
-                {
-                    amountOfMoney += item.CurrentlyInPot - lowerLimit;
+                var amountOfMoney = 0;
+                var activePlayerIndex = new List<int>();
 
-                    if (item.InHand)
+                foreach (var item in this.players)
+                {
+                    if (item == null)
                     {
-                        activePlayerIndex.Add(item.Position);
+                        continue;
+                    }
+                    if (item.CurrentlyInPot > lowerLimit && item.CurrentlyInPot <= upperLimit)
+                    {
+                        amountOfMoney += item.CurrentlyInPot - lowerLimit;
+
+                        if (item.InHand)
+                        {
+                            activePlayerIndex.Add(item.Position);
+                        }
+                    }
+                    else if (item.CurrentlyInPot > upperLimit)
+                    {
+                        amountOfMoney += upperLimit - lowerLimit;
+
+                        if (item.InHand)
+                        {
+                            activePlayerIndex.Add(item.Position);
+                        }
                     }
                 }
-                else if (item.CurrentlyInPot > upperLimit)
-                {
-                    amountOfMoney += upperLimit - lowerLimit;
 
-                    if (item.InHand)
-                    {
-                        activePlayerIndex.Add(item.Position);
-                    }
-                }
+                return new Pot(amountOfMoney, activePlayerIndex);
             }
-
-            return new Pot(amountOfMoney, activePlayerIndex);
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PotsManager.Create/" + e.Message);
+                }
+                throw e;
+            }
         }
     }
 }

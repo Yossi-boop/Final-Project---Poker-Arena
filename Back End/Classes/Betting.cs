@@ -20,7 +20,21 @@ namespace Classes
             CurrentPlayerIndex = i_CurrentPlayerIndex;
         }
 
-        public PokerPlayer CurrentPlayer => ActivePlayers[CurrentPlayerIndex];
+        public PokerPlayer CurrentPlayer {
+            get
+            {
+                try {
+                    return ActivePlayers[CurrentPlayerIndex];
+                } catch(Exception e)
+                {
+                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                    {
+                        file.WriteLine("Betting.CurrentPlayer/" + e.Message);
+                    }
+                    throw e;
+                }
+            }
+        }
 
         public int BiggestMoneyInPot
         {
@@ -51,51 +65,62 @@ namespace Classes
 
         internal bool MakeAnAction(string i_Signature, eAction i_Action, int i_RaiseAmount)
         {
-            if (!(CurrentPlayer.Signature.Equals(i_Signature)))
+            try
             {
-                return false;
-            }
+                if (!(CurrentPlayer.Signature.Equals(i_Signature)))
+                {
+                    return false;
+                }
 
-            ActionType = i_Action;
-            CurrentPlayer.LastAction = ActionType;
-            
-            switch (ActionType)
+                ActionType = i_Action;
+                CurrentPlayer.LastAction = ActionType;
+
+                switch (ActionType)
+                {
+                    case eAction.Fold:
+                        {
+                            CurrentPlayer.InHand = false;
+                            CurrentPlayer.ShouldPlayInRound = false;
+                            break;
+                        }
+                    case eAction.Call:
+                        {
+                            CurrentPlayer.PlaceMoney(BiggestMoneyInPot - CurrentPlayer.CurrentRoundBet);
+                            break;
+                        }
+                    case eAction.Raise:
+                        {
+                            if (CurrentPlayer.Money < i_RaiseAmount)
+                            {
+                                i_RaiseAmount = CurrentPlayer.Money + CurrentPlayer.CurrentRoundBet;
+                            }
+                            if (MinimumBet > i_RaiseAmount)
+                            {
+                                i_RaiseAmount = MinimumBet;
+                            }
+                            updateMinimumBet(i_RaiseAmount);
+                            CurrentPlayer.PlaceMoney(i_RaiseAmount - CurrentPlayer.CurrentRoundBet);
+                            requestActionFromAllPlayers();
+                            break;
+                        }
+                    default:
+                        {
+
+                            break;
+                        }
+                }
+
+                CurrentPlayer.ShouldPlayInRound = false;
+                return true;
+            }
+            catch (Exception e)
             {
-                case eAction.Fold:
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
                 {
-                    CurrentPlayer.InHand = false;
-                    CurrentPlayer.ShouldPlayInRound = false;
-                    break;
+                    file.WriteLine("Betting.MakeAnAction/" + e.Message);
                 }
-                case eAction.Call:
-                {
-                    CurrentPlayer.PlaceMoney(BiggestMoneyInPot - CurrentPlayer.CurrentRoundBet);
-                    break;
-                }
-                case eAction.Raise:
-                {
-                    if (CurrentPlayer.Money < i_RaiseAmount)
-                    {
-                        i_RaiseAmount = CurrentPlayer.Money + CurrentPlayer.CurrentRoundBet;
-                    }
-                    if (MinimumBet > i_RaiseAmount)
-                    {
-                        i_RaiseAmount = MinimumBet;
-                    }
-                    updateMinimumBet(i_RaiseAmount);
-                    CurrentPlayer.PlaceMoney(i_RaiseAmount - CurrentPlayer.CurrentRoundBet);
-                    requestActionFromAllPlayers();
-                    break;
-                }
-                default:
-                {
-
-                    break;
-                }
+                throw e;
             }
-
-            CurrentPlayer.ShouldPlayInRound = false;
-            return true;
         }
 
         private void updateMinimumBet(int i_RaiseAmount)
@@ -106,32 +131,54 @@ namespace Classes
 
         private void requestActionFromAllPlayers()
         {
-            foreach (var player in ActivePlayers)
+            try
             {
-                if (player != null)
+                foreach (var player in ActivePlayers)
                 {
-                    if (player.InHand && player.Money > 0) 
+                    if (player != null)
                     {
-                        player.ShouldPlayInRound = true;
+                        if (player.InHand && player.Money > 0)
+                        {
+                            player.ShouldPlayInRound = true;
+                        }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("Betting.requestActionFromAllPlayers/" + e.Message);
+                }
+                throw e;
             }
         }
 
         private bool checkIfThereIsNeedForAction()
         {
-            foreach (var player in ActivePlayers)
+            try
             {
-                if (player != null)
+                foreach (var player in ActivePlayers)
                 {
-                    if (player.ShouldPlayInRound)
+                    if (player != null)
                     {
-                        return true;
+                        if (player.ShouldPlayInRound)
+                        {
+                            return true;
+                        }
                     }
                 }
-            }
 
-            return false;
+                return false;
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("Betting.checkIfThereIsNeedForAction/" + e.Message);
+                }
+                throw e;
+            }
         }
 
     }

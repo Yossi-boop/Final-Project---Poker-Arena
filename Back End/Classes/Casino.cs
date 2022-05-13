@@ -49,34 +49,66 @@ namespace Classes
 
         public void CollectMoney(Stats stats)
         {
-            if (!TreasureChest.Collected)
+            try
             {
-                stats.Money += TreasureChest.GoldAmount;
-                writeInDataBase(stats);
+                if (!TreasureChest.Collected)
+                {
+                    stats.Money += TreasureChest.GoldAmount;
+                    writeInDataBase(stats);
+                }
+                TreasureChest.Collected = true;
             }
-            TreasureChest.Collected = true;
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("Casino.CollectMoney/" + e.Message);
+                }
+                throw e;
+            }
         }
 
         private void writeInDataBase(Stats stats)
         {
-            var values = new JObject();
-            values = JObject.FromObject(stats);
-            HttpContent content = new StringContent(values.ToString(), Encoding.UTF8, "application/json");
-            //putRequestAsync("https://pokerarenaapi.azurewebsites.net/api/Stats?i_Email=" + stats.UserEmail, content);
-            putRequestAsync("http://localhost:61968/api/Stats?i_Email=" + stats.UserEmail, content);
-
+            try
+            {
+                var values = new JObject();
+                values = JObject.FromObject(stats);
+                HttpContent content = new StringContent(values.ToString(), Encoding.UTF8, "application/json");
+                //putRequestAsync("https://pokerarenaapi.azurewebsites.net/api/Stats?i_Email=" + stats.UserEmail, content);
+                putRequestAsync("http://localhost:61968/api/Stats?i_Email=" + stats.UserEmail, content);
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("Casino.writeInDataBase/" + e.Message);
+                }
+                throw e;
+            }
         }
 
         private async void putRequestAsync(string i_Url, HttpContent i_Content)
         {
-            HttpClient client = new HttpClient();
-            string result = String.Empty;
-            using (HttpResponseMessage response = await client.PutAsync(i_Url, i_Content))
+            try
             {
-                using (HttpContent content = response.Content)
+                HttpClient client = new HttpClient();
+                string result = String.Empty;
+                using (HttpResponseMessage response = await client.PutAsync(i_Url, i_Content))
                 {
-                    result = await content.ReadAsStringAsync();
+                    using (HttpContent content = response.Content)
+                    {
+                        result = await content.ReadAsStringAsync();
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("Casino.putRequestAsync/" + e.Message);
+                }
+                throw e;
             }
         }
 
@@ -91,8 +123,19 @@ namespace Classes
 
         public List<FurnitureInstance> GetFurnitureInstances()
         {
-            Furnitures.Sort();
-            return Furnitures;
+            try
+            {
+                Furnitures.Sort();
+                return Furnitures;
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("Casino.GetFurnitureInstances/" + e.Message);
+                }
+                throw e;
+            }
         }
 
         private bool isBetween(int i_X, int i_Y, int i_UserCurrentXPos, int i_UserCurrentYPos, int size)
@@ -103,53 +146,96 @@ namespace Classes
 
         public void CheckIfTimeForChest()
         {
-            if(DateTime.Now.Subtract(TimeFromLastChest).TotalSeconds >= 30)
+            try
             {
-                TimeFromLastChest = DateTime.Now;
-                createNewChest();
+                if (DateTime.Now.Subtract(TimeFromLastChest).TotalSeconds >= 30)
+                {
+                    TimeFromLastChest = DateTime.Now;
+                    createNewChest();
+                }
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("Casino.CheckIfTimeForChest/" + e.Message);
+                }
+                throw e;
             }
         }
 
         private void createNewChest()
         {
-            int x;
-            int y;
-            int amount;
-            findPlaceForChest(out x,out y);
-            amount = SystemTools.GetRandomGoldAmount();
-            TreasureChest = new Chest(amount, x, y);
+            try {
+                int x;
+                int y;
+                int amount;
+                findPlaceForChest(out x, out y);
+                amount = SystemTools.GetRandomGoldAmount();
+                TreasureChest = new Chest(amount, x, y);
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("Casino.createNewChest/" + e.Message);
+                }
+                throw e;
+            }
         }
 
         private void findPlaceForChest(out int x, out int y)
         {
-            bool locationOk = false;
-            do
+            try
             {
-                SystemTools.GetRandomLocation(out x, out y, X + 71, Y + 132, X + Width - 83, Y + Heigth - 64);
-                locationOk = checkIfChestInRightPlace(x, y);
+                bool locationOk = false;
+                do
+                {
+                    SystemTools.GetRandomLocation(out x, out y, X + 71, Y + 132, X + Width - 83, Y + Heigth - 64);
+                    locationOk = checkIfChestInRightPlace(x, y);
+                }
+                while (!locationOk);
             }
-            while (!locationOk);
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("Casino.findPlaceForChest/" + e.Message);
+                }
+                throw e;
+            }
         }
 
         private bool checkIfChestInRightPlace(int x, int y)
         {
-            foreach(FurnitureInstance furniture in Furnitures)
+            try
             {
-                if(checkIfFurnituresBlockLocation(furniture, x, y))
+                foreach (FurnitureInstance furniture in Furnitures)
                 {
-                    return false;
+                    if (checkIfFurnituresBlockLocation(furniture, x, y))
+                    {
+                        return false;
+                    }
                 }
-            }
 
-            foreach (CharacterInstance character in Users)
+                foreach (CharacterInstance character in Users)
+                {
+                    if (checkIfCharacterBlockLocation(character, x, y))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+            catch (Exception e)
             {
-                if (checkIfCharacterBlockLocation(character, x, y))
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
                 {
-                    return false;
+                    file.WriteLine("Casino.checkIfChestInRightPlace/" + e.Message);
                 }
+                throw e;
             }
-
-            return true;
         }
 
         private bool checkIfCharacterBlockLocation(CharacterInstance character, int x, int y)
@@ -166,69 +252,113 @@ namespace Classes
 
         public CharacterInstance UserInCasino(string i_UserEmail)
         {
-            foreach (CharacterInstance user in Users)
+            try
             {
-                if (user != null && user.Email.Equals(i_UserEmail))
+                foreach (CharacterInstance user in Users)
                 {
-                    return user;
+                    if (user != null && user.Email.Equals(i_UserEmail))
+                    {
+                        return user;
+                    }
                 }
-            }
 
-            return null;
+                return null;
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("Casino.UserInCasino/" + e.Message);
+                }
+                throw e;
+            }
         }
 
         public List<Message> GetMessages()
         {
-            if (CasinoChat.Archive.Count > 50)
+            try
             {
-                List<Message> filteredMessages = (List<Message>)CasinoChat.Archive.Skip(Math.Max(0, CasinoChat.Archive.Count() - 50)).Take(50);
-                return filteredMessages;
-            }
+                if (CasinoChat.Archive.Count > 50)
+                {
+                    List<Message> filteredMessages = (List<Message>)CasinoChat.Archive.Skip(Math.Max(0, CasinoChat.Archive.Count() - 50)).Take(50);
+                    return filteredMessages;
+                }
 
-            return CasinoChat.Archive;
+                return CasinoChat.Archive;
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("Casino.GetMessages/" + e.Message);
+                }
+                throw e;
+            }
         }
 
         public List<CharacterInstance> GetUsersPositions(string i_Email, int i_radius = 600)
         {
-            List<CharacterInstance> relevantUsers = new List<CharacterInstance>();
-            CharacterInstance mainCharacter = UserInCasino(i_Email);
-            int x = mainCharacter.CurrentXPos;
-            int y = mainCharacter.CurrentYPos;
-
-            foreach (CharacterInstance user in Users)
+            try
             {
-                if (isBetween(x, y, user.CurrentXPos, user.CurrentYPos, i_radius) && !user.Email.Equals(i_Email))
-                {
-                    relevantUsers.Add(user);
-                }
-            }
+                List<CharacterInstance> relevantUsers = new List<CharacterInstance>();
+                CharacterInstance mainCharacter = UserInCasino(i_Email);
+                int x = mainCharacter.CurrentXPos;
+                int y = mainCharacter.CurrentYPos;
 
-            relevantUsers.Sort();
-            
-            return relevantUsers;
+                foreach (CharacterInstance user in Users)
+                {
+                    if (isBetween(x, y, user.CurrentXPos, user.CurrentYPos, i_radius) && !user.Email.Equals(i_Email))
+                    {
+                        relevantUsers.Add(user);
+                    }
+                }
+
+                relevantUsers.Sort();
+
+                return relevantUsers;
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("Casino.GetUsersPositions/" + e.Message);
+                }
+                throw e;
+            }
         }
 
         public void CheckIfAllPlayerOnline()
         {
             lock (DeleteObjLock)
             {
-                List<CharacterInstance> deletionList = new List<CharacterInstance>();
-                foreach (CharacterInstance player in Users)
+                try
                 {
-                    if (DateTime.Now.Subtract(player.LastUpdate).TotalSeconds >= 20)
+                    List<CharacterInstance> deletionList = new List<CharacterInstance>();
+                    foreach (CharacterInstance player in Users)
                     {
-                        deletionList.Add(player);
+                        if (DateTime.Now.Subtract(player.LastUpdate).TotalSeconds >= 20)
+                        {
+                            deletionList.Add(player);
+                        }
+                        else if (DateTime.Now.Subtract(player.LastUpdate).TotalSeconds >= 5)
+                        {
+                            player.LastXPos = player.CurrentXPos;
+                            player.CurrentYPos = player.CurrentYPos;
+                        }
                     }
-                    else if (DateTime.Now.Subtract(player.LastUpdate).TotalSeconds >= 5)
+
+                    foreach (CharacterInstance player in deletionList)
                     {
-                        player.LastXPos = player.CurrentXPos;
-                        player.CurrentYPos = player.CurrentYPos;
+                        Users.Remove(player);
                     }
                 }
-
-                foreach (CharacterInstance player in deletionList)
+                catch (Exception e)
                 {
-                    Users.Remove(player);
+                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                    {
+                        file.WriteLine("Casino.CheckIfAllPlayerOnline/" + e.Message);
+                    }
+                    throw e;
                 }
             }
         }

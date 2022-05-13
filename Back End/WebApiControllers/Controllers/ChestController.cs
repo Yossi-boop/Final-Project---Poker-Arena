@@ -14,31 +14,46 @@ namespace WebApiControllers.Controllers
     public class ChestController : ApiController
     {
 
-        // GET: api/Chest
-
-        // GET: api/Chest/5
+        
         public IHttpActionResult Get(string CasinoId)
         {
-            Casino casino = DataStorage.GetCasino(CasinoId);
-            var values = new JObject();
-            values = JObject.FromObject(casino.TreasureChest);
+            
+                try
+                {
+                    Casino casino = DataStorage.GetCasino(CasinoId);
+                    var values = new JObject();
+                    values = JObject.FromObject(casino.TreasureChest);
 
-            return Ok(values);
+                    return Ok(values);
+                }
+                catch (Exception e)
+                {
+                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                    {
+                        file.WriteLine("ChestController.get/" + e.Message);
+                    }
+                    return BadRequest("Bad");
+                }
+            
         }
 
-        // POST: api/Chest
         public void Post([FromBody]CollectChest Details)
         {
-            try
-            {
-                Casino casino = DataStorage.GetCasino(Details.CasinoId);
-                Stats stats = DataStorage.GetStatsByMail(Details.Email);
-                casino.CollectMoney(stats);
-            }
-            catch (Exception e)
-            {
-
-            }
+            
+                try
+                {
+                    Casino casino = DataStorage.GetCasino(Details.CasinoId);
+                    Stats stats = DataStorage.GetStatsByMail(Details.Email);
+                    casino.CollectMoney(stats);
+                }
+                catch (Exception e)
+                {
+                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                    {
+                        file.WriteLine("ChestController.post/" + e.Message);
+                    }
+                }
+            
         }
     }
 }
