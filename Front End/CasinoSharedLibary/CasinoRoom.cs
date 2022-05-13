@@ -10,6 +10,7 @@ using Classes;
 
 using Comora;
 using System.Timers;
+using System.Threading.Tasks;
 
 namespace CasinoSharedLibary
 {

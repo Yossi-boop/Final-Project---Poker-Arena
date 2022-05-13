@@ -6,6 +6,6 @@ namespace CasinoSharedLibary
 {
     public static class Logger
     {
-        public static string Path = "C:/Users/micha/Desktop/FrontLogger.txt";
+        public static string Path = "C:/Users/Yossi/Desktop/Final Project/FrontLogger.txt";
     }
 }
