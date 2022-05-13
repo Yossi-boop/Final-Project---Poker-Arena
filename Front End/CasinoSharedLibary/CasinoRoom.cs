@@ -350,7 +350,7 @@ namespace CasinoSharedLibary
                 if (casinoTimer == null)
                 {
                     casinoTimer = new Timer();
-                    casinoTimer.Interval = 1000;
+                    casinoTimer.Interval = 100;
                     casinoTimer.Elapsed += CasinoTimer_Elapsed;
                     casinoTimer.AutoReset = true;
                     casinoTimer.Enabled = true;

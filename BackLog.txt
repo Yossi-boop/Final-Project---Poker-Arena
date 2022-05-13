@@ -1,0 +1,2 @@
+Casino.GetUsersPositions/Object reference not set to an instance of an object.
+UserLocationController.get/Object reference not set to an instance of an object.

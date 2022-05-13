@@ -343,7 +343,7 @@ namespace Classes
                         else if (DateTime.Now.Subtract(player.LastUpdate).TotalSeconds >= 5)
                         {
                             player.LastXPos = player.CurrentXPos;
-                            player.CurrentYPos = player.CurrentYPos;
+                            player.LastYPos = player.CurrentYPos;
                         }
                     }
 
