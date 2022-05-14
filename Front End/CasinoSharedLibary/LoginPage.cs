@@ -95,7 +95,7 @@ namespace CasinoSharedLibary
             registerButton.HorizontalAlignment = HorizontalAlignment.Centre;
             registerButton.Clicked += RegisterButton_Clicked;
 
-            errorMessage = new Label();
+            errorMessage = new Label(unknownError);
             errorMessage.IsVisible = false;
             errorMessage.TextColor = Color.Red;
 
@@ -230,7 +230,7 @@ namespace CasinoSharedLibary
             {
                 errorMessage.IsVisible = false;
                 string loginResponse = gameManager.server.Login(userNameTextBox.Text, password.ToString());
-                if (loginResponse.Equals("loggedIn complete")) // Successful login
+                if (loginResponse.Contains("loggedIn complete")) // Successful login
                 {
                     gameManager.mainPlayerEmail = userNameTextBox.Text;
                     gameManager.ScreenType = eScreenType.CasinoRoom;
@@ -244,12 +244,12 @@ namespace CasinoSharedLibary
                     password.Clear();
                     starsPassword.Clear();
                 }
-                else if (loginResponse.Equals("Incorrect password")) // wrong username or password
+                else if (loginResponse.Contains("Incorrect password")) // wrong username or password
                 {
                     errorMessage.Content = wrongUserNameOrPassWord;
                     errorMessage.IsVisible = true;
                 }
-                else if (loginResponse.Equals("User Allready playing")) // user already login
+                else if (loginResponse.Contains("User Allready playing")) // user already login
                 {
                     errorMessage.Content = userAlreadyLogin;
                     errorMessage.IsVisible = true;

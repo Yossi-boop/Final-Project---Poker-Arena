@@ -763,14 +763,13 @@ namespace Classes
                 PokerPlayer player = ActivePlayersIndex[i_PlayerPosition];
                 if (currentBettingRound != null && currentBettingRound.CurrentPlayerIndex == i_PlayerPosition)
                 {
-                    if (!MakeAnAction(player.Signature, eAction.Fold, 0))
-                    {
-                        player.InHand = false;
-                        player.ShouldPlayInRound = false;
-                        player.ReadyToPlay = false;
-                    }
-                    player.UpdateResult = true;
+                    MakeAnAction(player.Signature, eAction.Fold, 0);
                 }
+                player.UpdateResult = true;
+                player.InHand = false;
+                player.ShouldPlayInRound = false;
+                player.ReadyToPlay = false;
+
             }
             catch (Exception e)
             {
