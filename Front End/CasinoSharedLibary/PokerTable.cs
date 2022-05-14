@@ -1083,6 +1083,8 @@ namespace CasinoSharedLibary
                 pokerTableChat.MoveChatDownButton.Update(i_gametime, 0, 0);
                 pokerTableChat.SendMessageButton.Position = new Vector2(0, 680);
                 pokerTableChat.SendMessageButton.Update(i_gametime, 0, 0);
+                pokerTableChat.MoveChatToLastMessage.Position = new Vector2(pokerTableChat.ChatMessagesWidth + 10, 655);
+                pokerTableChat.MoveChatToLastMessage.Update(i_gametime,0 ,0);
             }
             catch (Exception e)
             {
@@ -1189,6 +1191,7 @@ namespace CasinoSharedLibary
 
                 pokerTableChat.ChatButton.Draw(i_gametime, painter);
                 pokerTableChat.Draw(i_gametime);
+
 
                 volumeOnOffButton.Draw(i_gametime, painter);
 

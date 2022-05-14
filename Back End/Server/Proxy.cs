@@ -387,7 +387,7 @@ namespace Server
         {
             try
             {
-                string result = DeleteRequestAsync(BaseURL + "api/TablePokerChat?CasinoId=" + i_CasinoId + "&&TableId=" + i_TableId).Result;
+                string result = GetRequestAsync(BaseURL + "api/TablePokerChat?CasinoId=" + i_CasinoId + "&&TableId=" + i_TableId).Result;
                 var val = JArray.Parse(result);
 
                 List<Message> messages = val.ToObject<List<Message>>();
