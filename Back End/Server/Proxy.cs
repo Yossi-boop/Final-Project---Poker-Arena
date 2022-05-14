@@ -158,7 +158,7 @@ namespace Server
             return result;
         }
 
-        public bool Login(string i_Email, string i_Password)
+        public string Login(string i_Email, string i_Password)
         {
             try
             {
@@ -170,16 +170,12 @@ namespace Server
 
                 HttpContent content = new StringContent(values.ToString(), Encoding.UTF8, "application/json");
                 string result = PostRequestAsync(BaseURL + "api/LogIn", content).Result;
-                if (result.Equals("\"loggedIn complete\""))
-                {
-                    return true;
-                }
 
-                return false;
+                return result;
             }
             catch (Exception e)
             {
-                return false;
+                return e.Message;
             }
 
         }

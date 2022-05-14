@@ -23,10 +23,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerHand.PokerHand/" + e.Message);
-                }
+                
+                    Logger.WriteToLogger("PokerHand.PokerHand/" + e.Message);
+                
                 throw e;
             }
         }
@@ -96,10 +95,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerHand.CalculateHandRank/" + e.Message);
-                }
+
+                Logger.WriteToLogger("PokerHand.CalculateHandRank/" + e.Message);
+                
                 throw e;
             }
         }
@@ -146,10 +144,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerHand.MaxNumberOfSameCards/" + e.Message);
-                }
+                
+                    Logger.WriteToLogger("PokerHand.MaxNumberOfSameCards/" + e.Message);
+                
                 throw e;
             }
         }
@@ -178,10 +175,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerHand.ChangeHandOrder/" + e.Message);
-                }
+
+                Logger.WriteToLogger("PokerHand.ChangeHandOrder/" + e.Message);
+                
                 throw e;
             }
         }
@@ -205,10 +201,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerHand.CheckIfTwoPairs/" + e.Message);
-                }
+
+                Logger.WriteToLogger("PokerHand.CheckIfTwoPairs/" + e.Message);
+                
                 throw e;
             }
         }
@@ -259,10 +254,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerHand.ChangeHandOrderForTwoPairs/" + e.Message);
-                }
+
+                Logger.WriteToLogger("PokerHand.ChangeHandOrderForTwoPairs/" + e.Message);
+                
                 throw e;
             }
         }
@@ -275,10 +269,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerHand.CheckIfFullHouse/" + e.Message);
-                }
+
+                Logger.WriteToLogger("PokerHand.CheckIfFullHouse/" + e.Message);
+                
                 throw e;
             }
         }
@@ -298,10 +291,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerHand.CheckIfStraight/" + e.Message);
-                }
+
+                Logger.WriteToLogger("PokerHand.CheckIfStraight/" + e.Message);
+                
                 throw e;
             }
         }
@@ -322,10 +314,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerHand.CheckIfFlush/" + e.Message);
-                }
+
+                Logger.WriteToLogger("PokerHand.CheckIfFlush/" + e.Message);
+                
                 throw e;
             }
         }
@@ -350,10 +341,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerHand.CompareTo/" + e.Message);
-                }
+
+                Logger.WriteToLogger("PokerHand.CompareTo/" + e.Message);
+                
                 throw e;
             }
         }

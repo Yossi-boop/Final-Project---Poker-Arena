@@ -29,10 +29,15 @@ namespace CasinoSharedLibary
         private TextBox passWordTextBox;
         private Button loginButton;
         private Button registerButton;
-        private Label wrongUserNameOrPasswordLabel;
+        private Label errorMessage;
 
         private StringBuilder password;
         private StringBuilder starsPassword;
+
+        private const string enterUsernameAndPassword = "Please insert Username And Password.";
+        private const string wrongUserNameOrPassWord = "Wrong User Name Or Password.";
+        private const string userAlreadyLogin = "This user is already login. Try again in 30 seconds.";
+        private const string unknownError = "Something went wrong.";
 
         public LoginPage(Game1 i_gameManager, GraphicsDevice i_grapics, ContentManager i_contentManager)
         {
@@ -90,9 +95,9 @@ namespace CasinoSharedLibary
             registerButton.HorizontalAlignment = HorizontalAlignment.Centre;
             registerButton.Clicked += RegisterButton_Clicked;
 
-            wrongUserNameOrPasswordLabel = new Label("Wrong UserName or Password.");
-            wrongUserNameOrPasswordLabel.IsVisible = false;
-            wrongUserNameOrPasswordLabel.TextColor = Color.Red;
+            errorMessage = new Label();
+            errorMessage.IsVisible = false;
+            errorMessage.TextColor = Color.Red;
 
             Screen loginScreen = new Screen
             {
@@ -180,7 +185,7 @@ namespace CasinoSharedLibary
                                     Margin = 6,
                                     Items =
                                     {
-                                        wrongUserNameOrPasswordLabel
+                                        errorMessage
                                     }
                                 }
                             }
@@ -216,24 +221,43 @@ namespace CasinoSharedLibary
 
         private void LoginButton_Clicked(object sender, EventArgs e)
         {
-            if (gameManager.server.Login(userNameTextBox.Text, password.ToString()))
+            if (userNameTextBox.Text.Length == 0 || passWordTextBox.Text.Length == 0)
             {
-                gameManager.mainPlayerEmail = userNameTextBox.Text;
-                gameManager.ScreenType = eScreenType.CasinoRoom;
-                if(gameManager.casinoRoom == null)
-                {
-                    gameManager.casinoRoom = new CasinoRoom(gameManager, contentManager, storage);
-                    gameManager.casinoRoom.Load(_spriteBatch);
-                }
-                userNameTextBox.Text = string.Empty;
-                passWordTextBox.Text = string.Empty;
-                password.Clear();
-                starsPassword.Clear();
+                errorMessage.Content = enterUsernameAndPassword;
+                errorMessage.IsVisible = true;
             }
             else
             {
-                wrongUserNameOrPasswordLabel.IsVisible = true;
-            }
+                errorMessage.IsVisible = false;
+                string loginResponse = gameManager.server.Login(userNameTextBox.Text, password.ToString());
+                if (loginResponse.Equals("Good")) // Successful login
+                {
+                    gameManager.mainPlayerEmail = userNameTextBox.Text;
+                    gameManager.ScreenType = eScreenType.CasinoRoom;
+                    if (gameManager.casinoRoom == null)
+                    {
+                        gameManager.casinoRoom = new CasinoRoom(gameManager, contentManager, storage);
+                        gameManager.casinoRoom.Load(_spriteBatch);
+                    }
+                    userNameTextBox.Text = string.Empty;
+                    passWordTextBox.Text = string.Empty;
+                }
+                else if (loginResponse.Equals("BadUserNameOrPassword")) // wrong username or password
+                {
+                    errorMessage.Content = wrongUserNameOrPassWord;
+                    errorMessage.IsVisible = true;
+                }
+                else if (loginResponse.Equals("Already login")) // user already login
+                {
+                    errorMessage.Content = userAlreadyLogin;
+                    errorMessage.IsVisible = true;
+                }
+                else // general error message
+                {
+                    errorMessage.Content = unknownError;
+                    errorMessage.IsVisible = true;
+                }
+            }  
         }
 
         private void RegisterButton_Clicked(object sender, EventArgs e)

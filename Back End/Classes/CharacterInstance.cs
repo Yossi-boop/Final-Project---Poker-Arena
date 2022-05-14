@@ -60,7 +60,7 @@ namespace Classes
            }
             lock(MovementLock)
             {
-                if (ValidateNewLocation(i_CurrentXPos, i_CurrentYPos, this.LastXPos, this.LastYPos))
+                if (ValidateNewLocation(i_CurrentXPos, i_CurrentYPos, this.CurrentXPos, this.CurrentYPos))
             {
                 this.LastXPos = this.CurrentXPos;
                 this.LastYPos = this.CurrentYPos;
@@ -81,7 +81,7 @@ namespace Classes
 
         public bool ValidateNewLocation(int i_CurrentXPos, int i_CurrentYPos, int i_LastXPos, int i_LastYPos)
         {
-            return !(i_LastYPos < i_CurrentYPos - 150 || i_LastYPos > i_CurrentYPos + 150 || i_LastXPos < i_CurrentXPos - 150 || i_LastXPos > i_CurrentXPos + 150);
+            return !(i_LastYPos < i_CurrentYPos - 100 || i_LastYPos > i_CurrentYPos + 100 || i_LastXPos < i_CurrentXPos - 100  || i_LastXPos > i_CurrentXPos + 100);
         }
 
         public void AddMessage(string body)

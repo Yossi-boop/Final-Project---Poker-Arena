@@ -22,7 +22,7 @@ namespace WebApiControllers.Controllers
                     User user = DataStorage.GetUserByMail(i_UserDetails.Email);
                     if (user == null)
                     {
-                        return BadRequest("Email doesn't exist");
+                        return BadRequest("Incorrect password");
                     }
 
                     if (DataStorage.checkIfUserOnline(i_UserDetails.Email))
@@ -40,10 +40,9 @@ namespace WebApiControllers.Controllers
                 }
                 catch (Exception e)
                 {
-                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                    {
-                        file.WriteLine("LogInController.post/" + e.Message);
-                    }
+
+                Logger.WriteToLogger("LogInController.post/" + e.Message);
+                    
                     return BadRequest("Bad");
                 }
             

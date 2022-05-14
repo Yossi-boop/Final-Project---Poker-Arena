@@ -66,10 +66,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Table.updateAction/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Table.updateAction/" + e.Message);
+                
                 throw e;
             }
         }
@@ -98,10 +97,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Table.Table/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Table.Table/" + e.Message);
+                
                 throw e;
             }
         }
@@ -120,10 +118,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Table.initiateUserSits/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Table.initiateUserSits/" + e.Message);
+                
                 throw e;
             }
         }
@@ -142,10 +139,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Table.AddUser/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Table.AddUser/" + e.Message);
+                
                 throw e;
             }
         }
@@ -189,10 +185,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Table.StartRound/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Table.StartRound/" + e.Message);
+                
                 throw e;
             }
         }
@@ -221,10 +216,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Table.updatePlayerListAfterRound/" + e.Message);
-                }
+                
+                    Logger.WriteToLogger("Table.updatePlayerListAfterRound/" + e.Message);
+                
                 throw e;
             }
         }
@@ -245,10 +239,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Table.checkIfPlayerOnline/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Table.checkIfPlayerOnline/" + e.Message);
+                
                 throw e;
             }
         }
@@ -290,10 +283,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Table.nextPlayer/" + e.Message);
-                }
+                
+                    Logger.WriteToLogger("Table.nextPlayer/" + e.Message);
+                
                 throw e;
             }
         }
@@ -322,10 +314,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Table.checkIfEnough/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Table.checkIfEnough/" + e.Message);
+                
                 throw e;
             }
         }
@@ -343,10 +334,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Table.ReBuyAddOnAddToQueue/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Table.ReBuyAddOnAddToQueue/" + e.Message);
+                
                 throw e;
             }
         }
@@ -367,10 +357,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Table.reBuyAddOn/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Table.reBuyAddOn/" + e.Message);
+                
                 throw e;
             }
         }
@@ -409,10 +398,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Table.GetPlayer/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Table.GetPlayer/" + e.Message);
+                
                 throw e;
             }
         }
@@ -436,10 +424,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Table.GetOut/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Table.GetOut/" + e.Message);
+                
                 throw e;
             }
         }

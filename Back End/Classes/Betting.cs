@@ -27,10 +27,7 @@ namespace Classes
                     return ActivePlayers[CurrentPlayerIndex];
                 } catch(Exception e)
                 {
-                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                    {
-                        file.WriteLine("Betting.CurrentPlayer/" + e.Message);
-                    }
+                    Logger.WriteToLogger("Betting.CurrentPlayer/" + e.Message);
                     throw e;
                 }
             }
@@ -115,10 +112,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Betting.MakeAnAction/" + e.Message);
-                }
+               
+                    Logger.WriteToLogger("Betting.MakeAnAction/" + e.Message);
+               
                 throw e;
             }
         }
@@ -146,10 +142,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Betting.requestActionFromAllPlayers/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Betting.requestActionFromAllPlayers/" + e.Message);
+                
                 throw e;
             }
         }
@@ -173,10 +168,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Betting.checkIfThereIsNeedForAction/" + e.Message);
-                }
+                
+                    Logger.WriteToLogger("Betting.checkIfThereIsNeedForAction/" + e.Message);
+                
                 throw e;
             }
         }

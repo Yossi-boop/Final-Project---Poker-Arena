@@ -25,10 +25,9 @@ namespace WebApiControllers.Controllers
                 }
                 catch (Exception e)
                 {
-                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                    {
-                        file.WriteLine("PokerTableController.get/" + e.Message);
-                    }
+
+                    Logger.WriteToLogger("PokerTableController.get/" + e.Message);
+                    
                     return BadRequest("Bad");
                 }
             
@@ -68,10 +67,9 @@ namespace WebApiControllers.Controllers
                 }
                 catch (Exception e)
                 {
-                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                    {
-                        file.WriteLine("PokerTableController.post/" + e.Message);
-                    }
+
+                    Logger.WriteToLogger("PokerTableController.post/" + e.Message);
+                    
                     return BadRequest("Bad");
                 }
             

@@ -48,10 +48,9 @@ namespace WebApiControllers.Controllers
                 }
                 catch (Exception e)
                 {
-                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                    {
-                        file.WriteLine("UserLocationController.get/" + e.Message);
-                    }
+
+                Logger.WriteToLogger("UserLocationController.get/" + e.Message);
+                    
                     return BadRequest("Bad");
                 }
             
@@ -81,19 +80,17 @@ namespace WebApiControllers.Controllers
                     }
                     else
                     {
-                        i_Character.LastXPos = i_Character.CurrentXPos;
-                        i_Character.LastYPos = i_Character.CurrentYPos;
-
-                        casino.Users.Add(i_Character);
+                    i_Character.LastXPos = i_Character.CurrentXPos;
+                    i_Character.LastYPos = i_Character.CurrentYPos;
+                    casino.Users.Add(i_Character);
                     }
 
                     return Ok("Updated");
                 }
                 catch(Exception e) {
-                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                    {
-                        file.WriteLine("UserLocationController.post/" +e.Message);
-                    }
+
+                Logger.WriteToLogger("UserLocationController.post/" +e.Message);
+                    
                     return BadRequest("Bad");
                 }
             

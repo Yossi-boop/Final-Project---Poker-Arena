@@ -27,10 +27,9 @@ namespace WebApiControllers.Controllers
                 }
                 catch (Exception e)
                 {
-                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                    {
-                        file.WriteLine("CasinoChatController.get/" + e.Message);
-                    }
+
+                Logger.WriteToLogger("CasinoChatController.get/" + e.Message);
+                    
                     return BadRequest("Bad");
                 }
             
@@ -58,10 +57,9 @@ namespace WebApiControllers.Controllers
                 }
                 catch (Exception e)
                 {
-                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                    {
-                        file.WriteLine("CasinoChatController.post/" + e.Message);
-                    }
+
+                Logger.WriteToLogger("CasinoChatController.post/" + e.Message);
+                    
                     return BadRequest("Bad");
                 }
             

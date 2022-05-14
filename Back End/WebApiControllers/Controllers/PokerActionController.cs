@@ -41,10 +41,9 @@ namespace WebApiControllers.Controllers
                 }
                 catch (Exception e)
                 {
-                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                    {
-                        file.WriteLine("PokerActionController.post/" + e.Message);
-                    }
+                    
+                    Logger.WriteToLogger("PokerActionController.post/" + e.Message);
+                    
                     return BadRequest("Bad");
                 }
             
