@@ -277,6 +277,7 @@ namespace CasinoSharedLibary
             isReEnterToCasino = true;
             MediaPlayer.Stop();
             gameManager.ScreenType = eScreenType.LoginPage;
+            casinoTimer.Enabled = false;
         }
 
         private void SettingsButton_Click(object sender, EventArgs e)
@@ -351,9 +352,13 @@ namespace CasinoSharedLibary
                 if (casinoTimer == null)
                 {
                     casinoTimer = new Timer();
-                    casinoTimer.Interval = 100;
+                    casinoTimer.Interval = 1000;
                     casinoTimer.Elapsed += CasinoTimer_Elapsed;
                     casinoTimer.AutoReset = true;
+                    casinoTimer.Enabled = true;
+                }
+                else if (casinoTimer.Enabled == false)
+                {
                     casinoTimer.Enabled = true;
                 }
             }
