@@ -34,6 +34,8 @@ namespace CasinoSharedLibary
         public DrawingButton MoveChatToLastMessage { get; set; }
 
         private bool isChatVisible = false;
+        public bool IsChatVisible 
+        { get { return isChatVisible; } }
         private bool isChatSelfUpdated = true;
 
         private List<Message> ChatData = new List<Message>(); //chat data is a list of all the messagse,

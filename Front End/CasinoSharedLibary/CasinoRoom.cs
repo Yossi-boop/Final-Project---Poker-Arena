@@ -493,8 +493,9 @@ namespace CasinoSharedLibary
                 FurnitureInstance furniture = nearToPokerTable();
                 if (furniture != null)
                 {
-                    if (furniture.Type == 0 || furniture.Type == 4 || furniture.Type == 18 ||
-                        furniture.Type == 2 || furniture.Type == 17 || furniture.Type == 1)
+                    if ((furniture.Type == 0 || furniture.Type == 4 || furniture.Type == 18 ||
+                        furniture.Type == 2 || furniture.Type == 17 || furniture.Type == 1) &&
+                        !casinoRoomNewChat.IsChatVisible)
                     {
                         isExplainToPlayerHowToEnterPokerTablePanelVisibe = true;
                     }
@@ -513,9 +514,8 @@ namespace CasinoSharedLibary
                     {
                         isExplainToPlayerHowToEnterPokerTablePanelVisibe = false;
                     }
-                    if (currentInput == Keys.Space)
+                    if (currentInput == Keys.Space && !casinoRoomNewChat.IsChatVisible)
                     {
-
                         switch (furniture.Type)
                         {
                             case 0:
@@ -554,7 +554,6 @@ namespace CasinoSharedLibary
                                 {
                                     isEnterTablePanelVisible = true;
                                     givenTableId = furniture.Id;
-                                    //OpenPokerTable(furniture.Id, mainPlayer.PlayerName, mainPlayer.playerEmail);
                                     break;
                                 }
                             case 18:
@@ -734,7 +733,7 @@ namespace CasinoSharedLibary
         {
             try
             {
-                if (isExplainToPlayerHowToEnterPokerTablePanelVisibe)
+                if (isExplainToPlayerHowToEnterPokerTablePanelVisibe && !casinoRoomNewChat.IsChatVisible)
                 {
                     Vector2 panelLocation = new Vector2(390, 154) + i_mainPosition;
                     explainToPlayerHowToEnterPokerTablePanelRectangle = new Rectangle((int)panelLocation.X, (int)panelLocation.Y, 330, 200);
