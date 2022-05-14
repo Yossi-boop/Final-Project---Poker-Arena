@@ -241,6 +241,8 @@ namespace CasinoSharedLibary
                     }
                     userNameTextBox.Text = string.Empty;
                     passWordTextBox.Text = string.Empty;
+                    password.Clear();
+                    starsPassword.Clear();
                 }
                 else if (loginResponse.Equals("BadUserNameOrPassword")) // wrong username or password
                 {
