@@ -30,10 +30,9 @@ namespace WebApiControllers.Controllers
                 }
                 catch (Exception e)
                 {
-                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                    {
-                        file.WriteLine("CasinoController.get1/" + e.Message);
-                    }
+                    
+                    Logger.WriteToLogger("CasinoController.get1/" + e.Message);
+                    
                     return BadRequest("Bad");
                 }
             

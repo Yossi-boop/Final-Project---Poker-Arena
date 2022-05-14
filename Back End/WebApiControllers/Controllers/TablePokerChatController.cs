@@ -32,10 +32,9 @@ namespace WebApiControllers.Controllers
                 }
                 catch (Exception e)
                 {
-                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                    {
-                        file.WriteLine("TablePokerChatController.get/" + e.Message);
-                    }
+
+                    Logger.WriteToLogger("TablePokerChatController.get/" + e.Message);
+                    
                     return BadRequest("There Is No Table");
                 }
             
@@ -60,10 +59,9 @@ namespace WebApiControllers.Controllers
                 }
                 catch (Exception e)
                 {
-                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                    {
-                        file.WriteLine("TablePokerChatController.post/" + e.Message);
-                    }
+
+                    Logger.WriteToLogger("TablePokerChatController.post/" + e.Message);
+                    
                     return BadRequest("There Is No Table");
                 }
             

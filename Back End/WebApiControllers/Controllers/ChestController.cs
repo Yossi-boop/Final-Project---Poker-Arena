@@ -28,10 +28,9 @@ namespace WebApiControllers.Controllers
                 }
                 catch (Exception e)
                 {
-                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                    {
-                        file.WriteLine("ChestController.get/" + e.Message);
-                    }
+                    
+                    Logger.WriteToLogger("ChestController.get/" + e.Message);
+                    
                     return BadRequest("Bad");
                 }
             
@@ -48,10 +47,9 @@ namespace WebApiControllers.Controllers
                 }
                 catch (Exception e)
                 {
-                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                    {
-                        file.WriteLine("ChestController.post/" + e.Message);
-                    }
+                    
+                    Logger.WriteToLogger("ChestController.post/" + e.Message);
+                    
                 }
             
         }

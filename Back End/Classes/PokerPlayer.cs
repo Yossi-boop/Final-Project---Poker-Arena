@@ -72,10 +72,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerPlayer.PokerPlayer/" + e.Message);
-                }
+
+                Logger.WriteToLogger("PokerPlayer.PokerPlayer/" + e.Message);
+                
                 throw e;
             }
         }
@@ -118,10 +117,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerPlayer.UpdateStats/" + e.Message);
-                }
+
+                Logger.WriteToLogger("PokerPlayer.UpdateStats/" + e.Message);
+                
                 throw e;
             }
         }
@@ -136,10 +134,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerPlayer.writeInDataBase/" + e.Message);
-                }
+
+                Logger.WriteToLogger("PokerPlayer.writeInDataBase/" + e.Message);
+                
                 throw e;
             }
         }
@@ -164,10 +161,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerPlayer.putRequestAsync/" + e.Message);
-                }
+
+                Logger.WriteToLogger("PokerPlayer.putRequestAsync/" + e.Message);
+                
                 throw e;
             }
         }
@@ -217,10 +213,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerPlayer.PlaceMoney/" + e.Message);
-                }
+
+                Logger.WriteToLogger("PokerPlayer.PlaceMoney/" + e.Message);
+                
                 throw e;
             }
         }
@@ -246,10 +241,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerPlayer.ToString/" + e.Message);
-                }
+
+                Logger.WriteToLogger("PokerPlayer.ToString/" + e.Message);
+                
                 throw e;
             }
         }

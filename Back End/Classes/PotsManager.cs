@@ -25,10 +25,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PotsManager.PotsManager/" + e.Message);
-                }
+
+                Logger.WriteToLogger("PotsManager.PotsManager/" + e.Message);
+                
                 throw e;
             }
         }
@@ -45,10 +44,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PotsManager.createMainPot/" + e.Message);
-                }
+
+                Logger.WriteToLogger("PotsManager.createMainPot/" + e.Message);
+                
                 throw e;
             }
         }
@@ -79,10 +77,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PotsManager.createSidePots/" + e.Message);
-                }
+
+                Logger.WriteToLogger("PotsManager.createSidePots/" + e.Message);
+                
                 throw e;
             }
         }
@@ -111,10 +108,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PotsManager.Levels/" + e.Message);
-                }
+
+                Logger.WriteToLogger("PotsManager.Levels/" + e.Message);
+                
                 throw e;
             }
         }
@@ -156,10 +152,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PotsManager.Create/" + e.Message);
-                }
+
+                Logger.WriteToLogger("PotsManager.Create/" + e.Message);
+                
                 throw e;
             }
         }

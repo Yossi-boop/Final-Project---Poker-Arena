@@ -68,10 +68,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Card.ToString/" + e.Message);
-                }
+                
+                    Logger.WriteToLogger("Card.ToString/" + e.Message);
+                
                 throw e;
             }
         }
@@ -87,10 +86,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Card.CompareTo/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Card.CompareTo/" + e.Message);
+                
                 throw e;
             }
         }

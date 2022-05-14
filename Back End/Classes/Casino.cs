@@ -60,10 +60,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Casino.CollectMoney/" + e.Message);
-                }
+               
+                    Logger.WriteToLogger("Casino.CollectMoney/" + e.Message);
+               
                 throw e;
             }
         }
@@ -80,10 +79,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Casino.writeInDataBase/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Casino.writeInDataBase/" + e.Message);
+                
                 throw e;
             }
         }
@@ -104,10 +102,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Casino.putRequestAsync/" + e.Message);
-                }
+                
+                    Logger.WriteToLogger("Casino.putRequestAsync/" + e.Message);
+                
                 throw e;
             }
         }
@@ -130,10 +127,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Casino.GetFurnitureInstances/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Casino.GetFurnitureInstances/" + e.Message);
+                
                 throw e;
             }
         }
@@ -156,10 +152,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Casino.CheckIfTimeForChest/" + e.Message);
-                }
+                
+                    Logger.WriteToLogger("Casino.CheckIfTimeForChest/" + e.Message);
+                
                 throw e;
             }
         }
@@ -176,10 +171,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Casino.createNewChest/" + e.Message);
-                }
+                
+                    Logger.WriteToLogger("Casino.createNewChest/" + e.Message);
+                
                 throw e;
             }
         }
@@ -198,10 +192,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Casino.findPlaceForChest/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Casino.findPlaceForChest/" + e.Message);
+                
                 throw e;
             }
         }
@@ -229,11 +222,8 @@ namespace Classes
                 return true;
             }
             catch (Exception e)
-            {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Casino.checkIfChestInRightPlace/" + e.Message);
-                }
+            {                
+                    Logger.WriteToLogger("Casino.checkIfChestInRightPlace/" + e.Message); 
                 throw e;
             }
         }
@@ -266,10 +256,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Casino.UserInCasino/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Casino.UserInCasino/" + e.Message);
+                
                 throw e;
             }
         }
@@ -288,10 +277,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Casino.GetMessages/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Casino.GetMessages/" + e.Message);
+                
                 throw e;
             }
         }
@@ -319,10 +307,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Casino.GetUsersPositions/" + e.Message);
-                }
+                
+                    Logger.WriteToLogger("Casino.GetUsersPositions/" + e.Message);
+                
                 throw e;
             }
         }
@@ -354,10 +341,9 @@ namespace Classes
                 }
                 catch (Exception e)
                 {
-                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                    {
-                        file.WriteLine("Casino.CheckIfAllPlayerOnline/" + e.Message);
-                    }
+
+                    Logger.WriteToLogger("Casino.CheckIfAllPlayerOnline/" + e.Message);
+                    
                     throw e;
                 }
             }

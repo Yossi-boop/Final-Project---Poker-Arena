@@ -104,10 +104,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Stats.ConvertHandToInts/" + e.Message);
-                }
+                
+                    Logger.WriteToLogger("Stats.ConvertHandToInts/" + e.Message);
+                
                 throw e;
             }
         }

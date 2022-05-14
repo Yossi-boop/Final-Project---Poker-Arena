@@ -55,10 +55,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Round.CheckIfTimeout/" + e.Message);
-                }
+                
+                    Logger.WriteToLogger("Round.CheckIfTimeout/" + e.Message);
+                
                 throw e;
             }
         }
@@ -78,10 +77,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Round.skipTurn/" + e.Message);
-                }
+                
+                    Logger.WriteToLogger("Round.skipTurn/" + e.Message);
+                
                 throw e;
             }
         }
@@ -111,10 +109,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Round.Round/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Round.Round/" + e.Message);
+                
                 throw e;
             }
         }
@@ -133,10 +130,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Round.transferMoneyFromStatsToTable/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Round.transferMoneyFromStatsToTable/" + e.Message);
+                
                 throw e;
             }
         }
@@ -174,10 +170,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Round.checkIfReadyToPlay/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Round.checkIfReadyToPlay/" + e.Message);
+                
                 throw e;
             }
         }
@@ -190,10 +185,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Round.startRound/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Round.startRound/" + e.Message);
+                
                 throw e;
             }
         }
@@ -215,10 +209,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Round.endRound/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Round.endRound/" + e.Message);
+                
                 throw e;
             }
         }
@@ -239,10 +232,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Round.updateStatsForAllPlayers/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Round.updateStatsForAllPlayers/" + e.Message);
+                
                 throw e;
             }
         }
@@ -261,10 +253,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Round.collectMoney/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Round.collectMoney/" + e.Message);
+                
                 throw e;
             }
         }
@@ -281,10 +272,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Round.pushMoneyToPlayers/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Round.pushMoneyToPlayers/" + e.Message);
+                
                 throw e;
             }
         }
@@ -314,10 +304,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Round.winnerIndexes/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Round.winnerIndexes/" + e.Message);
+                
                 throw e;
             }
         }
@@ -333,10 +322,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Round.getBestHandsForAllRemainingUsers/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Round.getBestHandsForAllRemainingUsers/" + e.Message);
+                
                 throw e;
             }
         }
@@ -397,10 +385,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Round.findBestHand/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Round.findBestHand/" + e.Message);
+                
                 throw e;
             }
         }
@@ -419,10 +406,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Round.copyHand/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Round.copyHand/" + e.Message);
+                
                 throw e;
             }
         }
@@ -455,10 +441,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Round.randomCards/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Round.randomCards/" + e.Message);
+                
                 throw e;
             }
         }
@@ -495,10 +480,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Round.MakeAnAction/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Round.MakeAnAction/" + e.Message);
+                
                 throw e;
             }
         }
@@ -522,10 +506,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Round.checkIfThereIsNeedForAction/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Round.checkIfThereIsNeedForAction/" + e.Message);
+                
                 throw e;
             }
         }
@@ -569,10 +552,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Round.playRoundPart/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Round.playRoundPart/" + e.Message);
+                
                 throw e;
             }
         }
@@ -591,10 +573,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Round.resetAllPlayersRoundBet/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Round.resetAllPlayersRoundBet/" + e.Message);
+                
                 throw e;
             }
         }
@@ -622,10 +603,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Round.isOnlyOne/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Round.isOnlyOne/" + e.Message);
+                
                 throw e;
             }
         }
@@ -652,10 +632,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Round.isHeadsUp/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Round.isHeadsUp/" + e.Message);
+                
                 throw e;
             }
         }
@@ -677,10 +656,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Round.placeBlinds/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Round.placeBlinds/" + e.Message);
+                
                 throw e;
             }
         }
@@ -703,10 +681,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Round.nextPlayer/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Round.nextPlayer/" + e.Message);
+                
                 throw e;
             }
         }
@@ -732,10 +709,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Round.FinishResult/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Round.FinishResult/" + e.Message);
+                
                 throw e;
             }
         }
@@ -773,10 +749,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Round.ToString/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Round.ToString/" + e.Message);
+                
                 throw e;
             }
         }
@@ -790,19 +765,18 @@ namespace Classes
                 {
                     if (!MakeAnAction(player.Signature, eAction.Fold, 0))
                     {
-                        player.UpdateResult = true;
                         player.InHand = false;
                         player.ShouldPlayInRound = false;
                         player.ReadyToPlay = false;
                     }
+                    player.UpdateResult = true;
                 }
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Round.GetOut/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Round.GetOut/" + e.Message);
+                
                 throw e;
             }
         }   
@@ -823,10 +797,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Round.CalculateTotalBets/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Round.CalculateTotalBets/" + e.Message);
+                
                 throw e;
             }
         }
@@ -849,10 +822,9 @@ namespace Classes
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("Round.GetPlayer/" + e.Message);
-                }
+
+                Logger.WriteToLogger("Round.GetPlayer/" + e.Message);
+                
                 throw e;
             }
         }
