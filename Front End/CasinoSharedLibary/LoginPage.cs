@@ -230,7 +230,7 @@ namespace CasinoSharedLibary
             {
                 errorMessage.IsVisible = false;
                 string loginResponse = gameManager.server.Login(userNameTextBox.Text, password.ToString());
-                if (loginResponse.Equals("Good")) // Successful login
+                if (loginResponse.Equals("loggedIn complete")) // Successful login
                 {
                     gameManager.mainPlayerEmail = userNameTextBox.Text;
                     gameManager.ScreenType = eScreenType.CasinoRoom;
@@ -244,12 +244,12 @@ namespace CasinoSharedLibary
                     password.Clear();
                     starsPassword.Clear();
                 }
-                else if (loginResponse.Equals("BadUserNameOrPassword")) // wrong username or password
+                else if (loginResponse.Equals("Incorrect password")) // wrong username or password
                 {
                     errorMessage.Content = wrongUserNameOrPassWord;
                     errorMessage.IsVisible = true;
                 }
-                else if (loginResponse.Equals("Already login")) // user already login
+                else if (loginResponse.Equals("User Allready playing")) // user already login
                 {
                     errorMessage.Content = userAlreadyLogin;
                     errorMessage.IsVisible = true;
