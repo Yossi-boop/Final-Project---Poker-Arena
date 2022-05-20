@@ -1,3 +1,0 @@
-Casino.GetUsersPositions/Object reference not set to an instance of an object.
-UserLocationController.get/Object reference not set to an instance of an object.
-LogInController.post/Connection Timeout Expired.  The timeout period elapsed while attempting to consume the pre-login handshake acknowledgement.  This could be because the pre-login handshake failed or the server was unable to respond back in time.  The duration spent while attempting to connect to this server was - [Pre-Login] initialization=576; handshake=542; 
