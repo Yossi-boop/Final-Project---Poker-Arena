@@ -153,6 +153,11 @@ namespace CasinoSharedLibary
                     }
                         
                 }
+
+                if (_currentMouse.LeftButton == ButtonState.Released)
+                {
+                    Clicked = false;
+                }
             }
         }
 

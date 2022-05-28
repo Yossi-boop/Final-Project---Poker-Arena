@@ -11,10 +11,10 @@ using Classes;
 
 using Comora;
 using System.Timers;
-using System.Threading.Tasks;
 
 namespace CasinoSharedLibary
 {
+
     public class CasinoRoom
     {
         private Game1 gameManager;
@@ -97,6 +97,8 @@ namespace CasinoSharedLibary
         private bool isUpdateStatsAfterPokerTable = true;
 
         private Table currentTable;
+
+        private TaskScheduler scheduler;
 
         public CasinoRoom(Game1 i_gameManager, ContentManager i_Content, SpritesStorage i_Storage)
         {
