@@ -706,6 +706,7 @@ namespace CasinoSharedLibary
         private void ExitButton_Clicked(object sender, EventArgs e)
         {
             gameManager.server.SitOut(casinoId, tableId, userEmail, signature, true);
+
             gameManager.ScreenType = eScreenType.CasinoRoom;
         }
 
@@ -771,11 +772,11 @@ namespace CasinoSharedLibary
                         }
                         else
                         {
+                            updateEndRound = false;
                             roundEnd = false;
                             if (myPlayer != null && myPlayer.InHand &&
                                 currentPlayer.Email.Equals(myPlayer.Email))
                             {
-                                updateEndRound = false;
                                 bottomButtonsPanel.IsEnabled = true;
                                 bottomButtonsPanel.IsVisible = true;
                                 CheckOrCall();
