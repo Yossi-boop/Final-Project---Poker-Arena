@@ -567,7 +567,7 @@ namespace CasinoSharedLibary
         private void initializeIntervals()
         {
             aTimer = new System.Timers.Timer();
-            aTimer.Interval = 2000;
+            aTimer.Interval = 1000;
             aTimer.Elapsed += getData;
             aTimer.AutoReset = true;
             aTimer.Enabled = true;
@@ -583,6 +583,7 @@ namespace CasinoSharedLibary
                 if (round != null)
                 {
                     currentRoundPart = round.Part;
+                    lastRoundPart = (currentRoundPart == RoundPart.PreFlop) ? currentRoundPart : lastRoundPart;
                     currentBettingRound = round.currentBettingRound;
                     currentPlayer = currentBettingRound.CurrentPlayer;
                     cardDrawingLocations = calculateCardLocation(round);
@@ -1698,7 +1699,11 @@ namespace CasinoSharedLibary
                                 painter.Draw(storage.PokerSigns[(int)eAction], new Rectangle((int)(playersLocations[0].X - width * 100), (int)playersLocations[0].Y, 20 * (int)width, 20 * (int)height), Color.White);
                                 if (eAction != eAction.Fold && eAction != eAction.Check)
                                 {
-                                    painter.DrawString(storage.Fonts[0], table.CurrentRound.ActivePlayersIndex[0].CurrentRoundBet.ToString() + "$", new Vector2((int)(playersLocations[0].X - width * 75), (int)playersLocations[0].Y - 10 * height), Color.White);
+                                    painter.DrawString(storage.Fonts[0],
+                                        table.CurrentRound.ActivePlayersIndex[0].CurrentRoundBet.ToString() + "$",
+                                        new Vector2((int)(playersLocations[0].X - width * 75),
+                                        (int)playersLocations[0].Y - 10 * height),
+                                        i_PlayerIndex == table.CurrentRound.currentBettingRound.CurrentPlayerIndex ?  Color.Gold : Color.White);
                                 }
                             }
 
@@ -1717,7 +1722,11 @@ namespace CasinoSharedLibary
                                 painter.Draw(storage.PokerSigns[(int)eAction], new Rectangle((int)(playersLocations[1].X - width * 100), (int)playersLocations[1].Y, 20 * (int)width, 20 * (int)height), Color.White);
                                 if (eAction != eAction.Fold && eAction != eAction.Check)
                                 {
-                                    painter.DrawString(storage.Fonts[0], table.CurrentRound.ActivePlayersIndex[1].CurrentRoundBet.ToString() + "$", new Vector2((int)(playersLocations[1].X - width * 75), (int)playersLocations[1].Y - 10 * height), Color.White);
+                                    painter.DrawString(storage.Fonts[0], 
+                                        table.CurrentRound.ActivePlayersIndex[1].CurrentRoundBet.ToString() + "$", 
+                                        new Vector2((int)(playersLocations[1].X - width * 75), 
+                                        (int)playersLocations[1].Y - 10 * height),
+                                        i_PlayerIndex == table.CurrentRound.currentBettingRound.CurrentPlayerIndex ? Color.Gold : Color.White);
                                 }
                             }
                             break;
@@ -1734,7 +1743,11 @@ namespace CasinoSharedLibary
                                 painter.Draw(storage.PokerSigns[(int)eAction], new Rectangle((int)(playersLocations[2].X - width * 100), (int)playersLocations[2].Y, 20 * (int)width, 20 * (int)height), Color.White);
                                 if (eAction != eAction.Fold && eAction != eAction.Check)
                                 {
-                                    painter.DrawString(storage.Fonts[0], table.CurrentRound.ActivePlayersIndex[2].CurrentRoundBet.ToString() + "$", new Vector2((int)(playersLocations[2].X - width * 75), (int)playersLocations[2].Y - 10 * height), Color.White);
+                                    painter.DrawString(storage.Fonts[0], 
+                                        table.CurrentRound.ActivePlayersIndex[2].CurrentRoundBet.ToString() + "$", 
+                                        new Vector2((int)(playersLocations[2].X - width * 75), 
+                                        (int)playersLocations[2].Y - 10 * height),
+                                        i_PlayerIndex == table.CurrentRound.currentBettingRound.CurrentPlayerIndex ? Color.Gold : Color.White);
                                 }
                             }
                             break;
@@ -1751,7 +1764,11 @@ namespace CasinoSharedLibary
                                 painter.Draw(storage.PokerSigns[(int)eAction], new Rectangle((int)(playersLocations[3].X), (int)(playersLocations[3].Y - 90 * height), 20 * (int)width, 20 * (int)height), Color.White);
                                 if (eAction != eAction.Fold && eAction != eAction.Check)
                                 {
-                                    painter.DrawString(storage.Fonts[0], table.CurrentRound.ActivePlayersIndex[3].CurrentRoundBet.ToString() + "$", new Vector2((int)(playersLocations[3].X + width * 25), (int)playersLocations[3].Y - 100 * height), Color.White);
+                                    painter.DrawString(storage.Fonts[0], 
+                                        table.CurrentRound.ActivePlayersIndex[3].CurrentRoundBet.ToString() + "$", 
+                                        new Vector2((int)(playersLocations[3].X + width * 25), 
+                                        (int)playersLocations[3].Y - 100 * height),
+                                        i_PlayerIndex == table.CurrentRound.currentBettingRound.CurrentPlayerIndex ? Color.Gold : Color.White);
                                 }
                             }
                             break;
@@ -1768,7 +1785,11 @@ namespace CasinoSharedLibary
                                 painter.Draw(storage.PokerSigns[(int)eAction], new Rectangle((int)(playersLocations[4].X), (int)(playersLocations[4].Y - 90 * height), 20 * (int)width, 20 * (int)height), Color.White);
                                 if (eAction != eAction.Fold && eAction != eAction.Check)
                                 {
-                                    painter.DrawString(storage.Fonts[0], table.CurrentRound.ActivePlayersIndex[4].CurrentRoundBet.ToString() + "$", new Vector2((int)(playersLocations[4].X + width * 25), (int)playersLocations[4].Y - 100 * height), Color.White);
+                                    painter.DrawString(storage.Fonts[0], 
+                                        table.CurrentRound.ActivePlayersIndex[4].CurrentRoundBet.ToString() + "$", 
+                                        new Vector2((int)(playersLocations[4].X + width * 25), 
+                                        (int)playersLocations[4].Y - 100 * height),
+                                        i_PlayerIndex == table.CurrentRound.currentBettingRound.CurrentPlayerIndex ? Color.Gold : Color.White);
                                 }
                             }
                             break;
@@ -1785,7 +1806,11 @@ namespace CasinoSharedLibary
                                 painter.Draw(storage.PokerSigns[(int)eAction], new Rectangle((int)(playersLocations[5].X), (int)(playersLocations[5].Y - 90 * height), 20 * (int)width, 20 * (int)height), Color.White);
                                 if (eAction != eAction.Fold && eAction != eAction.Check)
                                 {
-                                    painter.DrawString(storage.Fonts[0], table.CurrentRound.ActivePlayersIndex[5].CurrentRoundBet.ToString() + "$", new Vector2((int)(playersLocations[5].X + width * 25), (int)playersLocations[5].Y - 100 * height), Color.White);
+                                    painter.DrawString(storage.Fonts[0], 
+                                        table.CurrentRound.ActivePlayersIndex[5].CurrentRoundBet.ToString() + "$", 
+                                        new Vector2((int)(playersLocations[5].X + width * 25), 
+                                        (int)playersLocations[5].Y - 100 * height),
+                                        i_PlayerIndex == table.CurrentRound.currentBettingRound.CurrentPlayerIndex ? Color.Gold : Color.White);
                                 }
                             }
                             break;
@@ -1802,7 +1827,11 @@ namespace CasinoSharedLibary
                                 painter.Draw(storage.PokerSigns[(int)eAction], new Rectangle((int)(playersLocations[6].X + width * 100), (int)playersLocations[6].Y, 20 * (int)width, 20 * (int)height), Color.White);
                                 if (eAction != eAction.Fold && eAction != eAction.Check)
                                 {
-                                    painter.DrawString(storage.Fonts[0], table.CurrentRound.ActivePlayersIndex[6].CurrentRoundBet.ToString() + "$", new Vector2((int)(playersLocations[6].X + width * 125), (int)playersLocations[6].Y - 10 * height), Color.White);
+                                    painter.DrawString(storage.Fonts[0], 
+                                        table.CurrentRound.ActivePlayersIndex[6].CurrentRoundBet.ToString() + "$", 
+                                        new Vector2((int)(playersLocations[6].X + width * 125), 
+                                        (int)playersLocations[6].Y - 10 * height),
+                                        i_PlayerIndex == table.CurrentRound.currentBettingRound.CurrentPlayerIndex ? Color.Gold : Color.White);
                                 }
                             }
                             break;
@@ -1819,7 +1848,11 @@ namespace CasinoSharedLibary
                                 painter.Draw(storage.PokerSigns[(int)eAction], new Rectangle((int)(playersLocations[7].X + width * 100), (int)playersLocations[7].Y, 20 * (int)width, 20 * (int)height), Color.White);
                                 if (eAction != eAction.Fold && eAction != eAction.Check)
                                 {
-                                    painter.DrawString(storage.Fonts[0], table.CurrentRound.ActivePlayersIndex[7].CurrentRoundBet.ToString() + "$", new Vector2((int)(playersLocations[7].X + width * 125), (int)playersLocations[7].Y - 10 * height), Color.White);
+                                    painter.DrawString(storage.Fonts[0], 
+                                        table.CurrentRound.ActivePlayersIndex[7].CurrentRoundBet.ToString() + "$", 
+                                        new Vector2((int)(playersLocations[7].X + width * 125), 
+                                        (int)playersLocations[7].Y - 10 * height),
+                                       i_PlayerIndex == table.CurrentRound.currentBettingRound.CurrentPlayerIndex ? Color.Gold : Color.White);
                                 }
                             }
                             break;
@@ -1836,7 +1869,11 @@ namespace CasinoSharedLibary
                                 painter.Draw(storage.PokerSigns[(int)eAction], new Rectangle((int)(playersLocations[8].X + width * 100), (int)playersLocations[8].Y, 20 * (int)width, 20 * (int)height), Color.White);
                                 if (eAction != eAction.Fold && eAction != eAction.Check)
                                 {
-                                    painter.DrawString(storage.Fonts[0], table.CurrentRound.ActivePlayersIndex[8].CurrentRoundBet.ToString() + "$", new Vector2((int)(playersLocations[8].X + width * 125), (int)playersLocations[8].Y - 10 * height), Color.White);
+                                    painter.DrawString(storage.Fonts[0], 
+                                        table.CurrentRound.ActivePlayersIndex[8].CurrentRoundBet.ToString() + "$", 
+                                        new Vector2((int)(playersLocations[8].X + width * 125), 
+                                        (int)playersLocations[8].Y - 10 * height),
+                                        i_PlayerIndex == table.CurrentRound.currentBettingRound.CurrentPlayerIndex ? Color.Gold : Color.White);
                                 }
                             }
                             break;
