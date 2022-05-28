@@ -155,8 +155,8 @@ namespace WebApiControllers.Controllers
                 catch (Exception e)
                 {
 
-                Logger.WriteToLogger("PokerTablePlayerController.delete/" + e.Message);
-                    
+                    Logger.WriteToLogger("PokerTablePlayerController.delete/" + e.Message);
+                  
                 }
         
         }
