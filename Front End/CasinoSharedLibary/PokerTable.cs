@@ -758,6 +758,8 @@ namespace CasinoSharedLibary
                         movingChipsInEndOfPart();
                         if (currentRoundPart == RoundPart.Result)
                         {
+                            bottomButtonsPanel.IsEnabled = false;
+                            bottomButtonsPanel.IsVisible = false;
                             playerRemainingTime.IsVisible = false;
                             if (!updateEndRound)
                             {
