@@ -480,15 +480,25 @@ namespace CasinoSharedLibary
 
         private void VolumeOnOffButton_Click(object sender, EventArgs e)
         {
-            if (MediaPlayer.Volume == 1f)
+            try
             {
-                MediaPlayer.Volume = 0f;
-                volumeOnOffButton.Text = "Sound Off";
+                if (MediaPlayer.Volume == 1f)
+                {
+                    MediaPlayer.Volume = 0f;
+                    volumeOnOffButton.Text = "Sound Off";
+                }
+                else
+                {
+                    MediaPlayer.Volume = 1f;
+                    volumeOnOffButton.Text = "Sound On";
+                }
             }
-            else
+            catch (Exception ex)
             {
-                MediaPlayer.Volume = 1f;
-                volumeOnOffButton.Text = "Sound On";
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PokerTable.VolumeOnOffButton_Click " + ex.Message);
+                }
             }
         }
 
@@ -834,44 +844,55 @@ namespace CasinoSharedLibary
 
         private void movingChipsInEndOfPart()
         {
-            bool partChange = currentRoundPart != lastRoundPart;
-            if (!partChange && currentRoundPart == RoundPart.Result && !roundEnd)
+            try
             {
-                if (totalBetStopMoving() || round.WinnersIndex.Count > 1)
+                bool partChange = currentRoundPart != lastRoundPart;
+                if (!partChange && currentRoundPart == RoundPart.Result && !roundEnd)
                 {
-                    // MediaPlayer.Play(storage.CoinsMusic2);
-                    lastRoundPart = RoundPart.PreFlop;
-                    numberOfCardServed = 0;
-                    roundEnd = true;
-                    restartChipLocations();
-                }
-                else
-                {
-                    moveChipsToTheWinner();
-                }
-            }
-            else
-            {
-                if (partChange && currentRoundPart != RoundPart.PreFlop)
-                {
-                    if (chipsStopMoving())
+                    if (totalBetStopMoving() || round.WinnersIndex.Count > 1)
                     {
-                        MediaPlayer.Play(storage.CoinsMusic2);
-                        if (numberOfCardServed != 0 || (currentRoundPart != RoundPart.River && numberOfCardServed == 0))
-                        {
-                            lastRoundPart = currentRoundPart;
-                        }
+                        // MediaPlayer.Play(storage.CoinsMusic2);
+                        lastRoundPart = RoundPart.PreFlop;
+                        numberOfCardServed = 0;
+                        roundEnd = true;
                         restartChipLocations();
                     }
                     else
                     {
-                        collectMoneyFromPlayer();
+                        moveChipsToTheWinner();
                     }
                 }
                 else
                 {
-                    restartChipLocations();
+                    if (partChange && currentRoundPart != RoundPart.PreFlop)
+                    {
+                        if (chipsStopMoving())
+                        {
+                            MediaPlayer.Play(storage.CoinsMusic2);
+                            if (numberOfCardServed != 0 || (currentRoundPart != RoundPart.River && numberOfCardServed == 0))
+                            {
+                                lastRoundPart = currentRoundPart;
+                            }
+                            restartChipLocations();
+                        }
+                        else
+                        {
+                            collectMoneyFromPlayer();
+                        }
+                    }
+                    else
+                    {
+                        restartChipLocations();
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("PokerTable.movingChipsInEndOfPart " + e.Message);
+                }
+                throw e;
             }
 
         }
@@ -986,12 +1007,12 @@ namespace CasinoSharedLibary
             {
                 MouseState mState = Mouse.GetState();
                 Rectangle mouseRectange = new Rectangle(mState.X, mState.Y, 1, 1);
-                Rectangle playerRectangel = new Rectangle(0, 0, 50, 50);
+                Rectangle playerRectangel = new Rectangle(0, 0, (int)(75 * width), (int)(75 + storage.Cards[0].Height * height));
                 for (int i = 0; i < playersLocations.Count; i++)
                 {
                     playerRectangel.X = (int)playersLocations[i].X;
-                    playerRectangel.Y = (int)playersLocations[i].Y;
-                    if (mouseRectange.Intersects(playerRectangel) && mState.LeftButton == ButtonState.Pressed && table.Players[i] != null)
+                    playerRectangel.Y = (int)(playersLocations[i].Y - 60 * height);
+                    if (mouseRectange.Intersects(playerRectangel) && mState.LeftButton == ButtonState.Pressed && table.PlayersInTable[i] != null)
                     {
                         isStatsPanelVisible = true;
                         currentStatsPlayer = i;
@@ -1256,7 +1277,7 @@ namespace CasinoSharedLibary
             {
                 if (isStatsPanelVisible)
                 {
-                    PokerPlayer currentStatPlayer = table.Players[currentStatsPlayer];
+                    PokerPlayer currentStatPlayer = table.PlayersInTable[currentStatsPlayer];
                     if (currentStatPlayer.Stat.Card1 == null)
                     {
                         painter.Draw(storage.GreyUI[5], new Rectangle(450, 100, 400, 480), Color.White);
@@ -1875,13 +1896,21 @@ namespace CasinoSharedLibary
                                 sitButtons[i].IsVisible = false;
                                 sitButtons[i].IsEnabled = false;
                                 painter.Draw(storage.PlayerFaces[table.PlayersInTable[i].Figure][0], new Rectangle((int)(playersLocations[i].X * width), (int)(playersLocations[i].Y - 60 * height), (int)(75 * width), (int)(70 * height)), Color.White);
-                                painter.DrawString(storage.Fonts[0], table.PlayersInTable[i].Name, new Vector2(playersLocations[i].X + (int)(75 * width), playersLocations[i].Y - 50 * height), Color.White);
-                                painter.DrawString(storage.Fonts[0], table.PlayersInTable[i].Money.ToString() + "$", new Vector2(playersLocations[i].X, playersLocations[i].Y + storage.Cards[0].Height), Color.White);
+                                if (table.CurrentRound != null && i == table.CurrentRound.currentBettingRound.CurrentPlayerIndex)
+                                {
+                                    painter.DrawString(storage.Fonts[0], table.PlayersInTable[i].Name, new Vector2(playersLocations[i].X + (int)(75 * width), playersLocations[i].Y - 50 * height), Color.Gold);
+                                    painter.DrawString(storage.Fonts[0], table.PlayersInTable[i].Money.ToString() + "$", new Vector2(playersLocations[i].X, playersLocations[i].Y + storage.Cards[0].Height), Color.Gold);
+                                }
+                                else
+                                {
+                                    painter.DrawString(storage.Fonts[0], table.PlayersInTable[i].Name, new Vector2(playersLocations[i].X + (int)(75 * width), playersLocations[i].Y - 50 * height), Color.White);
+                                    painter.DrawString(storage.Fonts[0], table.PlayersInTable[i].Money.ToString() + "$", new Vector2(playersLocations[i].X, playersLocations[i].Y + storage.Cards[0].Height), Color.White);
+                                }
                                 if (table.CurrentRound != null && table.CurrentRound.UsersCards[i] != null && table.CurrentRound.ActivePlayersIndex[i].InHand)
                                 {
                                     if (table.Players[i] != null)
                                     {
-                                        drawActionBar(i, table.Players[i].LastAction);
+                                        drawActionBar(i, table.PlayersInTable[i].LastAction);
                                         if (table.CurrentRound.Part != RoundPart.Result)
                                         {
                                             painter.Draw(storage.CurrentPlayerMark, new Rectangle((int)playersLocations[table.CurrentRound.currentBettingRound.CurrentPlayerIndex].X - (int)width * 2, (int)playersLocations[table.CurrentRound.currentBettingRound.CurrentPlayerIndex].Y - 2 * (int)height, 100 * (int)width, 93 * (int)height), Color.White);
@@ -1892,7 +1921,6 @@ namespace CasinoSharedLibary
                             }
                             else
                             {
-
                                 if (index == -1)
                                 {
                                     sitButtons[i].IsVisible = true;
