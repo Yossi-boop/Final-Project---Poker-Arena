@@ -852,8 +852,6 @@ namespace CasinoSharedLibary
                 {
                     if (totalBetStopMoving() || round.WinnersIndex.Count > 1)
                     {
-                        // MediaPlayer.Play(storage.CoinsMusic2);
-                        lastRoundPart = RoundPart.PreFlop;
                         numberOfCardServed = 0;
                         roundEnd = true;
                         restartChipLocations();
