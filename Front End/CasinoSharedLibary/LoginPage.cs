@@ -30,13 +30,15 @@ namespace CasinoSharedLibary
         private Button loginButton;
         private Button registerButton;
         private Label errorMessage;
+        private Label tryAgainMessage;
 
         private StringBuilder password;
         private StringBuilder starsPassword;
 
         private const string enterUsernameAndPassword = "Please insert Username And Password.";
         private const string wrongUserNameOrPassWord = "Wrong User Name Or Password.";
-        private const string userAlreadyLogin = "This user is already login. Try again in 30 seconds.";
+        private const string userAlreadyLogin = "This user is already login.";
+        private const string userAlreadyLoginTryAgain = "Try again in 30 seconds."; 
         private const string unknownError = "Something went wrong.";
 
         public LoginPage(Game1 i_gameManager, GraphicsDevice i_grapics, ContentManager i_contentManager)
@@ -98,6 +100,10 @@ namespace CasinoSharedLibary
             errorMessage = new Label(unknownError);
             errorMessage.IsVisible = false;
             errorMessage.TextColor = Color.Red;
+
+            tryAgainMessage = new Label(userAlreadyLoginTryAgain);
+            tryAgainMessage.IsVisible = false;
+            tryAgainMessage.TextColor = Color.Red;
 
             Screen loginScreen = new Screen
             {
@@ -185,7 +191,8 @@ namespace CasinoSharedLibary
                                     Margin = 6,
                                     Items =
                                     {
-                                        errorMessage
+                                        errorMessage,
+                                        tryAgainMessage
                                     }
                                 }
                             }
@@ -229,6 +236,7 @@ namespace CasinoSharedLibary
             else
             {
                 errorMessage.IsVisible = false;
+                tryAgainMessage.IsVisible = false;
                 string loginResponse = gameManager.server.Login(userNameTextBox.Text, password.ToString());
                 if (loginResponse.Contains("loggedIn complete")) // Successful login
                 {
@@ -253,6 +261,7 @@ namespace CasinoSharedLibary
                 {
                     errorMessage.Content = userAlreadyLogin;
                     errorMessage.IsVisible = true;
+                    tryAgainMessage.IsVisible = true;
                 }
                 else // general error message
                 {
