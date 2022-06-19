@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.Timers;
 using Classes;
 using Newtonsoft.Json.Linq;
+using System.IO;
+
 
 
 namespace Server
@@ -47,6 +49,40 @@ namespace Server
             Console.WriteLine(client.DefaultRequestHeaders.ConnectionClose);
         }
 
+        public async Task<string> postReq(string json,string url,string method)
+        { 
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = method;
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                streamWriter.Write(json);
+            }
+
+            var httpResponse = (HttpWebResponse) await httpWebRequest.GetResponseAsync();
+            string result;
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                result = await streamReader.ReadToEndAsync();
+            }
+
+            return result;
+        }
+
+        public async Task<string> getReq(string uri, string method = "GET")
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
+            request.Method = method;
+            request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+
+            using (HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync())
+            using (Stream stream = response.GetResponseStream())
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return await reader.ReadToEndAsync();
+            }
+        }
         private async Task<string> GetRequestAsync(string i_Url)
         {
             string result = String.Empty;
@@ -168,9 +204,9 @@ namespace Server
                 values.Add("Email", i_Email);
                 values.Add("Password", i_Password);
 
-                HttpContent content = new StringContent(values.ToString(), Encoding.UTF8, "application/json");
-                string result = PostRequestAsync(BaseURL + "api/LogIn", content).Result;
-
+                // HttpContent content = new StringContent(values.ToString(), Encoding.UTF8, "application/json");
+                //string result = PostRequestAsync(BaseURL + "api/LogIn", content).Result;
+                string result = postReq(values.ToString(), BaseURL + "api/LogIn","POST").Result;
                 return result;
             }
             catch (Exception e)
@@ -184,7 +220,7 @@ namespace Server
         {
             try
             {
-                string result = GetRequestAsync(BaseURL + "api/Casino?i_CasinoId=" + i_CasinoId).Result;
+                string result = getReq(BaseURL + "api/Casino?i_CasinoId=" + i_CasinoId,"GET").Result;
                 var val = JArray.Parse(result);
 
                 List<FurnitureInstance> list = val.ToObject<List<FurnitureInstance>>();
@@ -212,8 +248,9 @@ namespace Server
                 values.Add("Skin", skin);
 
 
-                HttpContent content = new StringContent(values.ToString(), Encoding.UTF8, "application/json");
-                return PostRequestAsync(BaseURL + "api/UserLocation", content).Result;
+                string result = postReq(values.ToString(), BaseURL + "api/UserLocation", "POST").Result;
+
+                return result;
             }
             catch (Exception e)
             {
@@ -226,7 +263,7 @@ namespace Server
         {
             try
             {
-                string result = GetRequestAsync(BaseURL + "api/UserLocation?i_CasinoId=" + i_CasinoId + "&&i_Email=" + i_Email).Result;
+                string result = getReq(BaseURL + "api/UserLocation?i_CasinoId=" + i_CasinoId + "&&i_Email=" + i_Email,"GET").Result;
                 var val = JArray.Parse(result);
 
                 List<CharacterInstance> players = val.ToObject<List<CharacterInstance>>();
@@ -250,8 +287,11 @@ namespace Server
                 values.Add("Action", i_Action);
                 values.Add("RaiseAmount", i_Amount);
 
-                HttpContent content = new StringContent(values.ToString(), Encoding.UTF8, "application/json");
-                return PostRequestAsync(BaseURL + "api/PokerAction", content).Result;
+       
+
+                string result = postReq(values.ToString(), BaseURL + "api/PokerAction", "POST").Result;
+
+                return result;
             }
             catch (Exception e)
             {
@@ -268,8 +308,8 @@ namespace Server
                 values.Add("CasinoId", i_CasinoId);
                 values.Add("Email", i_Email);
 
-                HttpContent content = new StringContent(values.ToString(), Encoding.UTF8, "application/json");
-                string result = PostRequestAsync(BaseURL + "api/PokerRound", content).Result;
+                string result = postReq(values.ToString(), BaseURL + "api/PokerRound", "POST").Result;
+
             }
             catch (Exception e)
             {
@@ -281,7 +321,7 @@ namespace Server
         {
             try
             {
-                string result = GetRequestAsync(BaseURL + "api/PokerRound?CasinoId=" + i_CasinoId + "&&TableId=" + i_TableId).Result;
+                string result = getReq(BaseURL + "api/PokerRound?CasinoId=" + i_CasinoId + "&&TableId=" + i_TableId).Result;
                 var val = JObject.Parse(result);
 
                 Round round = val.ToObject<Round>();
@@ -297,7 +337,7 @@ namespace Server
         {
             try
             {
-                string result = GetRequestAsync(BaseURL + "api/PokerTable?CasinoId=" + i_CasinoId + "&&TableId=" + i_TableId+"&&Email=" + i_Email).Result;
+                string result = getReq(BaseURL + "api/PokerTable?CasinoId=" + i_CasinoId + "&&TableId=" + i_TableId+"&&Email=" + i_Email).Result;
                 Console.WriteLine(result);
                 var val = JObject.Parse(result);
                 Console.WriteLine(val);
@@ -315,7 +355,7 @@ namespace Server
         {
             try
             {
-                string result = GetRequestAsync("api/PokerTablePlayer?CasinoId=" + i_CasinoId + "&&TableId=" + i_TableId).Result;
+                string result = getReq("api/PokerTablePlayer?CasinoId=" + i_CasinoId + "&&TableId=" + i_TableId).Result;
                 var val = JArray.Parse(result);
 
                 List<PokerPlayer> players = val.ToObject<List<PokerPlayer>>();
@@ -331,7 +371,7 @@ namespace Server
         {
             try
             {
-                string result = GetRequestAsync(BaseURL + "api/PokerTablePlayer?CasinoId=" + i_CasinoId + "&&TableId=" + i_TableId + "&&email=" + i_Email).Result;
+                string result = getReq(BaseURL + "api/PokerTablePlayer?CasinoId=" + i_CasinoId + "&&TableId=" + i_TableId + "&&email=" + i_Email).Result;
                 var val = JObject.Parse(result);
 
                 PokerPlayer player = val.ToObject<PokerPlayer>();
@@ -355,8 +395,7 @@ namespace Server
                 values.Add("Money", i_Money);
                 values.Add("Index", i_Index);
 
-                HttpContent content = new StringContent(values.ToString(), Encoding.UTF8, "application/json");
-                string result = PostRequestAsync(BaseURL + "api/PokerTablePlayer", content).Result;
+                string result = postReq(values.ToString(), BaseURL + "api/PokerTablePlayer", "POST").Result;
 
                 return result.Substring(1, 15);
             }
@@ -370,7 +409,7 @@ namespace Server
         {
             try
             {
-                string result = DeleteRequestAsync(BaseURL + "api/PokerTablePlayer?CasinoId=" + i_CasinoId +"&&TableId="+ i_TableId+  "&&Email="+i_Email+"&&Signature=" + i_Signature).Result;
+                string result = getReq(BaseURL + "api/PokerTablePlayer?CasinoId=" + i_CasinoId +"&&TableId="+ i_TableId+  "&&Email="+i_Email+"&&Signature=" + i_Signature,"DELETE").Result;
                 return result;
             }
             catch (Exception e)
@@ -383,7 +422,7 @@ namespace Server
         {
             try
             {
-                string result = GetRequestAsync(BaseURL + "api/TablePokerChat?CasinoId=" + i_CasinoId + "&&TableId=" + i_TableId).Result;
+                string result = getReq(BaseURL + "api/TablePokerChat?CasinoId=" + i_CasinoId + "&&TableId=" + i_TableId).Result;
                 var val = JArray.Parse(result);
 
                 List<Message> messages = val.ToObject<List<Message>>();
@@ -407,8 +446,9 @@ namespace Server
                 values.Add("UserName", i_UserName);
                 values.Add("Body", i_Body);
 
-                HttpContent content = new StringContent(values.ToString(), Encoding.UTF8, "application/json");
-                return PostRequestAsync(BaseURL + "api/TablePokerChat", content).Result;
+                string result = postReq(values.ToString(), BaseURL + "api/TablePokerChat", "POST").Result;
+
+                return result;
             }
             catch (Exception e)
             {
@@ -421,7 +461,7 @@ namespace Server
         {
             try
             {
-                string result = GetRequestAsync(BaseURL + "api/Stats?" + "i_Email=" + i_Email).Result;
+                string result = getReq(BaseURL + "api/Stats?" + "i_Email=" + i_Email).Result;
                 var val = JObject.Parse(result);
 
                 Stats stats = val.ToObject<Stats>();
@@ -437,7 +477,7 @@ namespace Server
         {
             try
             {
-                string result = GetRequestAsync(BaseURL + "api/User?" + "i_Email=" + i_Email).Result;
+                string result = getReq(BaseURL + "api/User?" + "i_Email=" + i_Email).Result;
                 var val = JObject.Parse(result);
 
                 User user = val.ToObject<User>();
@@ -459,8 +499,8 @@ namespace Server
                 values.Add("Email", i_Email);
                 values.Add("Password", i_Password);
 
-                HttpContent content = new StringContent(values.ToString(), Encoding.UTF8, "application/json");
-                string result = PostRequestAsync(BaseURL + "api/User", content).Result;
+                string result = postReq(values.ToString(), BaseURL + "api/User", "POST").Result;
+
                 if (result.Equals("\"Successed\""))
                 {
                     createStatsForPlayer(i_Email);
@@ -481,8 +521,7 @@ namespace Server
             {
                 var values = JObject.FromObject(i_User);
 
-                HttpContent content = new StringContent(values.ToString(), Encoding.UTF8, "application/json");
-                string result = PutRequestAsync(BaseURL + "api/User?i_Email=" + i_LastEmail, content).Result;
+                string result = postReq(values.ToString(), BaseURL + BaseURL + "api/User?i_Email=" + i_LastEmail, "PUT").Result;
             }
             catch (Exception e)
             {
@@ -497,7 +536,8 @@ namespace Server
                 var values = new JObject();
 
                 HttpContent content = new StringContent(values.ToString(), Encoding.UTF8, "application/json");
-                string result = PostRequestAsync(BaseURL + "api/Stats?i_Email=" + i_Email, content).Result;
+                string result = postReq(values.ToString(), BaseURL + "api/Stats?i_Email=" + i_Email, "POST").Result;
+
             }
             catch (Exception e)
             {
@@ -516,8 +556,9 @@ namespace Server
                 values.Add("Signature", i_Signature);
                 values.Add("Amount", i_Money);
 
-                HttpContent content = new StringContent(values.ToString(), Encoding.UTF8, "application/json");
-                string result = PutRequestAsync(BaseURL + "api/PokerTablePlayer", content).Result;
+               
+                string result = postReq(values.ToString(), BaseURL + "api/PokerTablePlayer", "PUT").Result;
+
             }
             catch (Exception e)
             {
@@ -547,7 +588,7 @@ namespace Server
         {
             try
             {
-                string result = GetRequestAsync(BaseURL + "api/CasinoChat?i_CasinoId=" + i_CasinoId).Result;
+                string result = getReq(BaseURL + "api/CasinoChat?i_CasinoId=" + i_CasinoId).Result;
                 var val = JArray.Parse(result);
 
                 List<Message> messages = val.ToObject<List<Message>>();
@@ -571,8 +612,9 @@ namespace Server
                 values.Add("UserName", i_UserName);
                 values.Add("Body", i_Body);
 
-                HttpContent content = new StringContent(values.ToString(), Encoding.UTF8, "application/json");
-                return PostRequestAsync(BaseURL + "api/CasinoChat", content).Result;
+                
+                string result = postReq(values.ToString(), BaseURL + "api/CasinoChat", "POST").Result;
+                return result;
             }
             catch (Exception e)
             {
@@ -584,7 +626,7 @@ namespace Server
         {
             try
             {
-                string result = GetRequestAsync(BaseURL + "api/Chest?" + "CasinoId=" + i_CasinoId).Result;
+                string result = getReq(BaseURL + "api/Chest?" + "CasinoId=" + i_CasinoId).Result;
                 var val = JObject.Parse(result);
 
                 Chest chest = val.ToObject<Chest>();
@@ -604,8 +646,9 @@ namespace Server
                 values.Add("CasinoId", i_CasinoId);
                 values.Add("Email", i_Email);
 
-                HttpContent content = new StringContent(values.ToString(), Encoding.UTF8, "application/json");
-                return PostRequestAsync(BaseURL + "api/Chest", content).Result;
+         
+                string result = postReq(values.ToString(), BaseURL + "api/Chest", "POST").Result;
+                return result;
             }
             catch (Exception e)
             {

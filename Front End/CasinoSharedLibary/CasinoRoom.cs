@@ -399,28 +399,26 @@ namespace CasinoSharedLibary
                 winningChest = gameManager.server.getChest("1234");
                 mainPlayer.updateStuckChest = winningChest;
 
-                lock (updateobjlock)
+                
+                if (playersInTheCasino != null && playersInTheCasino.Count > 0)
                 {
-                    if (playersInTheCasino != null && playersInTheCasino.Count > 0)
-                    {
-                        playersInTheCasino.Clear();
-                    }
-
-
-                    foreach (CharacterInstance player in playersInTheCasinoInformation)
-                    {
-                        playersInTheCasino.Add(new PlayerDrawingInformation(player, contentManager, painter, storage));
-                    }
+                    playersInTheCasino.Clear();
                 }
 
-                lock (instanceobjlock)
+
+                foreach (CharacterInstance player in playersInTheCasinoInformation)
                 {
-                    instancesList.Clear();
-                    instancesList.Add(winningChest);
-                    instancesList.AddRange(furnituresList);
-                    instancesList.AddRange(playersInTheCasino);
-                    instancesList.Sort();
+                    playersInTheCasino.Add(new PlayerDrawingInformation(player, contentManager, painter, storage));
                 }
+                
+
+                
+                instancesList.Clear();
+                instancesList.Add(winningChest);
+                instancesList.AddRange(furnituresList);
+                instancesList.AddRange(playersInTheCasino);
+                instancesList.Sort();
+                
             }
             catch (Exception ex)
             {
@@ -439,13 +437,11 @@ namespace CasinoSharedLibary
             {
                 if (playersInTheCasino != null) //The list exist
                 {
-                    lock (updateobjlock)
+                    foreach (PlayerDrawingInformation player in playersInTheCasino)
                     {
-                        foreach (PlayerDrawingInformation player in playersInTheCasino)
-                        {
-                            player.updateOnlinePlayer(i_GameTime, player.direction);
-                        }
+                        player.updateOnlinePlayer(i_GameTime, player.direction);
                     }
+                    
                 }
             }
             catch (Exception e)
