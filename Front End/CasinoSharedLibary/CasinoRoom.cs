@@ -378,7 +378,8 @@ namespace CasinoSharedLibary
         {
             try
             {
-                gameManager.server.UpdatePosition("1234", mainPlayer.playerEmail, mainPlayer.PlayerName, (int)mainPlayer.LastPosition.X,
+                gameManager.server.UpdatePosition("1234", mainPlayer.playerEmail, mainPlayer.PlayerName,
+                    (int)mainPlayer.LastPosition.X,
                 (int)mainPlayer.LastPosition.Y, (int)mainPlayer.drawingPosition.X,
                 (int)mainPlayer.drawingPosition.Y, (int)mainPlayer.direction, (int)mainPlayer.playerSkin);
                 mainPlayer.LastPosition.X = mainPlayer.position.X;
@@ -399,25 +400,28 @@ namespace CasinoSharedLibary
                 winningChest = gameManager.server.getChest("1234");
                 mainPlayer.updateStuckChest = winningChest;
 
-                
-                if (playersInTheCasino != null && playersInTheCasino.Count > 0)
+                lock (updateobjlock)
                 {
-                    playersInTheCasino.Clear();
+                    if (playersInTheCasino != null && playersInTheCasino.Count > 0)
+                    {
+                        playersInTheCasino.Clear();
+                    }
+
+
+                    foreach (CharacterInstance player in playersInTheCasinoInformation)
+                    {
+                        playersInTheCasino.Add(new PlayerDrawingInformation(player, contentManager, painter, storage));
+                    }
                 }
 
-
-                foreach (CharacterInstance player in playersInTheCasinoInformation)
+                lock (instanceobjlock)
                 {
-                    playersInTheCasino.Add(new PlayerDrawingInformation(player, contentManager, painter, storage));
+                    instancesList.Clear();
+                    instancesList.Add(winningChest);
+                    instancesList.AddRange(furnituresList);
+                    instancesList.AddRange(playersInTheCasino);
+                    instancesList.Sort();
                 }
-                
-
-                
-                instancesList.Clear();
-                instancesList.Add(winningChest);
-                instancesList.AddRange(furnituresList);
-                instancesList.AddRange(playersInTheCasino);
-                instancesList.Sort();
                 
             }
             catch (Exception ex)
@@ -437,11 +441,13 @@ namespace CasinoSharedLibary
             {
                 if (playersInTheCasino != null) //The list exist
                 {
-                    foreach (PlayerDrawingInformation player in playersInTheCasino)
+                    lock (updateobjlock)
                     {
-                        player.updateOnlinePlayer(i_GameTime, player.direction);
-                    }
-                    
+                        foreach (PlayerDrawingInformation player in playersInTheCasino)
+                        {
+                            player.updateOnlinePlayer(i_GameTime, player.direction);
+                        }
+                    }   
                 }
             }
             catch (Exception e)
