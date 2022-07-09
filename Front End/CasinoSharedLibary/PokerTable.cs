@@ -1212,7 +1212,10 @@ namespace CasinoSharedLibary
                     button.Draw(i_gametime, painter);
                 }
 
-                pokerTableChat.ChatButton.Draw(i_gametime, painter);
+                if (!pokerTableChat.IsChatVisible && pokerTableChat.newMessagesAvialble)
+                    pokerTableChat.ChatButton.Draw(i_gametime, painter, Color.Red);
+                else
+                    pokerTableChat.ChatButton.Draw(i_gametime, painter);
                 pokerTableChat.Draw(i_gametime);
 
 

@@ -50,24 +50,41 @@ namespace Server
         }
 
         public async Task<string> postReq(string json,string url,string method)
-        { 
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-            httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = method;
-
-            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+        {
+            try
             {
-                streamWriter.Write(json);
-            }
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = method;
 
-            var httpResponse = (HttpWebResponse) await httpWebRequest.GetResponseAsync();
-            string result;
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    streamWriter.Write(json);
+                }
+
+                var httpResponse = (HttpWebResponse)await httpWebRequest.GetResponseAsync();
+                string result;
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    result = await streamReader.ReadToEndAsync();
+                }
+
+                return result;
+            }
+            catch (WebException e)
             {
-                result = await streamReader.ReadToEndAsync();
-            }
 
-            return result;
+                using (WebResponse response = e.Response)
+                {
+                    var httpResponse = (HttpWebResponse)response;
+                    string result;
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+                        result = await streamReader.ReadToEndAsync();
+                        return result;
+                    }
+                }
+            }
         }
 
         public async Task<string> getReq(string uri, string method = "GET")

@@ -11,7 +11,7 @@ namespace CasinoSharedLibary
 {
     class NewChat
     {
-        private SpritesStorage storage;
+        private readonly SpritesStorage storage;
         private SpriteBatch painter;
 
         private Vector2 position;
@@ -24,6 +24,7 @@ namespace CasinoSharedLibary
         private StringBuilder messageText;
 
         public DrawingButton ChatButton { get; set; }
+        public bool newMessagesAvialble = false;
 
         public DrawingButton SendMessageButton { get; set; }
 
@@ -79,7 +80,8 @@ namespace CasinoSharedLibary
 
             SendMessageButton = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
             SendMessageButton.Text = "Send";
-            SendMessageButton.Size = new MonoGame.Extended.Size(ChatMessagesWidth, storage.GreenUI[0].Height);
+            SendMessageButton.Size = new MonoGame.Extended.Size(ChatMessagesWidth, 
+                storage.GreenUI[0].Height);
             SendMessageButton.Click += SendMessageButton_Click;
 
             if (ChatData != null && ChatData.Count > 0)
@@ -151,9 +153,11 @@ namespace CasinoSharedLibary
         private void ChatButton_Click(object sender, EventArgs e)
         {
             isChatVisible = !isChatVisible;
+            newMessagesAvialble = false;
         }
 
-        public string Update(GameTime i_gameTime, Vector2 i_pos, Keys i_input, bool i_isCapsLockOn, bool i_isShiftOn)
+        public string Update(GameTime i_gameTime, Vector2 i_pos, 
+            Keys i_input, bool i_isCapsLockOn, bool i_isShiftOn)
         {
             position.X = i_pos.X;
             position.Y = i_pos.Y;
@@ -248,7 +252,8 @@ namespace CasinoSharedLibary
                 }
 
                 StringBuilder text = new StringBuilder();
-                for (; ChatData != null && lastUsedChatDataMessage < ChatData.Count; lastUsedChatDataMessage++)
+                for (; ChatData != null && lastUsedChatDataMessage < ChatData.Count; 
+                    lastUsedChatDataMessage++)
                 {
                     if (lastUsedChatDataMessage == ChatData.Count)
                     {
@@ -256,7 +261,8 @@ namespace CasinoSharedLibary
                     }
                     text.Append(ChatData[lastUsedChatDataMessage].UserName);
                     text.Append(": ");
-                    if (ChatData[lastUsedChatDataMessage].UserName.Length + ChatData[lastUsedChatDataMessage].Body.Length < 31)
+                    if (ChatData[lastUsedChatDataMessage].UserName.Length + 
+                        ChatData[lastUsedChatDataMessage].Body.Length < 31)
                     {
                         text.Append(ChatData[lastUsedChatDataMessage].Body);
                         ChatMessage.Add(text.ToString());
@@ -402,7 +408,8 @@ namespace CasinoSharedLibary
             }
         }
 
-        private bool isSentenceInChatBorder(bool i_isFirstLine, int i_lineCounter, int i_lastUsedChatDataMessage)
+        private bool isSentenceInChatBorder(bool i_isFirstLine, int i_lineCounter, 
+            int i_lastUsedChatDataMessage)
         {
             bool isSentenceInChatBorder = false;
 
@@ -479,7 +486,11 @@ namespace CasinoSharedLibary
 
         public void UpdateMessageList(List<Message> i_chatData)
         {
-            ChatData = i_chatData;
+            if (ChatData.Count != i_chatData.Count)
+            {
+                ChatData = i_chatData;
+                newMessagesAvialble = true;
+            }
         }
     }
 }

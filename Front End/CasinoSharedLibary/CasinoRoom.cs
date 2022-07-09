@@ -1164,8 +1164,17 @@ namespace CasinoSharedLibary
             try
             {
                 coinAnimationManager.DrawAnimation(coinPosition, storage.Coins[0].Width, storage.Coins[0].Height);
-                painter.DrawString(storage.Fonts[0], mainPlayer.stats.Money.ToString(), new Vector2(50, 10) + coinPosition, Color.Black);
-                casinoRoomNewChat.ChatButton.Draw(i_gameTime, painter);
+                painter.DrawString(storage.Fonts[0], mainPlayer.stats.Money.ToString(), 
+                    new Vector2(50, 10) + coinPosition, Color.Black);
+                if (!casinoRoomNewChat.IsChatVisible && casinoRoomNewChat.newMessagesAvialble)
+                {
+                    casinoRoomNewChat.ChatButton.Draw(i_gameTime, painter, Color.Red);
+                }
+                else
+                {
+                    casinoRoomNewChat.ChatButton.Draw(i_gameTime, painter);
+                }
+                
                 exitButton.Draw(i_gameTime, painter);
                 settingsButton.Draw(i_gameTime, painter);
             }
