@@ -25,6 +25,7 @@ namespace CasinoSharedLibary
         private SpritesStorage storage;
 
         private Timer casinoTimer;
+        private Timer pokerTableTimer;
 
         private DateTime cameraCounter;
         private bool cameraMoved = true;
@@ -347,6 +348,52 @@ namespace CasinoSharedLibary
         #endregion
         #endregion
 
+        private void initializeIntervalsForPokerTimer()
+        {
+            try
+            {
+                if (pokerTableTimer == null)
+                {
+                    pokerTableTimer = new Timer();
+                    pokerTableTimer.Interval = 1000;
+                    pokerTableTimer.Elapsed += pokerTableTimer_Elapsed;
+                    pokerTableTimer.AutoReset = true;
+                    pokerTableTimer.Enabled = true;
+                }
+                else if (pokerTableTimer.Enabled == false)
+                {
+                    pokerTableTimer.Enabled = true;
+                }
+            }
+            catch (Exception e)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("CasinoRoom.initializeIntervalsForPokerTimer " + e.Message);
+                }
+                throw e;
+            }
+        }
+
+        private void pokerTableTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            try
+            {
+                gameManager.server.UpdatePosition("1234", mainPlayer.playerEmail, mainPlayer.PlayerName,
+                (int)mainPlayer.LastPosition.X, (int)mainPlayer.LastPosition.Y,
+                (int)mainPlayer.drawingPosition.X, (int)mainPlayer.drawingPosition.Y,
+                (int)mainPlayer.direction, (int)mainPlayer.playerSkin);
+            }
+            catch (Exception ex)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
+                {
+                    file.WriteLine("CasinoRoom.pokerTableTimer_Elapsed " + ex.Message);
+                }
+                throw ex;
+            }
+        }
+
         private void initializeIntervals()
         {
             try
@@ -354,13 +401,17 @@ namespace CasinoSharedLibary
                 if (casinoTimer == null)
                 {
                     casinoTimer = new Timer();
-                    casinoTimer.Interval = 1000;
+                    casinoTimer.Interval = 100;
                     casinoTimer.Elapsed += CasinoTimer_Elapsed;
                     casinoTimer.AutoReset = true;
                     casinoTimer.Enabled = true;
+                    if(pokerTableTimer != null)
+                        pokerTableTimer.Enabled = false;
                 }
                 else if (casinoTimer.Enabled == false)
                 {
+                    if(pokerTableTimer != null)
+                        pokerTableTimer.Enabled = false;
                     casinoTimer.Enabled = true;
                 }
             }
@@ -379,13 +430,14 @@ namespace CasinoSharedLibary
             try
             {
                 gameManager.server.UpdatePosition("1234", mainPlayer.playerEmail, mainPlayer.PlayerName,
-                    (int)mainPlayer.LastPosition.X,
-                (int)mainPlayer.LastPosition.Y, (int)mainPlayer.drawingPosition.X,
-                (int)mainPlayer.drawingPosition.Y, (int)mainPlayer.direction, (int)mainPlayer.playerSkin);
+                (int)mainPlayer.LastPosition.X, (int)mainPlayer.LastPosition.Y, 
+                (int)mainPlayer.drawingPosition.X, (int)mainPlayer.drawingPosition.Y, 
+                (int)mainPlayer.direction, (int)mainPlayer.playerSkin);
                 mainPlayer.LastPosition.X = mainPlayer.position.X;
                 mainPlayer.LastPosition.Y = mainPlayer.position.Y;
                 List<CharacterInstance> testPlayersInTheCasinoInformation;
-                testPlayersInTheCasinoInformation = gameManager.server.GetPosition("1234", mainPlayer.playerEmail);
+                testPlayersInTheCasinoInformation = 
+                    gameManager.server.GetPosition("1234", mainPlayer.playerEmail);
                 if (testPlayersInTheCasinoInformation != null)
                 {
                     playersInTheCasinoInformation = testPlayersInTheCasinoInformation;
@@ -410,7 +462,8 @@ namespace CasinoSharedLibary
 
                     foreach (CharacterInstance player in playersInTheCasinoInformation)
                     {
-                        playersInTheCasino.Add(new PlayerDrawingInformation(player, contentManager, painter, storage));
+                        playersInTheCasino.Add(new PlayerDrawingInformation
+                            (player, contentManager, painter, storage));
                     }
                 }
 
@@ -1290,6 +1343,8 @@ namespace CasinoSharedLibary
                 MediaPlayer.Play(storage.CoinsMusic);
                 gameManager.pokerTable = new PokerTable(gameManager, gameManager.GraphicsDevice, painter, storage,
                     contentManager, "1234", i_tableID, i_playerEmail, i_playerName);
+                casinoTimer.Enabled = false;
+                initializeIntervalsForPokerTimer();
                 gameManager.ScreenType = eScreenType.PokerTable;
                 gameManager.pokerTable.Load();
             }

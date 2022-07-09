@@ -567,7 +567,7 @@ namespace CasinoSharedLibary
         private void initializeIntervals()
         {
             aTimer = new System.Timers.Timer();
-            aTimer.Interval = 1000;
+            aTimer.Interval = 500;
             aTimer.Elapsed += getData;
             aTimer.AutoReset = true;
             aTimer.Enabled = true;
@@ -706,7 +706,7 @@ namespace CasinoSharedLibary
         private void ExitButton_Clicked(object sender, EventArgs e)
         {
             gameManager.server.SitOut(casinoId, tableId, userEmail, signature, true);
-
+            aTimer.Enabled = false;
             gameManager.ScreenType = eScreenType.CasinoRoom;
         }
 
@@ -714,6 +714,7 @@ namespace CasinoSharedLibary
         {
             try
             {
+                aTimer.Enabled = true;
                 currentInput = keyboard.Update();
                 lastMessage = pokerTableChat.Update(i_gametime, new Vector2(640, 360), currentInput, keyboard.isCapsLockOn, keyboard.isShiftOn);
                 if (lastMessage != null)
