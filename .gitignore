@@ -400,3 +400,8 @@ FodyWeavers.xsd
 # PokerArenaLogs
 BackLog.txt
 FrontLogger.txt
+
+#FrontEnd dll
+Classes.dll
+Server.dll
+Usefull Methods.dll
