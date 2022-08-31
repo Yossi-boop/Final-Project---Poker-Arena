@@ -17,12 +17,12 @@ namespace CasinoSharedLibary
 
     public class CasinoRoom
     {
-        private Game1 gameManager;
+        private readonly Game1 gameManager;
 
-        private ContentManager contentManager;
+        private readonly ContentManager contentManager;
         private SpriteBatch painter;
 
-        private SpritesStorage storage;
+        private readonly SpritesStorage storage;
 
         private Timer casinoTimer;
         private Timer pokerTableTimer;
@@ -38,7 +38,7 @@ namespace CasinoSharedLibary
         public static readonly object instanceobjlock = new object();
 
         private List<CharacterInstance> playersInTheCasinoInformation;
-        private List<PlayerDrawingInformation> playersInTheCasino = new List<PlayerDrawingInformation>();
+        private readonly List<PlayerDrawingInformation> playersInTheCasino = new List<PlayerDrawingInformation>();
 
         public List<FurnitureInstance> furnituresList { get; set; }
         public List<Instance> instancesList { get; set; } = new List<Instance>();
@@ -98,8 +98,6 @@ namespace CasinoSharedLibary
 
         private Table currentTable;
 
-        private TaskScheduler scheduler;
-
         public CasinoRoom(Game1 i_gameManager, ContentManager i_Content, SpritesStorage i_Storage)
         {
             try
@@ -120,8 +118,10 @@ namespace CasinoSharedLibary
                 User user = gameManager.server.GetUserDetails(gameManager.mainPlayerEmail);
 
                 mainPlayer = new Player(contentManager, gameManager.UserScreenWidth, gameManager.UserScreenHeight,
-                  (PlayerSkin)user.Figure, storage, user.Name, gameManager.mainPlayerEmail, gameManager.server.GetStats(gameManager.mainPlayerEmail), furnituresList);
-                mainPlayer.updateStuckChest = winningChest;
+                  (PlayerSkin)user.Figure, storage, user.Name, gameManager.mainPlayerEmail, gameManager.server.GetStats(gameManager.mainPlayerEmail), furnituresList)
+                {
+                    updateStuckChest = winningChest
+                };
             }
             catch (Exception e)
             {
@@ -219,8 +219,10 @@ namespace CasinoSharedLibary
                 User user = gameManager.server.GetUserDetails(gameManager.mainPlayerEmail);
 
                 mainPlayer = new Player(contentManager, gameManager.UserScreenWidth, gameManager.UserScreenHeight,
-                  (PlayerSkin)user.Figure, storage, user.Name, gameManager.mainPlayerEmail, gameManager.server.GetStats(gameManager.mainPlayerEmail), furnituresList);
-                mainPlayer.updateStuckChest = winningChest;
+                  (PlayerSkin)user.Figure, storage, user.Name, gameManager.mainPlayerEmail, gameManager.server.GetStats(gameManager.mainPlayerEmail), furnituresList)
+                {
+                    updateStuckChest = winningChest
+                };
                 mainPlayer.Load(painter);
                 camera.Position = mainPlayer.position;
             }
