@@ -226,7 +226,7 @@ namespace CasinoSharedLibary
             }
         }
 
-        private void LoginButton_Clicked(object sender, EventArgs e)
+        private async void LoginButton_Clicked(object sender, EventArgs e)
         {
             if (userNameTextBox.Text.Length == 0 || passWordTextBox.Text.Length == 0)
             {

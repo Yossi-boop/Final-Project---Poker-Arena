@@ -269,11 +269,6 @@ namespace CasinoSharedLibary
             isUpdateStatsAfterPokerTable = false;
         }
         #endregion
-
-        //private void KnightSkin_Click(object sender, EventArgs e)
-        //{
-        //    changeSkinAndCloseSettingPanel((sender as DrawingButton).Text);
-        //}
         #region UpperBar Methods
         private void ExitButton_Click(object sender, EventArgs e)
         {
@@ -513,21 +508,6 @@ namespace CasinoSharedLibary
             }
             
         }
-
-        //to draw the people array, only after the room
-        //public void casinoPeopleDraw()
-        //{
-        //    lock (drawobjlock)
-        //    {
-        //        if (playersInTheCasino != null) //The list exist
-        //        {
-        //            foreach (PlayerDrawingInformation player in playersInTheCasino)
-        //            {
-        //                player.drawOnlinePlayer(painter);
-        //            }
-        //        }
-        //    }
-        //}
 
         public void Update(GameTime i_gameTime)
         {
