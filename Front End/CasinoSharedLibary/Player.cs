@@ -550,29 +550,10 @@ namespace CasinoSharedLibary
             {
                 drawingPosition.X = position.X - 47;
                 drawingPosition.Y = position.Y - 32;
-                //animation.DrawAnimation(drawingPosition, direction, 75, 100);
 
                 if (DateTime.Now.Subtract(LastActionTime).TotalSeconds <= 3)
                 {
                     animation.DrawAnimation(drawingPosition, LastMessage, direction);
-                    //Vector2 bubblePosition = new Vector2(-210, -240) + drawingPosition; // acording to defualt bubble size(300,300)
-
-                    ////if(LastMessage.Length < 20)
-                    //if (lengthOfLastMessage(LastMessage) < 20)
-                    //{
-                    //    painter.Draw(storage.SpeachBubble, new Rectangle((int)bubblePosition.X + 80, (int)bubblePosition.Y + 80, 200, 200), Color.White);
-                    //    painter.DrawString(storage.Fonts[2], createBubbleString(LastMessage, 1), new Vector2(120, 115) + bubblePosition, Color.Black);
-                    //}
-                    //else if (lengthOfLastMessage(LastMessage) < 50)
-                    //{
-                    //    painter.Draw(storage.SpeachBubble, new Rectangle((int)bubblePosition.X + 80, (int)bubblePosition.Y + 80, 200, 200), Color.White);
-                    //    painter.DrawString(storage.Fonts[3], createBubbleString(LastMessage, 2), new Vector2(120, 115) + bubblePosition, Color.Black);
-                    //}
-                    //else
-                    //{
-                    //    painter.Draw(storage.SpeachBubble, new Rectangle((int)bubblePosition.X + 80, (int)bubblePosition.Y + 80, 200, 200), Color.White);
-                    //    painter.DrawString(storage.Fonts[4], createBubbleString(LastMessage, 3), new Vector2(110, 105) + bubblePosition, Color.Black);
-                    //}
                 }
                 else
                 {
@@ -581,62 +562,6 @@ namespace CasinoSharedLibary
             }
             IsUpdate = false;
         }
-
-        //private int lengthOfLastMessage(string i_lastMessage)
-        //{
-        //    int lengthOfLastMessage = i_lastMessage.Length;
-        //    int countBigSymbols = 0;
-
-        //    foreach (char letter in i_lastMessage)
-        //    {
-        //        if (letter == '@' || letter == '#' || letter == '$' || letter == '%' || letter == '&')
-        //        {
-        //            countBigSymbols++;
-        //        }
-        //    }
-
-        //    lengthOfLastMessage += countBigSymbols;
-
-        //    return lengthOfLastMessage;
-        //}
-
-        //private string createBubbleString(string i_message, int i_fontSize)
-        //{
-        //    StringBuilder bubbleString = new StringBuilder();
-
-        //    string[] words = i_message.Split(' ');
-
-        //    int lineCounter = 0;
-        //    foreach (string word in words)
-        //    {
-        //        bubbleString.Append(word);
-        //        lineCounter += word.Length;
-
-        //        if (lineCounter > 7 && i_fontSize == 1)
-        //        {
-        //            bubbleString.Append("\n");
-        //            lineCounter = 0;
-        //        }
-        //        else if (lineCounter > 9 && i_fontSize == 2)
-        //        {
-        //            bubbleString.Append("\n");
-        //            lineCounter = 0;
-        //        }
-        //        else if (lineCounter > 15 && i_fontSize == 3)
-        //        {
-        //            bubbleString.Append("\n");
-        //            lineCounter = 0;
-        //        }
-        //        else
-        //        {
-        //            lineCounter++;
-        //            bubbleString.Append(' ');
-        //        }
-
-        //    }
-
-        //    return bubbleString.ToString();
-        //}
 
         public void UpdatePlayerSkin(PlayerSkin i_PlayerSkin)
         {

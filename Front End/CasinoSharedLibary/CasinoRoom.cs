@@ -53,7 +53,6 @@ namespace CasinoSharedLibary
         private NewChat casinoRoomNewChat;
         private DrawingButton exitButton;
 
-        //private DrawingButton knightSkin;
         #region Settings Panel
         private DrawingButton settingsButton;
         private Rectangle settingPanelRectangle;
@@ -163,10 +162,6 @@ namespace CasinoSharedLibary
                 exitEnterTable.Text = "Exit";
                 exitEnterTable.Click += ExitEnterTable_Click;
                 #endregion
-
-                //knightSkin = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
-                //knightSkin.Text = "KNIGHT";
-                //knightSkin.Click += KnightSkin_Click;
                 #region UpperBar Buttons And Animations
                 #region Settings Buttons
                 settingsButton = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
@@ -213,7 +208,6 @@ namespace CasinoSharedLibary
                 {
                     file.WriteLine("CasinoRoom.Load " + e.Message);
                 }
-                //throw e;
             }
             
         }
@@ -236,7 +230,6 @@ namespace CasinoSharedLibary
                 {
                     file.WriteLine("CasinoRoom.UpdateMainPlayer " + e.Message);
                 }
-                //throw e;
             }
             
         }
@@ -327,9 +320,6 @@ namespace CasinoSharedLibary
                     break;
                 case "JACK":
                     mainPlayer.UpdatePlayerSkin(PlayerSkin.Jack);
-                    break;
-                case "KNIGHT":
-                    mainPlayer.UpdatePlayerSkin(PlayerSkin.Knight);
                     break;
                 case "ZOMBIE":
                     mainPlayer.UpdatePlayerSkin(PlayerSkin.Zombie);
@@ -914,8 +904,6 @@ namespace CasinoSharedLibary
                     ninjaSkin.Update(i_gameTime, (int)i_mainPosition.X - 640, (int)i_mainPosition.Y - 360);
                     jackSkin.Position = new Vector2((int)ninjaSkin.Position.X + ninjaSkin.Rectangle.Width + 30, (int)ninjaSkin.Position.Y);
                     jackSkin.Update(i_gameTime, (int)i_mainPosition.X - 640, (int)i_mainPosition.Y - 360);
-                    //knightSkin.Position = new Vector2((int)ninjaSkin.Position.X, (int)ninjaSkin.Position.Y + ninjaSkin.Rectangle.Height + 30);
-                    //knightSkin.Update(i_gameTime, (int)i_mainPosition.X - 640, (int)i_mainPosition.Y - 360);
                     zombieSkin.Position = new Vector2(ninjaSkin.Position.X + (ninjaSkin.Rectangle.Width / 2) + 30, (int)jackSkin.Position.Y + jackSkin.Rectangle.Height + 30);
                     zombieSkin.Update(i_gameTime, (int)i_mainPosition.X - 640, (int)i_mainPosition.Y - 360);
                     volumeOnOffButton.Position = new Vector2(ninjaSkin.Position.X + (ninjaSkin.Rectangle.Width / 2) + 30, zombieSkin.Position.Y + ninjaSkin.Rectangle.Height + 30);
@@ -1032,7 +1020,6 @@ namespace CasinoSharedLibary
             try
             {
                 casinoRoomDraw();
-                //casinoFurnitureDraw();
                 mainPlayerDraw = false;
                 drawCasinoWalls();
                 drawCasinoInstances(i_gameTime);
@@ -1042,8 +1029,6 @@ namespace CasinoSharedLibary
                 drawUpperBar(i_gameTime);
                 joystick.Draw(i_gameTime);
                 casinoRoomNewChat.Draw(i_gameTime);
-                //casinoPeopleDraw();
-                //mainPlayer.drawPlayer();
                 drawSettingPanel(i_gameTime);
                 IsUpdated = false;
             }
@@ -1125,8 +1110,6 @@ namespace CasinoSharedLibary
             {
                 if (isExplainToPlayerHowToEnterPokerTablePanelVisibe)
                 {
-                    //painter.Draw(storage.GreenUI[5], explainToPlayerHowToEnterPokerTablePanelRectangle, Color.White);
-                    //painter.DrawString(storage.Fonts[0], "Click The Space Bar", new Vector2(explainToPlayerHowToEnterPokerTablePanelRectangle.X + 20, explainToPlayerHowToEnterPokerTablePanelRectangle.Y + 20), Color.White);
                     if (isSpaceBarClicked)
                     {
                         painter.Draw(storage.GreenUI[0], new Vector2(explainToPlayerHowToEnterPokerTablePanelRectangle.X + 60, explainToPlayerHowToEnterPokerTablePanelRectangle.Y + 110), Color.White);
@@ -1184,7 +1167,6 @@ namespace CasinoSharedLibary
                     painter.DrawString(storage.Fonts[0], "Please Choose Your Skin:", new Vector2(55, 20) + new Vector2((int)settingPanelRectangle.X, (int)settingPanelRectangle.Y), Color.Black);
                     ninjaSkin.Draw(i_gameTime, painter);
                     jackSkin.Draw(i_gameTime, painter);
-                    //knightSkin.Draw(i_gameTime, painter);
                     zombieSkin.Draw(i_gameTime, painter);
                     volumeOnOffButton.Draw(i_gameTime, painter);
                 }
