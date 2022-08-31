@@ -241,7 +241,6 @@ namespace CasinoSharedLibary
                 if (loginResponse.Contains("loggedIn complete")) // Successful login
                 {
                     gameManager.mainPlayerEmail = userNameTextBox.Text;
-                    gameManager.ScreenType = eScreenType.CasinoRoom;
                     if (gameManager.casinoRoom == null)
                     {
                         gameManager.casinoRoom = new CasinoRoom(gameManager, contentManager, storage);
@@ -251,6 +250,7 @@ namespace CasinoSharedLibary
                     passWordTextBox.Text = string.Empty;
                     password.Clear();
                     starsPassword.Clear();
+                    gameManager.ScreenType = eScreenType.CasinoRoom;
                 }
                 else if (loginResponse.Contains("Incorrect password")) // wrong username or password
                 {

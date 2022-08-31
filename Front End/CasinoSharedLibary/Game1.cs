@@ -6,6 +6,7 @@ using Comora;
 
 using Server;
 using System.Collections.Generic;
+using System;
 
 namespace CasinoSharedLibary
 {
@@ -40,7 +41,6 @@ namespace CasinoSharedLibary
 
             listOfSprites.Add(new CharcterSprite(PlayerSkin.Ninja, 75, 100));
             listOfSprites.Add(new CharcterSprite(PlayerSkin.Jack, 75, 100));
-            listOfSprites.Add(new CharcterSprite(PlayerSkin.Knight, 85, 130));
             listOfSprites.Add(new CharcterSprite(PlayerSkin.Zombie, 75, 100));
         }
 
@@ -79,58 +79,66 @@ namespace CasinoSharedLibary
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
-            // TODO: Add your update logic here
-
-            switch (ScreenType)
+            try
             {
-                case eScreenType.LoginPage:
-                    updateLoginPage(gameTime);
-                    break;
-                case eScreenType.RegisterPage:
-                    registerPage.Update(gameTime);
-                    break;
-                case eScreenType.CasinoRoom:
-                    updateCasinoRoom(gameTime);
-                    break;
-                case eScreenType.PokerTable:
-                    updatePokerTable(gameTime);
-                    break;
-                default:
-                    break;
+                if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                    Exit();
+
+                // TODO: Add your update logic here
+
+                switch (ScreenType)
+                {
+                    case eScreenType.LoginPage:
+                        updateLoginPage(gameTime);
+                        break;
+                    case eScreenType.RegisterPage:
+                        registerPage.Update(gameTime);
+                        break;
+                    case eScreenType.CasinoRoom:
+                        updateCasinoRoom(gameTime);
+                        break;
+                    case eScreenType.PokerTable:
+                        updatePokerTable(gameTime);
+                        break;
+                    default:
+                        break;
+                }
+
+
+                base.Update(gameTime);
             }
-
-
-            base.Update(gameTime);
+            catch (Exception) { }
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.White);
-
-            // TODO: Add your drawing code here
-
-            switch (ScreenType)
+            try
             {
-                case eScreenType.LoginPage:
-                    drawLoginPage(gameTime);
-                    break;
-                case eScreenType.RegisterPage:
-                    registerPage.Draw(gameTime);
-                    break;
-                case eScreenType.CasinoRoom:
-                    drawCasinoRoom(gameTime);
-                    break;
-                case eScreenType.PokerTable:
-                    drawPokerTable(gameTime);
-                    break;
-                default:
-                    break;
-            }
+                GraphicsDevice.Clear(Color.White);
 
-            base.Draw(gameTime);
+                // TODO: Add your drawing code here
+
+                switch (ScreenType)
+                {
+                    case eScreenType.LoginPage:
+                        drawLoginPage(gameTime);
+                        break;
+                    case eScreenType.RegisterPage:
+                        registerPage.Draw(gameTime);
+                        break;
+                    case eScreenType.CasinoRoom:
+                        drawCasinoRoom(gameTime);
+                        break;
+                    case eScreenType.PokerTable:
+                        drawPokerTable(gameTime);
+                        break;
+                    default:
+                        break;
+                }
+
+                base.Draw(gameTime);
+            }
+            catch (Exception) { }
         }
 
         private void drawCasinoRoom(GameTime i_gameTime)
