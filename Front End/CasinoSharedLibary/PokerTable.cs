@@ -381,6 +381,7 @@ namespace CasinoSharedLibary
                 enterMoneyExit.Click += exitRebuyPanel_Clicked;
 
                 enterMoneyTextbox = new DrawingTextbox(150, 50, storage.GreenUI[6], storage.Fonts[1]);
+                enterMoneyTextbox.message = "0";
 
                 enterMoneyRectangle = new Rectangle(450, 130, 400, 400);
 
@@ -625,25 +626,25 @@ namespace CasinoSharedLibary
 
         private void AddDownButton_Clicked(object sender, EventArgs e)
         {
-            if (int.Parse(addAmountTextbox.Text) - 500 > 0)
+            if (int.Parse(enterMoneyTextbox.message) - 500 > 0)
             {
-                addAmountTextbox.Text = (int.Parse(addAmountTextbox.Text) - 500).ToString();
+                enterMoneyTextbox.message = (int.Parse(enterMoneyTextbox.message) - 500).ToString();
             }
             else
             {
-                addAmountTextbox.Text = "0";
+                enterMoneyTextbox.message = "0";
             }
         }
 
         private void AddUpButton_Clicked(object sender, EventArgs e)
         {
-            if (int.Parse(addAmountTextbox.Text) + 500 < myPlayer.Stat.Money)
+            if (int.Parse(enterMoneyTextbox.message) + 500 < myPlayer.Stat.Money)
             {
-                addAmountTextbox.Text = (int.Parse(addAmountTextbox.Text) + 500).ToString();
+                enterMoneyTextbox.message = (int.Parse(enterMoneyTextbox.message) + 500).ToString();
             }
             else
             {
-                addAmountTextbox.Text = myPlayer.Stat.Money.ToString();
+                enterMoneyTextbox.message = myPlayer.Stat.Money.ToString();
             }
         }
 
@@ -1350,8 +1351,8 @@ namespace CasinoSharedLibary
                 {
                     painter.Draw(storage.GreenUI[5], enterMoneyRectangle, Color.White);
                     painter.DrawString(storage.Fonts[0], "Buy Into Game", new Vector2(enterMoneyRectangle.X + 100, enterMoneyRectangle.Y + 20), Color.Black);
-                    painter.DrawString(storage.Fonts[0], "Min: 200K", new Vector2(enterMoneyRectangle.X + 30, enterMoneyRectangle.Y + 60), Color.Black);
-                    painter.DrawString(storage.Fonts[0], "Max: 1M", new Vector2(enterMoneyRectangle.X + 250, enterMoneyRectangle.Y + 60), Color.Black);
+                    painter.DrawString(storage.Fonts[0], "Min: 200", new Vector2(enterMoneyRectangle.X + 30, enterMoneyRectangle.Y + 60), Color.Black);
+                    painter.DrawString(storage.Fonts[0], "Max: 2K", new Vector2(enterMoneyRectangle.X + 250, enterMoneyRectangle.Y + 60), Color.Black);
                     enterMoneyRaiseDown.Draw(i_gameTime, painter);
                     enterMoneyTextbox.Draw(painter);
                     enterMoneyRaiseUp.Draw(i_gameTime, painter);
