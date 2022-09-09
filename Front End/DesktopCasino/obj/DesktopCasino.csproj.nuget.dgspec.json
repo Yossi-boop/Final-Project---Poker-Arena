@@ -1,0 +1,158 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\Yossi\\Desktop\\Final Project\\Front End\\DesktopCasino\\DesktopCasino.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\Yossi\\Desktop\\Final Project\\Front End\\Classes\\Classes.csproj": {
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Yossi\\Desktop\\Final Project\\Front End\\Classes\\Classes.csproj",
+        "projectName": "Classes",
+        "projectPath": "C:\\Users\\Yossi\\Desktop\\Final Project\\Front End\\Classes\\Classes.csproj",
+        "frameworks": {
+          "net461": {
+            "projectReferences": {
+              "C:\\Users\\Yossi\\Desktop\\Final Project\\Front End\\Usefull Methods\\UsefullMethods.csproj": {
+                "projectPath": "C:\\Users\\Yossi\\Desktop\\Final Project\\Front End\\Usefull Methods\\UsefullMethods.csproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "net461": {}
+      }
+    },
+    "C:\\Users\\Yossi\\Desktop\\Final Project\\Front End\\DesktopCasino\\DesktopCasino.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Yossi\\Desktop\\Final Project\\Front End\\DesktopCasino\\DesktopCasino.csproj",
+        "projectName": "DesktopCasino",
+        "projectPath": "C:\\Users\\Yossi\\Desktop\\Final Project\\Front End\\DesktopCasino\\DesktopCasino.csproj",
+        "packagesPath": "C:\\Users\\Yossi\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Yossi\\Desktop\\Final Project\\Front End\\DesktopCasino\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Yossi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
+            "projectReferences": {
+              "C:\\Users\\Yossi\\Desktop\\Final Project\\Front End\\Classes\\Classes.csproj": {
+                "projectPath": "C:\\Users\\Yossi\\Desktop\\Final Project\\Front End\\Classes\\Classes.csproj"
+              },
+              "C:\\Users\\Yossi\\Desktop\\Final Project\\Front End\\Server\\Server.csproj": {
+                "projectPath": "C:\\Users\\Yossi\\Desktop\\Final Project\\Front End\\Server\\Server.csproj"
+              },
+              "C:\\Users\\Yossi\\Desktop\\Final Project\\Front End\\Usefull Methods\\UsefullMethods.csproj": {
+                "projectPath": "C:\\Users\\Yossi\\Desktop\\Final Project\\Front End\\Usefull Methods\\UsefullMethods.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
+          "dependencies": {
+            "Comora": {
+              "target": "Package",
+              "version": "[0.5.0, )"
+            },
+            "MonoGame.Extended": {
+              "target": "Package",
+              "version": "[3.8.0, )"
+            },
+            "MonoGame.Extended.Content.Pipeline": {
+              "target": "Package",
+              "version": "[3.8.0, )"
+            },
+            "MonoGame.Extended.Gui": {
+              "target": "Package",
+              "version": "[3.8.0, )"
+            },
+            "MonoGame.Framework.DesktopGL": {
+              "target": "Package",
+              "version": "[3.8.0.1641, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.409\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\Yossi\\Desktop\\Final Project\\Front End\\Server\\Server.csproj": {
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Yossi\\Desktop\\Final Project\\Front End\\Server\\Server.csproj",
+        "projectName": "Server",
+        "projectPath": "C:\\Users\\Yossi\\Desktop\\Final Project\\Front End\\Server\\Server.csproj",
+        "frameworks": {
+          "net461": {
+            "projectReferences": {
+              "C:\\Users\\Yossi\\Desktop\\Final Project\\Front End\\Classes\\Classes.csproj": {
+                "projectPath": "C:\\Users\\Yossi\\Desktop\\Final Project\\Front End\\Classes\\Classes.csproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "net461": {}
+      }
+    },
+    "C:\\Users\\Yossi\\Desktop\\Final Project\\Front End\\Usefull Methods\\UsefullMethods.csproj": {
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Yossi\\Desktop\\Final Project\\Front End\\Usefull Methods\\UsefullMethods.csproj",
+        "projectName": "UsefullMethods",
+        "projectPath": "C:\\Users\\Yossi\\Desktop\\Final Project\\Front End\\Usefull Methods\\UsefullMethods.csproj",
+        "frameworks": {
+          "net461": {
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "net461": {}
+      }
+    }
+  }
+}

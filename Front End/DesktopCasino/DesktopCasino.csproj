@@ -32,15 +32,9 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Classes">
-      <HintPath>..\Classes.dll</HintPath>
-    </Reference>
-    <Reference Include="Server">
-      <HintPath>..\Server.dll</HintPath>
-    </Reference>
-    <Reference Include="Usefull Methods">
-      <HintPath>..\Usefull Methods.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\Classes\Classes.csproj" />
+    <ProjectReference Include="..\Server\Server.csproj" />
+    <ProjectReference Include="..\Usefull Methods\UsefullMethods.csproj" />
   </ItemGroup>
   <Import Project="..\CasinoSharedLibary\CasinoSharedLibary.projitems" Label="Shared" />
 </Project>

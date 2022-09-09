@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "dgSpecHash": "XzgOeOsKoSo+oeOFcFEWPMZtsGlfta3WYTPlwioAcb4JFU3olQr3Ucj/gRjSkxJ8DYfNzLwoSmkWK9SObF0S/g==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Yossi\\Desktop\\Final Project\\Front End\\DesktopCasino\\DesktopCasino.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Yossi\\.nuget\\packages\\autofac\\5.2.0\\autofac.5.2.0.nupkg.sha512",
+    "C:\\Users\\Yossi\\.nuget\\packages\\comora\\0.5.0\\comora.0.5.0.nupkg.sha512",
+    "C:\\Users\\Yossi\\.nuget\\packages\\monogame.extended\\3.8.0\\monogame.extended.3.8.0.nupkg.sha512",
+    "C:\\Users\\Yossi\\.nuget\\packages\\monogame.extended.content.pipeline\\3.8.0\\monogame.extended.content.pipeline.3.8.0.nupkg.sha512",
+    "C:\\Users\\Yossi\\.nuget\\packages\\monogame.extended.graphics\\3.8.0\\monogame.extended.graphics.3.8.0.nupkg.sha512",
+    "C:\\Users\\Yossi\\.nuget\\packages\\monogame.extended.gui\\3.8.0\\monogame.extended.gui.3.8.0.nupkg.sha512",
+    "C:\\Users\\Yossi\\.nuget\\packages\\monogame.extended.input\\3.8.0\\monogame.extended.input.3.8.0.nupkg.sha512",
+    "C:\\Users\\Yossi\\.nuget\\packages\\monogame.extended.tiled\\3.8.0\\monogame.extended.tiled.3.8.0.nupkg.sha512",
+    "C:\\Users\\Yossi\\.nuget\\packages\\monogame.framework.desktopgl\\3.8.0.1641\\monogame.framework.desktopgl.3.8.0.1641.nupkg.sha512",
+    "C:\\Users\\Yossi\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}
