@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>6efba8a9-a407-4029-bdd0-651d22a87386</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>CasinoSharedLibary</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Content\" />
+  </ItemGroup>
+  <ItemGroup>
+    <MonoGameContentReference Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
+    <None Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AnimationManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CasinoRoom.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CharcterSprite.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DrawingButton.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DrawingTextbox.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)eScreenType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FurnitureDrawingInformation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game1.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)JoysStick.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)KeyboardInput.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Logger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LoginPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NewChat.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Player.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PlayerDrawingInformation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PokerTable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RegisterPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SpritesStorage.cs" />
+  </ItemGroup>
+</Project>
