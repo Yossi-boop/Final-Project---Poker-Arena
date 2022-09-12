@@ -171,7 +171,7 @@ namespace CasinoSharedLibary
             {
                 endingMessage = startingMessage + (ChatMessage.Count - startingMessage);
             }
-            
+
 
             if (isChatVisible && isNewMessage)
             {
@@ -394,7 +394,7 @@ namespace CasinoSharedLibary
                 {
                     MoveChatToLastMessage.Draw(i_gameTime, painter);
                 }
-                else 
+                else
                 {
                     MoveChatToLastMessage.Draw(i_gameTime, painter, Color.Red);
                 }
@@ -490,6 +490,12 @@ namespace CasinoSharedLibary
             {
                 ChatData = i_chatData;
                 newMessagesAvialble = true;
+                if (endingMessage == ChatMessage.Count - 1)
+                {
+                    startingMessage++;
+                    endingMessage++;
+                    lastSeenMessage++;
+                }
             }
         }
     }

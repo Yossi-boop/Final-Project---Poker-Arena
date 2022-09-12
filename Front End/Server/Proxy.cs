@@ -633,7 +633,7 @@ namespace Server
                 string result = postReq(values.ToString(), BaseURL + "api/CasinoChat", "POST").Result;
                 return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
