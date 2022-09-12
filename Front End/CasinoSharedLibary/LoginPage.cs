@@ -241,11 +241,8 @@ namespace CasinoSharedLibary
                 if (loginResponse.Contains("loggedIn complete")) // Successful login
                 {
                     gameManager.mainPlayerEmail = userNameTextBox.Text;
-                    if (gameManager.casinoRoom == null)
-                    {
-                        gameManager.casinoRoom = new CasinoRoom(gameManager, contentManager, storage);
-                        gameManager.casinoRoom.Load(_spriteBatch);
-                    }
+                    gameManager.casinoRoom = new CasinoRoom(gameManager, contentManager, storage);
+                    gameManager.casinoRoom.Load(_spriteBatch);
                     userNameTextBox.Text = string.Empty;
                     passWordTextBox.Text = string.Empty;
                     password.Clear();

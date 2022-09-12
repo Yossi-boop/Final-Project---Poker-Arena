@@ -155,16 +155,6 @@ namespace CasinoSharedLibary
 
         private void updateCasinoRoom(GameTime i_GameTime)
         {
-            if (casinoRoom == null)
-            {
-                casinoRoom = new CasinoRoom(this, Content, storage);
-                casinoRoom.Load(_spriteBatch);
-            }
-            if(casinoRoom.isReEnterToCasino)
-            {
-                casinoRoom.isReEnterToCasino = false;
-                casinoRoom.UpdateMainPlayer(mainPlayerEmail);
-            }
             casinoRoom.IsUpdated = true;
             casinoRoom.Update(i_GameTime);
         }
