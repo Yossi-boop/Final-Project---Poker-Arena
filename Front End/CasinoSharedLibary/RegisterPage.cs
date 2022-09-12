@@ -20,6 +20,7 @@ namespace CasinoSharedLibary
         private GraphicsDevice _graphics;
         private SpriteBatch _spriteBatch;
         private ContentManager contentManager;
+        private SpritesStorage storage;
 
         private GuiSystem _guiSystem;
 
@@ -46,6 +47,7 @@ namespace CasinoSharedLibary
         public void Load(SpriteBatch i_spriteBatch, SpritesStorage i_storage)
         {
             _spriteBatch = i_spriteBatch;
+            storage = i_storage;
 
             DefaultViewportAdapter viewportAdapter = new DefaultViewportAdapter(_graphics);
             GuiSpriteBatchRenderer guiRenderer = new GuiSpriteBatchRenderer(_graphics, () => Matrix.Identity);
@@ -213,6 +215,10 @@ namespace CasinoSharedLibary
                 if (registerResponse.Contains("Successed"))
                 {
                     gameManager.mainPlayerEmail = emailTextBox.Text;
+                    gameManager.casinoRoom = new CasinoRoom(gameManager, contentManager, storage);
+                    gameManager.casinoRoom.Load(_spriteBatch);
+                    userNameTextBox.Text = string.Empty;
+                    passWordTextBox.Text = string.Empty;
                     gameManager.ScreenType = eScreenType.CasinoRoom;
                 }
                 else if (registerResponse.Contains("Email already exist"))

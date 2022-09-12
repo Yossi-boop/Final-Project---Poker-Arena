@@ -106,7 +106,6 @@ namespace CasinoSharedLibary
     {
         Ninja,
         Jack,
-        Knight,
         Zombie
     }
 
