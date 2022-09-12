@@ -523,8 +523,7 @@ namespace CasinoSharedLibary
                 if (furniture != null)
                 {
                     if ((furniture.Type == 0 || furniture.Type == 4 || furniture.Type == 18 ||
-                        furniture.Type == 2 || furniture.Type == 17 || furniture.Type == 1) &&
-                        !casinoRoomNewChat.IsChatVisible)
+                        furniture.Type == 2 || furniture.Type == 17 || furniture.Type == 1))
                     {
                         isExplainToPlayerHowToEnterPokerTablePanelVisibe = true;
                     }
@@ -543,7 +542,7 @@ namespace CasinoSharedLibary
                     {
                         isExplainToPlayerHowToEnterPokerTablePanelVisibe = false;
                     }
-                    if (currentInput == Keys.Space && !casinoRoomNewChat.IsChatVisible)
+                    if (currentInput == Keys.Space)
                     {
                         switch (furniture.Type)
                         {
@@ -758,7 +757,7 @@ namespace CasinoSharedLibary
         {
             try
             {
-                if (isExplainToPlayerHowToEnterPokerTablePanelVisibe && !casinoRoomNewChat.IsChatVisible)
+                if (isExplainToPlayerHowToEnterPokerTablePanelVisibe)
                 {
                     Vector2 panelLocation = new Vector2(390, 154) + i_mainPosition;
                     explainToPlayerHowToEnterPokerTablePanelRectangle = new Rectangle((int)panelLocation.X, (int)panelLocation.Y, 330, 200);
