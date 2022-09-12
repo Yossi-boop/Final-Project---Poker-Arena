@@ -506,7 +506,7 @@ namespace Server
             }
         }
 
-        public bool SignUp(string i_UserName, string i_Email, string i_Password)
+        public string SignUp(string i_UserName, string i_Email, string i_Password)
         {
             try
             {
@@ -521,14 +521,14 @@ namespace Server
                 if (result.Equals("\"Successed\""))
                 {
                     createStatsForPlayer(i_Email);
-                    return true;
+                    return result;
                 }
 
-                return false;
+                return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return false;
+                return "";
             }
         }
 
