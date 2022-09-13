@@ -1306,10 +1306,10 @@ namespace CasinoSharedLibary
                 MediaPlayer.Play(storage.CoinsMusic);
                 gameManager.pokerTable = new PokerTable(gameManager, gameManager.GraphicsDevice, painter, storage,
                     contentManager, "1234", i_tableID, i_playerEmail, i_playerName);
+                gameManager.pokerTable.Load();
                 casinoTimer.Enabled = false;
                 initializeIntervalsForPokerTimer();
                 gameManager.ScreenType = eScreenType.PokerTable;
-                gameManager.pokerTable.Load();
             }
             catch (Exception e)
             {
