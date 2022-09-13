@@ -1,15 +1,16 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 using System;
 using MonoGame.Extended;
 using MonoGame.Extended.BitmapFonts;
 using MonoGame.Extended.Gui;
 using MonoGame.Extended.Gui.Controls;
-using MonoGame.Extended.Gui.Markup;
 using MonoGame.Extended.ViewportAdapters;
 using Microsoft.Xna.Framework.Content;
+
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace CasinoSharedLibary
 {
@@ -34,12 +35,12 @@ namespace CasinoSharedLibary
         private const string emailAlreadyExist = "The email address is already being used.";
         private const string enterRequestedFields = "Please fill the requested fields.";
         private const string generalErrorMessage = "Something went wrong.";
+        private const string wrongEmailFormat = "Enter valid email.";
 
 
         public RegisterPage(Game1 i_gameManager, GraphicsDevice i_grapics, ContentManager i_contentManager)
         {
             gameManager = i_gameManager;
-            //_spriteBatch = i_spriteBatch;
             _graphics = i_grapics;
             contentManager = i_contentManager;
         }
@@ -163,7 +164,6 @@ namespace CasinoSharedLibary
                 Orientation = Orientation.Vertical,
                 HorizontalAlignment = HorizontalAlignment.Centre,
                 VerticalAlignment = VerticalAlignment.Centre,
-                //AttachedProperties = { { DockPanel.DockProperty, Dock.Left } } ,
                 Items =
                 {
                     new StackPanel
@@ -208,6 +208,11 @@ namespace CasinoSharedLibary
                 errorMessage.Content = enterRequestedFields;
                 errorMessage.IsVisible = true;
             }
+            else if(!isValidEmail(emailTextBox.Text))
+            {
+                errorMessage.Content = wrongEmailFormat;
+                errorMessage.IsVisible = true;
+            }
             else
             {
                 string registerResponse = gameManager.server.SignUp(userNameTextBox.Text,
@@ -248,6 +253,46 @@ namespace CasinoSharedLibary
         {
             _graphics.Clear(Color.Aqua);
             _guiSystem.Draw(i_gameTime);
+        }
+
+        private bool isValidEmail(string i_email)
+        {
+            if (string.IsNullOrWhiteSpace(i_email))
+                return false;
+
+            try
+            {
+                i_email = Regex.Replace(i_email, @"(@)(.+)$", DomainMapper,
+                                      RegexOptions.None, TimeSpan.FromMilliseconds(200));
+
+                string DomainMapper(Match match)
+                {
+                    var idn = new IdnMapping();
+
+                    string domainName = idn.GetAscii(match.Groups[2].Value);
+
+                    return match.Groups[1].Value + domainName;
+                }
+            }
+            catch (RegexMatchTimeoutException e)
+            {
+                return false;
+            }
+            catch (ArgumentException e)
+            {
+                return false;
+            }
+
+            try
+            {
+                return Regex.IsMatch(i_email,
+                    @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
+                    RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                return false;
+            }
         }
     }
 }
