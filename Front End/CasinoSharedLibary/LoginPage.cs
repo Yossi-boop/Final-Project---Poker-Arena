@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 using System;
 using System.Text;
@@ -8,9 +7,10 @@ using MonoGame.Extended;
 using MonoGame.Extended.BitmapFonts;
 using MonoGame.Extended.Gui;
 using MonoGame.Extended.Gui.Controls;
-using MonoGame.Extended.Gui.Markup;
 using MonoGame.Extended.ViewportAdapters;
 using Microsoft.Xna.Framework.Content;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace CasinoSharedLibary
 {
@@ -40,6 +40,7 @@ namespace CasinoSharedLibary
         private const string userAlreadyLogin = "This user is already login.";
         private const string userAlreadyLoginTryAgain = "Try again in 30 seconds."; 
         private const string unknownError = "Something went wrong.";
+        private const string wrongEmailFormat = "Enter valid email.";
 
         public LoginPage(Game1 i_gameManager, GraphicsDevice i_grapics, ContentManager i_contentManager)
         {
@@ -233,6 +234,11 @@ namespace CasinoSharedLibary
                 errorMessage.Content = enterUsernameAndPassword;
                 errorMessage.IsVisible = true;
             }
+            else if(!isValidEmail(userNameTextBox.Text))
+            {
+                errorMessage.Content = wrongEmailFormat;
+                errorMessage.IsVisible = true;
+            }
             else
             {
                 errorMessage.IsVisible = false;
@@ -281,6 +287,46 @@ namespace CasinoSharedLibary
         public void Draw(GameTime i_gameTime)
         {
             _guiSystem.Draw(i_gameTime);
+        }
+
+        private bool isValidEmail(string i_email)
+        {
+            if (string.IsNullOrWhiteSpace(i_email))
+                return false;
+
+            try
+            {
+                i_email = Regex.Replace(i_email, @"(@)(.+)$", DomainMapper,
+                                      RegexOptions.None, TimeSpan.FromMilliseconds(200));
+
+                string DomainMapper(Match match)
+                {
+                    var idn = new IdnMapping();
+
+                    string domainName = idn.GetAscii(match.Groups[2].Value);
+
+                    return match.Groups[1].Value + domainName;
+                }
+            }
+            catch (RegexMatchTimeoutException e)
+            {
+                return false;
+            }
+            catch (ArgumentException e)
+            {
+                return false;
+            }
+
+            try
+            {
+                return Regex.IsMatch(i_email,
+                    @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
+                    RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                return false;
+            }
         }
     }
 }
