@@ -39,6 +39,8 @@ namespace CasinoSharedLibary
         { get { return isChatVisible; } }
         private bool isChatSelfUpdated = true;
 
+        private const string wordMessageLong = "Only 30 chars per word.";
+
         private List<Message> ChatData = new List<Message>(); //chat data is a list of all the messagse,
         //The list ISN'T seperated to sentences.
         private List<String> ChatMessage = new List<string>();//chat message is a list of the the messages,
@@ -278,9 +280,10 @@ namespace CasinoSharedLibary
                         {
                             if (word.Length > 15)
                             {
+                                text.Append(word.Substring(0, 5));
                                 text.Append("...");
-                                ChatMessage.Add(text.ToString());
-                                text.Clear();
+                                //ChatMessage.Add(text.ToString());
+                                //text.Clear();
                                 break;
                             }
 
