@@ -122,7 +122,7 @@ namespace Classes
         private void updateMinimumBet(int i_RaiseAmount)
         {
             RaiseJump = i_RaiseAmount - BiggestMoneyInPot;
-            MinimumBet = BiggestMoneyInPot + RaiseJump;
+            MinimumBet = BiggestMoneyInPot + 2*RaiseJump;
         }
 
         private void requestActionFromAllPlayers()
