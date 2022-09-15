@@ -49,10 +49,13 @@ namespace WebApiControllers.Controllers
                     {
                         return BadRequest("There Is No Table");
                     }
+                    PokerPlayer player = table.GetPlayer(i_FinishRound.Email);
+                    if(player != null)
+                     {
+                        player.UpdateResult = true;
+                    }
 
-                    table.GetPlayer(i_FinishRound.Email).UpdateResult = true;
-
-                    return Ok("Updated");
+                return Ok("Updated");
                 }
                 catch (Exception e)
                 {

@@ -453,7 +453,7 @@ namespace Classes
             try
             {
                 lock(makeAnActionLock){
-                if (currentBettingRound.MakeAnAction(i_Signature, i_Action, i_Raise))
+                if (currentBettingRound!= null && currentBettingRound.MakeAnAction(i_Signature, i_Action, i_Raise))
                 {
                     LastActionTime = DateTime.Now;
                     Console.WriteLine(LastActionTime);
@@ -594,7 +594,7 @@ namespace Classes
                     }
                 }
 
-                if (count <= 1)
+                if (count == 1)
                 {
                     return true;
                 }
@@ -761,7 +761,7 @@ namespace Classes
             try
             {
                 PokerPlayer player = ActivePlayersIndex[i_PlayerPosition];
-                if (currentBettingRound != null && currentBettingRound.CurrentPlayerIndex == i_PlayerPosition)
+                if (Part != RoundPart.Result && currentBettingRound != null && currentBettingRound.CurrentPlayerIndex == i_PlayerPosition)
                 {
                     MakeAnAction(player.Signature, eAction.Fold, 0);
                 }
@@ -769,7 +769,10 @@ namespace Classes
                 {
                     UsersHands = new List<PokerHand>();
                     getBestHandsForAllRemainingUsers();
-                    player.UpdateStats(false, UsersHands[i_PlayerPosition]);
+                    if (!isOnlyOne(null))
+                    {
+                        player.UpdateStats(false, UsersHands[i_PlayerPosition]);
+                    }
                 }
                 player.UpdateResult = true;
                 player.InHand = false;
