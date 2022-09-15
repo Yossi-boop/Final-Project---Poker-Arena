@@ -765,10 +765,22 @@ namespace Classes
                 {
                     MakeAnAction(player.Signature, eAction.Fold, 0);
                 }
+                else
+                {
+                    UsersHands = new List<PokerHand>();
+                    getBestHandsForAllRemainingUsers();
+                    player.UpdateStats(false, UsersHands[i_PlayerPosition]);
+                }
                 player.UpdateResult = true;
                 player.InHand = false;
                 player.ShouldPlayInRound = false;
                 player.ReadyToPlay = false;
+                ActivePlayersIndex[i_PlayerPosition] = null;
+                if (isOnlyOne(null))
+                {
+                    Part = RoundPart.Result;
+                    endRound();
+                }
 
             }
             catch (Exception e)
