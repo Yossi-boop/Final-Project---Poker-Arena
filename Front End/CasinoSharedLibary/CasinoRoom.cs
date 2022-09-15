@@ -74,8 +74,8 @@ namespace CasinoSharedLibary
         #endregion
 
         #region Explain Enter Table Panel
-        private Rectangle explainToPlayerHowToEnterPokerTablePanelRectangle;
-        private bool isExplainToPlayerHowToEnterPokerTablePanelVisibe = false;
+        private DrawingButton explainButton;
+        private bool isExplainButtonClicked = false;
         private int speedOfChangedSpaceBar = 0;
         private bool isSpaceBarClicked = false;
         #endregion
@@ -154,6 +154,12 @@ namespace CasinoSharedLibary
                 joystick.Load();
                 #endregion
 
+                explainButton = new DrawingButton(storage.GreenUI[0], storage.Fonts[3])
+                {
+                    Text = "Click On Space"
+                };
+                explainButton.Click += explainButton_Click;
+
                 #region Enter Table Buttons
                 confirmEnterTable = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
                 confirmEnterTable.Text = "Confirm";
@@ -211,6 +217,11 @@ namespace CasinoSharedLibary
                 }
             }
             
+        }
+
+        private void explainButton_Click(object sender, EventArgs e)
+        {
+            isExplainButtonClicked = true;
         }
 
         public void UpdateMainPlayer(string i_mainPlayerEmail)
@@ -527,25 +538,26 @@ namespace CasinoSharedLibary
                     if ((furniture.Type == 0 || furniture.Type == 4 || furniture.Type == 18 ||
                         furniture.Type == 2 || furniture.Type == 17 || furniture.Type == 1))
                     {
-                        isExplainToPlayerHowToEnterPokerTablePanelVisibe = true;
+                        explainButton.IsVisible = true;
                     }
                     else if (furniture.Type == 8)
                     {
                         if (!winningChest.Collected)
                         {
-                            isExplainToPlayerHowToEnterPokerTablePanelVisibe = true;
+                            explainButton.IsVisible = true;
                         }
                         else
                         {
-                            isExplainToPlayerHowToEnterPokerTablePanelVisibe = false;
+                            explainButton.IsVisible = false;
                         }
                     }
                     else
                     {
-                        isExplainToPlayerHowToEnterPokerTablePanelVisibe = false;
+                        explainButton.IsVisible = false;
                     }
-                    if (currentInput == Keys.Space)
+                    if (currentInput == Keys.Space || isExplainButtonClicked)
                     {
+                        isExplainButtonClicked = false;
                         switch (furniture.Type)
                         {
                             case 0:
@@ -597,7 +609,7 @@ namespace CasinoSharedLibary
                 }
                 else
                 {
-                    isExplainToPlayerHowToEnterPokerTablePanelVisibe = false;
+                    explainButton.IsVisible = false;
                 }
 
                 mainPlayer.updatePlayer(i_gameTime, currentInput, instanceobjlock);
@@ -760,10 +772,11 @@ namespace CasinoSharedLibary
         {
             try
             {
-                if (isExplainToPlayerHowToEnterPokerTablePanelVisibe)
+                if (explainButton.IsVisible)
                 {
-                    Vector2 panelLocation = new Vector2(390, 154) + i_mainPosition;
-                    explainToPlayerHowToEnterPokerTablePanelRectangle = new Rectangle((int)panelLocation.X, (int)panelLocation.Y, 330, 200);
+                    explainButton.Position = new Vector2(450, 264) + i_mainPosition;
+                    explainButton.Update(i_gameTime, (int)i_mainPosition.X - gameManager.UserScreenWidth / 2,
+                        (int)i_mainPosition.Y - gameManager.UserScreenHeight / 2);
                     speedOfChangedSpaceBar++;
                     speedOfChangedSpaceBar %= 20;
                     if (speedOfChangedSpaceBar % 20 == 0)
@@ -1109,17 +1122,12 @@ namespace CasinoSharedLibary
         {
             try
             {
-                if (isExplainToPlayerHowToEnterPokerTablePanelVisibe)
+                if (explainButton.IsVisible)
                 {
                     if (isSpaceBarClicked)
-                    {
-                        painter.Draw(storage.GreenUI[0], new Vector2(explainToPlayerHowToEnterPokerTablePanelRectangle.X + 60, explainToPlayerHowToEnterPokerTablePanelRectangle.Y + 110), Color.White);
-                    }
+                        explainButton.Draw(i_gameTime, painter, Color.White);
                     else
-                    {
-                        painter.Draw(storage.GreenUI[0], new Vector2(explainToPlayerHowToEnterPokerTablePanelRectangle.X + 60, explainToPlayerHowToEnterPokerTablePanelRectangle.Y + 110), Color.Gray);
-                    }
-                    painter.DrawString(storage.Fonts[3], @"Click On Space", new Vector2(explainToPlayerHowToEnterPokerTablePanelRectangle.X + 80, explainToPlayerHowToEnterPokerTablePanelRectangle.Y + 120), Color.White);
+                        explainButton.Draw(i_gameTime, painter, Color.Gray);
                 }
             }
             catch (Exception e)
