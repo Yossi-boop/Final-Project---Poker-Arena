@@ -1074,6 +1074,10 @@ namespace CasinoSharedLibary
                     enterMoneyExit.Size = new Size(120, 50);
                     enterMoneyExit.Update(i_gameTime, 0, 0);
                     enterMoneyTextbox.Update(i_input, new Vector2(enterMoneyRaiseDown.Position.X + 93, enterMoneyRaiseDown.Position.Y));
+                    if(int.Parse(enterMoneyTextbox.message) > myPlayer.Stat.Money)
+                    {
+                        enterMoneyTextbox.updateMessageExtern(myPlayer.Stat.Money.ToString());
+                    }
                 }
                 else
                 {
