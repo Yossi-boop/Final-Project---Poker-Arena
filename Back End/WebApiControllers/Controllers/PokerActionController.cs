@@ -41,9 +41,7 @@ namespace WebApiControllers.Controllers
                 }
                 catch (Exception e)
                 {
-                    
-                    Logger.WriteToLogger("PokerActionController.post/" + e.Message);
-                    
+                                       
                     return BadRequest("Bad");
                 }
             

@@ -54,10 +54,7 @@ namespace Classes
                 }
             }
             catch (Exception e)
-            {
-                
-                    Logger.WriteToLogger("Round.CheckIfTimeout/" + e.Message);
-                
+            {                
                 throw e;
             }
         }
@@ -77,9 +74,6 @@ namespace Classes
             }
             catch (Exception e)
             {
-                
-                    Logger.WriteToLogger("Round.skipTurn/" + e.Message);
-                
                 throw e;
             }
         }
@@ -109,9 +103,6 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Round.Round/" + e.Message);
-                
                 throw e;
             }
         }
@@ -125,14 +116,12 @@ namespace Classes
                     if (player != null)
                     {
                         player.Stat.Money -= player.Money;
+                        player.UpdateStats();
                     }
                 }
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Round.transferMoneyFromStatsToTable/" + e.Message);
-                
                 throw e;
             }
         }
@@ -170,10 +159,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Round.checkIfReadyToPlay/" + e.Message);
-                
-                throw e;
+              throw e;
             }
         }
 
@@ -185,9 +171,6 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Round.startRound/" + e.Message);
-                
                 throw e;
             }
         }
@@ -209,10 +192,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Round.endRound/" + e.Message);
-                
-                throw e;
+               throw e;
             }
         }
 
@@ -226,16 +206,13 @@ namespace Classes
                     if (ActivePlayersIndex[i] != null)
                     {
                         winner = WinnersIndex.Contains(i);
-                        ActivePlayersIndex[i].UpdateStats(winner, UsersHands[i]);
+                        ActivePlayersIndex[i].UpdateStatsAfterRound(winner, UsersHands[i]);
                     }
                 }
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Round.updateStatsForAllPlayers/" + e.Message);
-                
-                throw e;
+               throw e;
             }
         }
 
@@ -253,10 +230,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Round.collectMoney/" + e.Message);
-                
-                throw e;
+             throw e;
             }
         }
 
@@ -271,10 +245,7 @@ namespace Classes
                 }
             }
             catch (Exception e)
-            {
-
-                Logger.WriteToLogger("Round.pushMoneyToPlayers/" + e.Message);
-                
+            {               
                 throw e;
             }
         }
@@ -304,10 +275,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Round.winnerIndexes/" + e.Message);
-                
-                throw e;
+             throw e;
             }
         }
 
@@ -322,10 +290,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Round.getBestHandsForAllRemainingUsers/" + e.Message);
-                
-                throw e;
+             throw e;
             }
         }
         
@@ -385,10 +350,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Round.findBestHand/" + e.Message);
-                
-                throw e;
+               throw e;
             }
         }
 
@@ -406,10 +368,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Round.copyHand/" + e.Message);
-                
-                throw e;
+              throw e;
             }
         }
 
@@ -441,9 +400,6 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Round.randomCards/" + e.Message);
-                
                 throw e;
             }
         }
@@ -479,10 +435,7 @@ namespace Classes
                 return true;
             }
             catch (Exception e)
-            {
-
-                Logger.WriteToLogger("Round.MakeAnAction/" + e.Message);
-                
+            {              
                 throw e;
             }
         }
@@ -506,10 +459,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Round.checkIfThereIsNeedForAction/" + e.Message);
-                
-                throw e;
+               throw e;
             }
         }
 
@@ -552,10 +502,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Round.playRoundPart/" + e.Message);
-                
-                throw e;
+             throw e;
             }
         }
 
@@ -573,9 +520,6 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Round.resetAllPlayersRoundBet/" + e.Message);
-                
                 throw e;
             }
         }
@@ -603,10 +547,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Round.isOnlyOne/" + e.Message);
-                
-                throw e;
+               throw e;
             }
         }
 
@@ -632,10 +573,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Round.isHeadsUp/" + e.Message);
-                
-                throw e;
+             throw e;
             }
         }
 
@@ -656,10 +594,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Round.placeBlinds/" + e.Message);
-                
-                throw e;
+               throw e;
             }
         }
 
@@ -681,9 +616,6 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Round.nextPlayer/" + e.Message);
-                
                 throw e;
             }
         }
@@ -708,10 +640,7 @@ namespace Classes
                 return true;
             }
             catch (Exception e)
-            {
-
-                Logger.WriteToLogger("Round.FinishResult/" + e.Message);
-                
+            {              
                 throw e;
             }
         }
@@ -748,10 +677,7 @@ namespace Classes
                 return result.ToString();
             }
             catch (Exception e)
-            {
-
-                Logger.WriteToLogger("Round.ToString/" + e.Message);
-                
+            {               
                 throw e;
             }
         }
@@ -771,7 +697,7 @@ namespace Classes
                     getBestHandsForAllRemainingUsers();
                     if (!isOnlyOne(null))
                     {
-                        player.UpdateStats(false, UsersHands[i_PlayerPosition]);
+                        player.UpdateStatsAfterRound(false, UsersHands[i_PlayerPosition]);
                     }
                 }
                 player.UpdateResult = true;
@@ -779,7 +705,7 @@ namespace Classes
                 player.ShouldPlayInRound = false;
                 player.ReadyToPlay = false;
                 ActivePlayersIndex[i_PlayerPosition] = null;
-                if (isOnlyOne(null))
+                if (isOnlyOne(null)&& Part != RoundPart.Result)
                 {
                     Part = RoundPart.Result;
                     endRound();
@@ -788,10 +714,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Round.GetOut/" + e.Message);
-                
-                throw e;
+              throw e;
             }
         }   
         public void CalculateTotalBets()
@@ -811,10 +734,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Round.CalculateTotalBets/" + e.Message);
-                
-                throw e;
+              throw e;
             }
         }
         public PokerPlayer GetPlayer(string i_Email)
@@ -836,10 +756,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Round.GetPlayer/" + e.Message);
-                
-                throw e;
+              throw e;
             }
         }
     }

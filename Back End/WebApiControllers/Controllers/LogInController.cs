@@ -40,8 +40,6 @@ namespace WebApiControllers.Controllers
                 }
                 catch (Exception e)
                 {
-
-                Logger.WriteToLogger("LogInController.post/" + e.Message);
                     
                     return BadRequest("Bad");
                 }

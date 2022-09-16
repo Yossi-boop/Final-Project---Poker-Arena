@@ -71,15 +71,12 @@ namespace Classes
                 this.NewRound();
             }
             catch (Exception e)
-            {
-
-                Logger.WriteToLogger("PokerPlayer.PokerPlayer/" + e.Message);
-                
+            {                
                 throw e;
             }
         }
 
-        public void UpdateStats(bool i_Winner, PokerHand i_UsersHand)
+        public void UpdateStatsAfterRound(bool i_Winner, PokerHand i_UsersHand)
         {
             try
             {
@@ -94,7 +91,7 @@ namespace Classes
                     Stat.NumberOfHandsWon += 1;
                 }
 
-                if (Stat.Card1 != null)
+                if (Stat.Card1 != null && Stat.Card1 != 52)
                 {
                     List<Card> cards = new List<Card>();
                     cards.Add(Deck.deck[(int)Stat.Card1]);
@@ -113,13 +110,22 @@ namespace Classes
                 Stat.Money += Money;
                 Stat.VictoryPercentage = (float)Stat.NumberOfHandsWon / (float)Stat.NumberOfHandsPlay;
 
-                writeInDataBase();
+                UpdateStats();
             }
             catch (Exception e)
             {
+              throw e;
+            }
+        }
 
-                Logger.WriteToLogger("PokerPlayer.UpdateStats/" + e.Message);
-                
+        public void UpdateStats()
+        {
+            try
+            {
+                writeInDataBase();
+            }
+            catch (Exception e)
+            { 
                 throw e;
             }
         }
@@ -133,10 +139,7 @@ namespace Classes
                 putRequestAsync("http://localhost:61968/api/Stats?i_Email=" + Email, content);
             }
             catch (Exception e)
-            {
-
-                Logger.WriteToLogger("PokerPlayer.writeInDataBase/" + e.Message);
-                
+            {                
                 throw e;
             }
         }
@@ -160,10 +163,7 @@ namespace Classes
                 }
             }
             catch (Exception e)
-            {
-
-                Logger.WriteToLogger("PokerPlayer.putRequestAsync/" + e.Message);
-                
+            {                
                 throw e;
             }
         }
@@ -213,17 +213,30 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("PokerPlayer.PlaceMoney/" + e.Message);
-                
-                throw e;
+               throw e;
             }
         }
 
         public void Rebuy(int i_Amount)
         {
-            Money += i_Amount;
-            this.ReadyToPlay = true;
+            try
+            {
+                if(i_Amount <= Stat.Money)
+                {
+                    Money += i_Amount;
+                    Stat.Money -= i_Amount;
+                    this.ReadyToPlay = true;
+                    UpdateStats();
+                } 
+                else
+                {
+                    throw  new Exception("Player Balance too Low");
+                }
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
         }
 
         public override string ToString()
@@ -241,10 +254,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("PokerPlayer.ToString/" + e.Message);
-                
-                throw e;
+               throw e;
             }
         }
     }

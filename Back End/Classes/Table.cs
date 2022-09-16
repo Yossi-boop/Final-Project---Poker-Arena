@@ -27,6 +27,7 @@ namespace Classes
 
         private readonly object sitOutLock = new object();
 
+        private readonly object startRoundLock = new object();
 
         public class AddOn
         {
@@ -66,10 +67,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Table.updateAction/" + e.Message);
-                
-                throw e;
+     throw e;
             }
         }
 
@@ -98,8 +96,6 @@ namespace Classes
             catch (Exception e)
             {
 
-                Logger.WriteToLogger("Table.Table/" + e.Message);
-                
                 throw e;
             }
         }
@@ -118,8 +114,6 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Table.initiateUserSits/" + e.Message);
                 
                 throw e;
             }
@@ -138,10 +132,7 @@ namespace Classes
                 }
             }
             catch (Exception e)
-            {
-
-                Logger.WriteToLogger("Table.AddUser/" + e.Message);
-                
+            {     
                 throw e;
             }
         }
@@ -150,44 +141,44 @@ namespace Classes
         {
             try
             {
-                if (IsRoundLive)
+                lock (startRoundLock)
                 {
-
-                    if (!CurrentRound.FinishResult())
+                    if (IsRoundLive)
                     {
-                        return;
+
+                        if (CurrentRound != null && !CurrentRound.FinishResult())
+                        {
+                            return;
+                        }
+                        else
+                        {
+
+                            reBuyAddOn();
+                            ReBuyQueue.Clear();
+                            checkIfPlayerOnline();
+                            // GetOutAux();
+                            // GetOutQueue.Clear();
+                            // updatePlayerListAfterRound();
+                            IsRoundLive = false;
+                        }
+
+                    }
+
+                    if (checkIfEnough())
+                    {
+                        IsRoundLive = true;
+                        updatePlayerListAfterRound();
+                        Dealer = nextPlayer(Dealer);
+                        CurrentRound = new Round(Players, NumberOfSits, Dealer, GameSetting.SmallBlind);
                     }
                     else
                     {
-
-                        reBuyAddOn();
-                        ReBuyQueue.Clear();
-                        checkIfPlayerOnline();
-                        // GetOutAux();
-                        // GetOutQueue.Clear();
-                        // updatePlayerListAfterRound();
-                        IsRoundLive = false;
+                        CurrentRound = null;
                     }
-
-                }
-
-                if (checkIfEnough())
-                {
-                    updatePlayerListAfterRound();
-                    Dealer = nextPlayer(Dealer);
-                    CurrentRound = new Round(Players, NumberOfSits, Dealer, GameSetting.SmallBlind);
-                    IsRoundLive = true;
-                }
-                else
-                {
-                    CurrentRound = null;
                 }
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Table.StartRound/" + e.Message);
-                
                 throw e;
             }
         }
@@ -216,9 +207,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-                
-                    Logger.WriteToLogger("Table.updatePlayerListAfterRound/" + e.Message);
-                
+              
                 throw e;
             }
         }
@@ -239,9 +228,6 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Table.checkIfPlayerOnline/" + e.Message);
-                
                 throw e;
             }
         }
@@ -283,9 +269,6 @@ namespace Classes
             }
             catch (Exception e)
             {
-                
-                    Logger.WriteToLogger("Table.nextPlayer/" + e.Message);
-                
                 throw e;
             }
         }
@@ -314,10 +297,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Table.checkIfEnough/" + e.Message);
-                
-                throw e;
+                 throw e;
             }
         }
 
@@ -334,10 +314,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Table.ReBuyAddOnAddToQueue/" + e.Message);
-                
-                throw e;
+               throw e;
             }
         }
 
@@ -357,10 +334,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Table.reBuyAddOn/" + e.Message);
-                
-                throw e;
+               throw e;
             }
         }
 
@@ -398,10 +372,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Table.GetPlayer/" + e.Message);
-                
-                throw e;
+               throw e;
             }
         }
 
@@ -424,9 +395,6 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Table.GetOut/" + e.Message);
-                
                 throw e;
             }
         }

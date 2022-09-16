@@ -24,10 +24,7 @@ namespace WebApiControllers.Controllers
                     return Ok(values);
                 }
                 catch (Exception e)
-                {
-
-                    Logger.WriteToLogger("PokerTableController.get/" + e.Message);
-                    
+                {                    
                     return BadRequest("Bad");
                 }
             
@@ -67,8 +64,6 @@ namespace WebApiControllers.Controllers
                 }
                 catch (Exception e)
                 {
-
-                    Logger.WriteToLogger("PokerTableController.post/" + e.Message);
                     
                     return BadRequest("Bad");
                 }

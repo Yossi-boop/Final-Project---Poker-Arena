@@ -25,9 +25,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("PotsManager.PotsManager/" + e.Message);
-                
+              
                 throw e;
             }
         }
@@ -44,8 +42,6 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("PotsManager.createMainPot/" + e.Message);
                 
                 throw e;
             }
@@ -78,9 +74,7 @@ namespace Classes
             catch (Exception e)
             {
 
-                Logger.WriteToLogger("PotsManager.createSidePots/" + e.Message);
-                
-                throw e;
+              throw e;
             }
         }
 
@@ -108,10 +102,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("PotsManager.Levels/" + e.Message);
-                
-                throw e;
+          throw e;
             }
         }
 
@@ -152,10 +143,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("PotsManager.Create/" + e.Message);
-                
-                throw e;
+             throw e;
             }
         }
     }

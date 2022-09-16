@@ -60,9 +60,6 @@ namespace Classes
             }
             catch (Exception e)
             {
-               
-                    Logger.WriteToLogger("Casino.CollectMoney/" + e.Message);
-               
                 throw e;
             }
         }
@@ -79,10 +76,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Casino.writeInDataBase/" + e.Message);
-                
-                throw e;
+            throw e;
             }
         }
 
@@ -102,9 +96,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-                
-                    Logger.WriteToLogger("Casino.putRequestAsync/" + e.Message);
-                
+                 
                 throw e;
             }
         }
@@ -127,8 +119,6 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Casino.GetFurnitureInstances/" + e.Message);
                 
                 throw e;
             }
@@ -152,9 +142,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-                
-                    Logger.WriteToLogger("Casino.CheckIfTimeForChest/" + e.Message);
-                
+              
                 throw e;
             }
         }
@@ -171,10 +159,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-                
-                    Logger.WriteToLogger("Casino.createNewChest/" + e.Message);
-                
-                throw e;
+              throw e;
             }
         }
 
@@ -192,10 +177,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Casino.findPlaceForChest/" + e.Message);
-                
-                throw e;
+       throw e;
             }
         }
 
@@ -223,7 +205,6 @@ namespace Classes
             }
             catch (Exception e)
             {                
-                    Logger.WriteToLogger("Casino.checkIfChestInRightPlace/" + e.Message); 
                 throw e;
             }
         }
@@ -256,9 +237,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Casino.UserInCasino/" + e.Message);
-                
+        
                 throw e;
             }
         }
@@ -277,10 +256,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Casino.GetMessages/" + e.Message);
-                
-                throw e;
+         throw e;
             }
         }
 
@@ -307,9 +283,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-                
-                    Logger.WriteToLogger("Casino.GetUsersPositions/" + e.Message);
-                
+                  
                 throw e;
             }
         }
@@ -341,10 +315,7 @@ namespace Classes
                 }
                 catch (Exception e)
                 {
-
-                    Logger.WriteToLogger("Casino.CheckIfAllPlayerOnline/" + e.Message);
-                    
-                    throw e;
+                   throw e;
                 }
             }
         }

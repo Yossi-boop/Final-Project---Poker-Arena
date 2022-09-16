@@ -47,10 +47,7 @@ namespace WebApiControllers.Controllers
                     return Ok(values);
                 }
                 catch (Exception e)
-                {
-
-                Logger.WriteToLogger("UserLocationController.get/" + e.Message);
-                    
+                {                    
                     return BadRequest("Bad");
                 }
             
@@ -87,10 +84,7 @@ namespace WebApiControllers.Controllers
 
                     return Ok("Updated");
                 }
-                catch(Exception e) {
-
-                Logger.WriteToLogger("UserLocationController.post/" +e.Message);
-                    
+                catch(Exception e) {                    
                     return BadRequest("Bad");
                 }
             

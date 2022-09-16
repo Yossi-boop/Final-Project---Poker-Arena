@@ -31,10 +31,7 @@ namespace WebApiControllers.Controllers
                     return Ok(values);
                 }
                 catch (Exception e)
-                {
-
-                    Logger.WriteToLogger("TablePokerChatController.get/" + e.Message);
-                    
+                {                    
                     return BadRequest("There Is No Table");
                 }
             
@@ -58,10 +55,7 @@ namespace WebApiControllers.Controllers
 
                 }
                 catch (Exception e)
-                {
-
-                    Logger.WriteToLogger("TablePokerChatController.post/" + e.Message);
-                    
+                {                    
                     return BadRequest("There Is No Table");
                 }
             

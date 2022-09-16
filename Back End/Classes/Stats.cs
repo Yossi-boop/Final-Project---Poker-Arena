@@ -104,9 +104,6 @@ namespace Classes
             }
             catch (Exception e)
             {
-                
-                    Logger.WriteToLogger("Stats.ConvertHandToInts/" + e.Message);
-                
                 throw e;
             }
         }

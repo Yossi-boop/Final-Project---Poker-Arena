@@ -26,10 +26,7 @@ namespace WebApiControllers.Controllers
                     return Ok(values);
                 }
                 catch (Exception e)
-                {
-
-                Logger.WriteToLogger("CasinoChatController.get/" + e.Message);
-                    
+                {                    
                     return BadRequest("Bad");
                 }
             
@@ -56,10 +53,7 @@ namespace WebApiControllers.Controllers
                     return Ok("MessageSent");
                 }
                 catch (Exception e)
-                {
-
-                Logger.WriteToLogger("CasinoChatController.post/" + e.Message);
-                    
+                {                    
                     return BadRequest("Bad");
                 }
             

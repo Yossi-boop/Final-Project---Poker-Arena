@@ -30,9 +30,6 @@ namespace WebApiControllers.Controllers
                 }
                 catch (Exception e)
                 {
-                    
-                    Logger.WriteToLogger("CasinoController.get1/" + e.Message);
-                    
                     return BadRequest("Bad");
                 }
             

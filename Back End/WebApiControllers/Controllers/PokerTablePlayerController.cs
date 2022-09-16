@@ -31,10 +31,7 @@ namespace WebApiControllers.Controllers
                     return Ok(values);
                 }
                 catch (Exception e)
-                {
-
-                Logger.WriteToLogger("PokerTablePlayerController.get1/" + e.Message);
-                    
+                {                    
                     return BadRequest("");
                 }
             
@@ -64,9 +61,7 @@ namespace WebApiControllers.Controllers
                 }
                 catch (Exception e)
                 {
-                    
-                    Logger.WriteToLogger("PokerTablePlayerController.get2/" + e.Message);
-                    
+                                       
                     return BadRequest("");
 
                 }
@@ -86,7 +81,6 @@ namespace WebApiControllers.Controllers
                 catch (Exception e)
                 {
                     
-                    Logger.WriteToLogger("PokerTablePlayerController.get3/" + e.Message);
                     
                 }
             
@@ -111,9 +105,7 @@ namespace WebApiControllers.Controllers
                 }
                 catch (Exception e)
                 {
-                    
-                    Logger.WriteToLogger("PokerTablePlayerController.post/" + e.Message);
-                    
+                                        
                     return BadRequest("");
                 }
             
@@ -133,8 +125,6 @@ namespace WebApiControllers.Controllers
                 }
                 catch (Exception e)
                 {
-
-                Logger.WriteToLogger("PokerTablePlayerController.put/" + e.Message);
                     
                 }
             
@@ -154,8 +144,6 @@ namespace WebApiControllers.Controllers
                 }
                 catch (Exception e)
                 {
-
-                    Logger.WriteToLogger("PokerTablePlayerController.delete/" + e.Message);
                   
                 }
         

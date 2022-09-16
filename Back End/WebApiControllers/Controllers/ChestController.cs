@@ -28,9 +28,7 @@ namespace WebApiControllers.Controllers
                 }
                 catch (Exception e)
                 {
-                    
-                    Logger.WriteToLogger("ChestController.get/" + e.Message);
-                    
+                                      
                     return BadRequest("Bad");
                 }
             
@@ -47,9 +45,7 @@ namespace WebApiControllers.Controllers
                 }
                 catch (Exception e)
                 {
-                    
-                    Logger.WriteToLogger("ChestController.post/" + e.Message);
-                    
+                                        
                 }
             
         }

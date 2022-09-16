@@ -68,9 +68,6 @@ namespace Classes
             }
             catch (Exception e)
             {
-                
-                    Logger.WriteToLogger("Card.ToString/" + e.Message);
-                
                 throw e;
             }
         }
@@ -86,10 +83,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Card.CompareTo/" + e.Message);
-                
-                throw e;
+               throw e;
             }
         }
     }

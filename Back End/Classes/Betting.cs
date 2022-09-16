@@ -27,8 +27,7 @@ namespace Classes
                     return ActivePlayers[CurrentPlayerIndex];
                 } catch(Exception e)
                 {
-                    Logger.WriteToLogger("Betting.CurrentPlayer/" + e.Message);
-                    throw e;
+                 throw e;
                 }
             }
         }
@@ -112,10 +111,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-               
-                    Logger.WriteToLogger("Betting.MakeAnAction/" + e.Message);
-               
-                throw e;
+                 throw e;
             }
         }
 
@@ -142,10 +138,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("Betting.requestActionFromAllPlayers/" + e.Message);
-                
-                throw e;
+           throw e;
             }
         }
 
@@ -168,9 +161,6 @@ namespace Classes
             }
             catch (Exception e)
             {
-                
-                    Logger.WriteToLogger("Betting.checkIfThereIsNeedForAction/" + e.Message);
-                
                 throw e;
             }
         }

@@ -34,9 +34,7 @@ namespace WebApiControllers.Controllers
                 }
                 catch (Exception e)
                 {
-                    
-                    Logger.WriteToLogger("UserController.get/" + e.Message);
-                    
+                                    
                     return BadRequest("");
                 }
             
@@ -60,10 +58,7 @@ namespace WebApiControllers.Controllers
                     return Ok("Successed");
                 }
                 catch (Exception e)
-                {
-
-                Logger.WriteToLogger("UserController.post/" + e.Message);
-                    
+                {                    
                     return BadRequest("There Is No Table");
                 }
             

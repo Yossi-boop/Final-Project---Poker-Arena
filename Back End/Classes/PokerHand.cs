@@ -23,9 +23,6 @@ namespace Classes
             }
             catch (Exception e)
             {
-                
-                    Logger.WriteToLogger("PokerHand.PokerHand/" + e.Message);
-                
                 throw e;
             }
         }
@@ -95,10 +92,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("PokerHand.CalculateHandRank/" + e.Message);
-                
-                throw e;
+               throw e;
             }
         }
 
@@ -144,9 +138,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-                
-                    Logger.WriteToLogger("PokerHand.MaxNumberOfSameCards/" + e.Message);
-                
+           
                 throw e;
             }
         }
@@ -176,8 +168,6 @@ namespace Classes
             catch (Exception e)
             {
 
-                Logger.WriteToLogger("PokerHand.ChangeHandOrder/" + e.Message);
-                
                 throw e;
             }
         }
@@ -201,10 +191,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("PokerHand.CheckIfTwoPairs/" + e.Message);
-                
-                throw e;
+              throw e;
             }
         }
 
@@ -254,10 +241,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("PokerHand.ChangeHandOrderForTwoPairs/" + e.Message);
-                
-                throw e;
+              throw e;
             }
         }
 
@@ -269,10 +253,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("PokerHand.CheckIfFullHouse/" + e.Message);
-                
-                throw e;
+               throw e;
             }
         }
 
@@ -291,10 +272,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("PokerHand.CheckIfStraight/" + e.Message);
-                
-                throw e;
+           throw e;
             }
         }
 
@@ -314,9 +292,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("PokerHand.CheckIfFlush/" + e.Message);
-                
+            
                 throw e;
             }
         }
@@ -341,9 +317,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-
-                Logger.WriteToLogger("PokerHand.CompareTo/" + e.Message);
-                
+           
                 throw e;
             }
         }

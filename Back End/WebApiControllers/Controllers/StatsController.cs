@@ -31,9 +31,7 @@ namespace WebApiControllers.Controllers
                 }
                 catch (Exception e)
                 {
-                    
-                    Logger.WriteToLogger("StatsController.get/" + e.Message);
-                    
+                                        
                     return BadRequest("");
 
                 }
@@ -50,8 +48,6 @@ namespace WebApiControllers.Controllers
                 }
                 catch (Exception e)
                 {
-
-                Logger.WriteToLogger("StatsController.post/" + e.Message);
                     
                 }
             
@@ -67,9 +63,7 @@ namespace WebApiControllers.Controllers
                 }
                 catch (Exception e)
                 {
-                    
-                    Logger.WriteToLogger("StatsController.put/" + e.Message);
-                    
+                                        
                 }
             
         }
