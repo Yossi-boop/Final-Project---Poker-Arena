@@ -124,8 +124,14 @@ namespace Classes
             try
             {
                 lock(sitOutLock){
-
-                if(PlayersInTable[i_Index] == null)
+                    for (int i = 0; i < NumberOfSits; i++)
+                    {
+                        if (PlayersInTable[i] != null && PlayersInTable[i].Email.Equals(i_Email))
+                        {
+                            throw new Exception("User already in table");
+                        }
+                    }
+                    if (PlayersInTable[i_Index] == null)
                 {
                     PlayersInTable[i_Index] = new PokerPlayer(i_Money, i_Index, i_Name, i_Email, i_Stats, i_Figure);
                 }
