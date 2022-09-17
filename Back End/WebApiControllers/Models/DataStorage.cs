@@ -85,9 +85,9 @@ namespace WebApiControllers.Models
             ActiveUsers = new List<LogedInUser>();
             OpenTables = new List<Table>();
             Casinos[0].CheckIfTimeForChest();
-            Casinos[0].Tables.Add(new Table(9));
+            Casinos[0].Tables.Add(new Table(9, new Setting(200, 5000, 20, 10, 30)));
             Casinos[0].Tables[0].Id = "1234";
-            Casinos[0].Tables.Add(new Table(9));
+            Casinos[0].Tables.Add(new Table(9, new Setting(2000, 50000, 200, 100, 30)));
             Casinos[0].Tables[1].Id = "1235";
         }
 

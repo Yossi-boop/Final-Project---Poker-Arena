@@ -78,7 +78,7 @@ namespace Classes
 
         }
 
-        public Table(int i_NumberOfSits)
+        public Table(int i_NumberOfSits, Setting setting)
         {
             try
             {
@@ -91,7 +91,7 @@ namespace Classes
                 Dealer = i_NumberOfSits - 1;
                 initiateUserSits();
 
-                GameSetting = new Setting(200, 10000, 20, 10, 30);
+                GameSetting = setting; 
             }
             catch (Exception e)
             {
@@ -123,6 +123,19 @@ namespace Classes
         {
             try
             {
+                if(i_Stats.Money>= GameSetting.MaxBalance)
+                {
+                    i_Money = GameSetting.MaxBalance;
+                }
+                else
+                { 
+                    i_Money = i_Stats.Money;
+                }
+
+                if(i_Money < GameSetting.MinBalance)
+                {
+                    throw new Exception("User not have enough balance");
+                }
                 lock(sitOutLock){
                     for (int i = 0; i < NumberOfSits; i++)
                     {
@@ -147,8 +160,7 @@ namespace Classes
         {
             try
             {
-                lock (startRoundLock)
-                {
+                
                     if (IsRoundLive)
                     {
 
@@ -181,7 +193,7 @@ namespace Classes
                     {
                         CurrentRound = null;
                     }
-                }
+                
             }
             catch (Exception e)
             {

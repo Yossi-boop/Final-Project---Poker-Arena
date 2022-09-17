@@ -803,12 +803,12 @@ namespace CasinoSharedLibary
                 {
                     Vector2 enterTablePanelLocation = new Vector2(-200, -200) + i_mainPosition;
 
-                    confirmEnterTable.Position = new Vector2(50, 135) + enterTablePanelLocation;
+                    confirmEnterTable.Position = new Vector2(50, 180) + enterTablePanelLocation;
                     confirmEnterTable.Update(i_gameTime, (int)i_mainPosition.X - 640, (int)i_mainPosition.Y - 360);
                     exitEnterTable.Position = new Vector2((int)confirmEnterTable.Position.X + confirmEnterTable.Rectangle.Width + 30, (int)confirmEnterTable.Position.Y);
                     exitEnterTable.Update(i_gameTime, (int)i_mainPosition.X - 640, (int)i_mainPosition.Y - 360);
 
-                    enterTablePanelRectangle = new Rectangle((int)enterTablePanelLocation.X - 25, (int)enterTablePanelLocation.Y, 165 + (confirmEnterTable.Rectangle.Width * 2), 200);
+                    enterTablePanelRectangle = new Rectangle((int)enterTablePanelLocation.X - 25, (int)enterTablePanelLocation.Y, 165 + (confirmEnterTable.Rectangle.Width * 2), 250);
                 }
             }
             catch (Exception e)
@@ -1150,9 +1150,11 @@ namespace CasinoSharedLibary
                         currentTable = gameManager.server.GetTableById(givenTableId, "1234", mainPlayer.playerEmail);
                     }
                     painter.Draw(storage.GreenUI[5], enterTablePanelRectangle, Color.White);
-                    painter.DrawString(storage.Fonts[0], "Are You Sure You Want To Enter?", new Vector2(enterTablePanelRectangle.X + 25, enterTablePanelRectangle.Y + 40), Color.Black);
-                    painter.DrawString(storage.Fonts[0], "Small Blind: " + currentTable.GameSetting.SmallBlind.ToString(), new Vector2(enterTablePanelRectangle.X + 30, enterTablePanelRectangle.Y + 90), Color.Black);
-                    painter.DrawString(storage.Fonts[0], "Big Blind: " + currentTable.GameSetting.BigBlind.ToString(), new Vector2(enterTablePanelRectangle.X + 280, enterTablePanelRectangle.Y + 90), Color.Black);
+                    painter.DrawString(storage.Fonts[0], "Are You Sure You Want To Enter?", new Vector2(enterTablePanelRectangle.X + 25, enterTablePanelRectangle.Y + 20), Color.Black);
+                    painter.DrawString(storage.Fonts[0], "Minimum Buy-in: " + currentTable.GameSetting.MinBalance.ToString(), new Vector2(enterTablePanelRectangle.X + 25, enterTablePanelRectangle.Y + 60), Color.Black);
+                    painter.DrawString(storage.Fonts[0], "Maximum Buy-in: " + currentTable.GameSetting.MaxBalance.ToString(), new Vector2(enterTablePanelRectangle.X + 25, enterTablePanelRectangle.Y + 100), Color.Black);
+                    painter.DrawString(storage.Fonts[0], "Small Blind: " + currentTable.GameSetting.SmallBlind.ToString(), new Vector2(enterTablePanelRectangle.X + 25, enterTablePanelRectangle.Y + 140), Color.Black);
+                    painter.DrawString(storage.Fonts[0], "Big Blind: " + currentTable.GameSetting.BigBlind.ToString(), new Vector2(enterTablePanelRectangle.X + 280, enterTablePanelRectangle.Y + 140), Color.Black);
                     confirmEnterTable.Draw(i_gameTime, painter);
                     exitEnterTable.Draw(i_gameTime, painter);
                 }
