@@ -111,7 +111,12 @@ namespace CasinoSharedLibary
 
                 winningChest = gameManager.server.getChest("1234");
 
-                furnituresList = gameManager.server.GetCasinoFurnitureInstances("1234");
+                do
+                {
+                    furnituresList = gameManager.server.GetCasinoFurnitureInstances("1234");
+                }
+                while (furnituresList == null);
+                
 
                 instancesList.Add(winningChest);
                 instancesList.AddRange(furnituresList);
@@ -1086,14 +1091,19 @@ namespace CasinoSharedLibary
             {
                 lock (instanceobjlock)
                 {
+                    List<FurnitureInstance> trees = new List<FurnitureInstance>();
                     foreach (Instance casinoInstance in instancesList)
                     {
-                        if (!mainPlayerDraw && mainPlayer.position.Y < casinoInstance.CurrentYPos)
+                        if ((casinoInstance as FurnitureInstance) != null&& (casinoInstance as FurnitureInstance).Type == 1)
+                        {
+                            trees.Add(casinoInstance as FurnitureInstance);
+                        }
+                            if (!mainPlayerDraw && mainPlayer.position.Y < casinoInstance.CurrentYPos)
                         {
                             mainPlayer.drawPlayer();
                             mainPlayerDraw = true;
                         }
-                        if ((casinoInstance as FurnitureInstance) != null)
+                        if ((casinoInstance as FurnitureInstance) != null) 
                         {
                             drawFurniture(casinoInstance as FurnitureInstance);
                         }
@@ -1102,10 +1112,15 @@ namespace CasinoSharedLibary
                             (casinoInstance as PlayerDrawingInformation).drawOnlinePlayer(painter);
                         }
                     }
-                    if (!mainPlayerDraw)
+
+                    foreach (FurnitureInstance tree in trees)
                     {
-                        mainPlayer.drawPlayer();
-                        mainPlayerDraw = true;
+                        if(tree.CurrentYPos + tree.Length* 0.9  > mainPlayer.position.Y)
+                        {
+                            drawFurniture(tree);
+
+                        }
+
                     }
                 }
             }
