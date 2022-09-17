@@ -26,6 +26,8 @@ namespace CasinoSharedLibary
         private SpritesStorage storage;
         private ContentManager contentManager;
         private Timer aTimer;
+        private Timer bTimer;
+
         private GuiSystem _guiSystem;
 
 
@@ -570,8 +572,16 @@ namespace CasinoSharedLibary
             aTimer = new System.Timers.Timer();
             aTimer.Interval = 500;
             aTimer.Elapsed += getData;
+
             aTimer.AutoReset = true;
             aTimer.Enabled = true;
+
+            bTimer = new System.Timers.Timer();
+            bTimer.Interval = 1000;
+            bTimer.Elapsed += startRound;
+
+            bTimer.AutoReset = true;
+            bTimer.Enabled = true;
         }
 
         private void getData(Object source, System.Timers.ElapsedEventArgs e)
@@ -600,6 +610,11 @@ namespace CasinoSharedLibary
                     pokerTableChat.UpdateMessageList(testChatData);
                 }
             }
+        }
+        private void startRound(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            gameManager.server.startRound(tableId, casinoId);
+            
         }
 
         private List<int> calculateCardLocation(Round round)

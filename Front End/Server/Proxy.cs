@@ -367,6 +367,18 @@ namespace Server
                 return null;
             }
         }
+        public void startRound(string i_TableId, string i_CasinoId)
+        {
+            try
+            {
+                string result = getReq(BaseURL + "api/PokerTable?CasinoId=" + i_CasinoId + "&&TableId=" + i_TableId).Result;
+              
+            }
+            catch (Exception e)
+            {
+                return;
+            }
+        }
 
         public List<PokerPlayer> GetPlayersByTableId(string i_TableId, string i_CasinoId)
         {
