@@ -22,6 +22,8 @@ namespace CasinoSharedLibary
         public int ChatMessagesHeight { get; set; }
 
         private StringBuilder messageText;
+        private List<int> lastSpacePositions = new List<int>();
+        private bool shouldShowMessageLengthExplantion = false;
 
         public DrawingButton ChatButton { get; set; }
         public bool newMessagesAvialble = false;
@@ -61,6 +63,7 @@ namespace CasinoSharedLibary
             ChatMessagesHeight = i_chatMessageHeight;
 
             messageText = new StringBuilder();
+            lastSpacePositions.Add(-1);
         }
 
         public void Load(SpriteBatch i_painter)
@@ -188,56 +191,71 @@ namespace CasinoSharedLibary
             {
                 if (i_input != Keys.None)
                 {
-                    if (i_input == Keys.Space)
+                    if (i_input == Keys.Back && messageText.Length > 0)
+                    {
+                        if (messageText[messageText.Length - 1] == ' ')
+                        {
+                            lastSpacePositions.RemoveAt(lastSpacePositions.Count - 1);
+                        }
+                        messageText.Remove(messageText.Length - 1, 1);
+                        shouldShowMessageLengthExplantion = false;
+                    }
+                    else if (i_input == Keys.Enter)
+                    {
+                        lastSpacePositions.Clear();
+                        lastSpacePositions.Add(-1);
+                        sendMessage();
+                    }
+                    else if (i_input == Keys.Space)
                     {
                         messageText.Append(' ');
+                        lastSpacePositions.Add(messageText.Length - 1);
                     }
-                    else if(i_isShiftOn)
+                    else if (messageText.Length - (lastSpacePositions[lastSpacePositions.Count - 1] + 1) < 15)
                     {
-                        messageText.Append(shiftKeysToString(i_input));
-                    }
-                    else if (i_input == Keys.Back && messageText.Length > 0)
-                    {
-                        messageText.Remove(messageText.Length - 1, 1);
-                    }
-                    else if (isKeyLetter(i_input))
-                    {
-                        if (i_isCapsLockOn)
+                        if (i_isShiftOn)
                         {
-                            messageText.Append(i_input.ToString());
+                            messageText.Append(shiftKeysToString(i_input));
                         }
-                        else
+                        else if (isKeyLetter(i_input))
                         {
-                            messageText.Append(i_input.ToString().ToLower());
+                            if (i_isCapsLockOn)
+                            {
+                                messageText.Append(i_input.ToString());
+                            }
+                            else
+                            {
+                                messageText.Append(i_input.ToString().ToLower());
+                            }
+                        }
+                        else if (isKeyNumber(i_input))
+                        {
+                            messageText.Append(numKeyToNumString(i_input));
+                        }
+                        else if (i_input == Keys.OemQuestion)
+                        {
+                            messageText.Append(".");
+                        }
+                        else if (i_input == Keys.OemPlus)
+                        {
+                            messageText.Append("=");
+                        }
+                        else if (i_input == Keys.OemMinus)
+                        {
+                            messageText.Append("-");
+                        }
+                        else if (i_input == Keys.OemComma)
+                        {
+                            messageText.Append(",");
+                        }
+                        else if (i_input == Keys.OemQuotes)
+                        {
+                            messageText.Append("'");
                         }
                     }
-                    else if (isKeyNumber(i_input))
+                    else if(messageText.Length - (lastSpacePositions[lastSpacePositions.Count - 1] + 1) >= 15)
                     {
-                        messageText.Append(numKeyToNumString(i_input));
-                    }
-                    else if(i_input == Keys.OemQuestion)
-                    {
-                        messageText.Append(".");
-                    }
-                    else if(i_input == Keys.OemPlus)
-                    {
-                        messageText.Append("=");
-                    }
-                    else if(i_input == Keys.OemMinus)
-                    {
-                        messageText.Append("-");
-                    }
-                    else if (i_input == Keys.OemComma)
-                    {
-                        messageText.Append(",");
-                    }
-                    else if (i_input == Keys.OemQuotes)
-                    {
-                        messageText.Append("'");
-                    }
-                    else if( i_input == Keys.Enter)
-                    {
-                        sendMessage();
+                        shouldShowMessageLengthExplantion = true;
                     }
                 }
 
@@ -280,10 +298,10 @@ namespace CasinoSharedLibary
                         {
                             if (word.Length > 15)
                             {
-                                text.Append(word.Substring(0, 5));
-                                text.Append("...");
-                                //ChatMessage.Add(text.ToString());
-                                //text.Clear();
+                                //text.Append(word.Substring(0, 5));
+                                //text.Append("...");
+                                text.Clear();
+                                text.Append(wordMessageLong);
                                 break;
                             }
 
@@ -370,8 +388,13 @@ namespace CasinoSharedLibary
             {
                 Vector2 drawingTextStringSize;
 
-                painter.Draw(storage.GreenUI[6], new Rectangle((int)SendMessageButton.Position.X, (int)SendMessageButton.Position.Y - 20, ChatMessagesWidth, 20), Color.White);
+                //Only 15 chars words message
+                if(shouldShowMessageLengthExplantion)
+                    painter.DrawString(storage.Fonts[3], @"Only 15 Letters Words Allowed!", new Vector2((int)SendMessageButton.Position.X, (int)SendMessageButton.Position.Y - 50 - ChatMessagesHeight), Color.Red);
+                //Chat messages box
                 painter.Draw(storage.GreenUI[5], new Rectangle((int)SendMessageButton.Position.X, (int)SendMessageButton.Position.Y - 20 - ChatMessagesHeight, ChatMessagesWidth, ChatMessagesHeight), Color.White);
+                //Textbox
+                painter.Draw(storage.GreenUI[6], new Rectangle((int)SendMessageButton.Position.X, (int)SendMessageButton.Position.Y - 20, ChatMessagesWidth, 20), Color.White);
 
                 drawingTextStringSize = storage.Fonts[1].MeasureString(messageText.ToString());
                 if(drawingTextStringSize.X < ChatMessagesWidth - 20)

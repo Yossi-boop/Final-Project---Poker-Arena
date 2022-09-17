@@ -195,14 +195,32 @@ namespace CasinoSharedLibary
             string[] words = i_message.Split(' ');
 
             int lineCounter = 0;
-            foreach (string word in words)
+            for (int word = 0; word < words.Length; word++)
             {
-                if (lineCounter + word.Length > 7 && i_fontSize == 1)
+                if (words[word].Length > 7 && i_fontSize == 1 && word == 0)
+                {
+                    bubbleString.Append(words[word].Substring(0, 5));
+                    bubbleString.Append("...");
+                    break;
+                }
+                else if (words[word].Length > 10 && i_fontSize == 2 && word == 0)
+                {
+                    bubbleString.Append(words[word].Substring(0, 10));
+                    bubbleString.Append("...");
+                    break;
+                }
+                else if (words[word].Length > 20 && i_fontSize == 3 && word == 0)
+                {
+                    bubbleString.Append(words[word].Substring(0, 20));
+                    bubbleString.Append("...");
+                    break;
+                }
+                else if (lineCounter + words[word].Length > 7 && i_fontSize == 1)
                 {
                     bubbleString.Append("\n");
                     lineCounter = 0;
-                    bubbleString.Append(word);
-                    lineCounter += word.Length;
+                    bubbleString.Append(words[word]);
+                    lineCounter += words[word].Length;
                     lineCounter++;
                     bubbleString.Append(' ');
                     if (bubbleString.Length > 15)
@@ -211,12 +229,12 @@ namespace CasinoSharedLibary
                         break;
                     }
                 }
-                else if (lineCounter + word.Length > 10 && i_fontSize == 2)
+                else if (lineCounter + words[word].Length > 10 && i_fontSize == 2)
                 {
                     bubbleString.Append("\n");
                     lineCounter = 0;
-                    bubbleString.Append(word);
-                    lineCounter += word.Length;
+                    bubbleString.Append(words[word]);
+                    lineCounter += words[word].Length;
                     lineCounter++;
                     bubbleString.Append(' ');
                     if (bubbleString.Length > 22)
@@ -225,12 +243,12 @@ namespace CasinoSharedLibary
                         break;
                     }
                 }
-                else if (lineCounter + word.Length > 20 && i_fontSize == 3)
+                else if (lineCounter + words[word].Length > 20 && i_fontSize == 3)
                 {
                     bubbleString.Append("\n");
                     lineCounter = 0;
-                    bubbleString.Append(word);
-                    lineCounter += word.Length;
+                    bubbleString.Append(words[word]);
+                    lineCounter += words[word].Length;
                     lineCounter++;
                     bubbleString.Append(' ');
                     if (bubbleString.Length > 50)
@@ -239,19 +257,20 @@ namespace CasinoSharedLibary
                         break;
                     }
                 }
-                else if (word.Length > 7)
-                {
-                    bubbleString.Append(word.Substring(0, 5));
-                    bubbleString.Append("...");
-                    break;
-                }
+                //else if (word.Length > 7)
+                //{
+                //    bubbleString.Append(word.Substring(0, 5));
+                //    bubbleString.Append("...");
+                //    break;
+                //}
                 else
                 {
-                    bubbleString.Append(word);
-                    lineCounter += word.Length;
+                    bubbleString.Append(words[word]);
+                    lineCounter += words[word].Length;
                     lineCounter++;
                     bubbleString.Append(' ');
                 }
+                
             }
 
             return bubbleString.ToString();

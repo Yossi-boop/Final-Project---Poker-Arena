@@ -371,7 +371,7 @@ namespace CasinoSharedLibary
                     {
                         leftSide = (int)(furniture.CurrentXPos + (float)furniture.Width * 0.87);
                         rightSide = (int)(furniture.CurrentXPos + (float)furniture.Width * 1.07);
-                        upSide = (int)(furniture.CurrentYPos + (float)furniture.Length * 0.55);
+                        upSide = (int)(furniture.CurrentYPos + (float)furniture.Length * 0.5);
                         downSide = (int)(furniture.CurrentYPos + (float)furniture.Length * 0.75);
                         break;
                     }

@@ -507,26 +507,46 @@ namespace CasinoSharedLibary
 
         private void allInButton_Clicked(object sender, EventArgs e)
         {
-            raiseAmountTextbox.Text = (myPlayer.Money + myPlayer.CurrentRoundBet).ToString();
+            try
+            {
+                raiseAmountTextbox.Text = (myPlayer.Money + myPlayer.CurrentRoundBet).ToString();
+            }
+            catch(Exception)
+            {
+
+            }
         }
 
         private void raiseAmountTextbox_TextChanged(object sender, EventArgs e)
         {
-            int raiseAmount;
-            if (!(int.TryParse(raiseAmountTextbox.Text, out raiseAmount)))
+            try
             {
-                raiseAmountTextbox.Text = minimumRaise.ToString();
+                int raiseAmount;
+                if (!(int.TryParse(raiseAmountTextbox.Text, out raiseAmount)))
+                {
+                    raiseAmountTextbox.Text = minimumRaise.ToString();
+                }
+                else if (raiseAmount > myPlayer.Money + myPlayer.CurrentRoundBet)
+                {
+                    raiseAmountTextbox.Text = (myPlayer.Money + myPlayer.CurrentRoundBet).ToString();
+                }
             }
-            else if (raiseAmount > myPlayer.Money + myPlayer.CurrentRoundBet)
+            catch (Exception)
             {
-                raiseAmountTextbox.Text = (myPlayer.Money + myPlayer.CurrentRoundBet).ToString();
+
             }
 
         }
 
         private void CloseStatsPanel_Click(object sender, EventArgs e)
         {
-            closeStatsPanel();
+            try {
+                closeStatsPanel();
+            }
+            catch (Exception)
+            {
+
+            }
         }
 
         private void closeStatsPanel()
@@ -536,194 +556,305 @@ namespace CasinoSharedLibary
 
         private void CloseHandsRatingButton_Click(object sender, EventArgs e)
         {
-            isHandsRatingVisible = false;
+            try {
+                isHandsRatingVisible = false;
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
         private void exitRebuyPanel_Clicked(object sender, EventArgs e)
         {
-            isEnterMoneyPanelVisible = false;
+            try {
+                isEnterMoneyPanelVisible = false;
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
         private void HandsRatingButton_Clicked(object sender, EventArgs e)
         {
-            handsRatingPictureSwitch();
-        }
+            try
+            {
+
+
+                handsRatingPictureSwitch();
+            }catch(Exception ex)
+            {
+
+            }
+            }
 
         private void handsRatingPictureSwitch()
         {
-            isHandsRatingVisible = !isHandsRatingVisible;
-            closeHandsRatingButton.IsVisible = true;
-            closeHandsRatingButton.IsEnabled = true;
+            try {
+                isHandsRatingVisible = !isHandsRatingVisible;
+                closeHandsRatingButton.IsVisible = true;
+                closeHandsRatingButton.IsEnabled = true;
+            }
+            catch (Exception e)
+            {
+
+            }
         }
 
         private void MakeAction_Clicked(object sender, EventArgs e)
         {
-            Button button = sender as Button;
-            gameManager.server.MakeAnAction(tableId, casinoId, userEmail, signature, int.Parse(button.Name), int.Parse(raiseAmountTextbox.Text));
+            try {
+                Button button = sender as Button;
+                gameManager.server.MakeAnAction(tableId, casinoId, userEmail, signature, int.Parse(button.Name), int.Parse(raiseAmountTextbox.Text));
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         private void SitButton_Clicked(object sender, EventArgs e)
         {
-            DrawingButton button = sender as DrawingButton;
-            index = int.Parse(button.Name);
-            signature = gameManager.server.AddPlayerToTable(tableId, casinoId, userEmail, userName, 1000, int.Parse(button.Name));
+            try {
+                DrawingButton button = sender as DrawingButton;
+                index = int.Parse(button.Name);
+                signature = gameManager.server.AddPlayerToTable(tableId, casinoId, userEmail, userName, 1000, int.Parse(button.Name));
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         private void initializeIntervals()
         {
-            aTimer = new System.Timers.Timer();
-            aTimer.Interval = 500;
-            aTimer.Elapsed += getData;
+            try
+            {
+                aTimer = new System.Timers.Timer();
+                aTimer.Interval = 600;
+                aTimer.Elapsed += getData;
 
-            aTimer.AutoReset = true;
-            aTimer.Enabled = true;
+                aTimer.AutoReset = true;
+                aTimer.Enabled = true;
 
-            bTimer = new System.Timers.Timer();
-            bTimer.Interval = 1000;
-            bTimer.Elapsed += startRound;
 
-            bTimer.AutoReset = true;
-            bTimer.Enabled = true;
+               
+
+            }
+            catch (Exception e)
+            {
+
+            }
         }
 
         private void getData(Object source, System.Timers.ElapsedEventArgs e)
         {
-            Table tempTable = gameManager.server.GetTableById(tableId, casinoId, userEmail);
-            if (tempTable != null && tempTable.Players != null)
+            try
             {
-                table = tempTable;
-                round = table.CurrentRound;
-                if (round != null)
+                Table tempTable = gameManager.server.GetTableById(tableId, casinoId, userEmail);
+                if (tempTable != null && tempTable.Players != null)
                 {
-                    currentRoundPart = round.Part;
-                    lastRoundPart = (currentRoundPart == RoundPart.PreFlop) ? currentRoundPart : lastRoundPart;
-                    currentBettingRound = round.currentBettingRound;
-                    currentPlayer = currentBettingRound.CurrentPlayer;
-                    cardDrawingLocations = calculateCardLocation(round);
-                }
-                else
-                {
+                    table = tempTable;
+                    round = table.CurrentRound;
+                    if (round != null)
+                    {
+                        currentRoundPart = round.Part;
+                        lastRoundPart = (currentRoundPart == RoundPart.PreFlop) ? currentRoundPart : lastRoundPart;
+                        currentBettingRound = round.currentBettingRound;
+                        currentPlayer = currentBettingRound.CurrentPlayer;
+                        cardDrawingLocations = calculateCardLocation(round);
+                    }
+                    else
+                    {
 
-                }
+                    }
 
-                List<Message> testChatData = gameManager.server.GetTableChatMessages(tableId, casinoId);
-                if (testChatData != null)
-                {
-                    pokerTableChat.UpdateMessageList(testChatData);
+                    List<Message> testChatData = gameManager.server.GetTableChatMessages(tableId, casinoId);
+                    if (testChatData != null)
+                    {
+                        pokerTableChat.UpdateMessageList(testChatData);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+
             }
         }
         private void startRound(Object source, System.Timers.ElapsedEventArgs e)
         {
-            gameManager.server.startRound(tableId, casinoId);
-            
+            try
+            {
+                gameManager.server.startRound(tableId, casinoId);
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         private List<int> calculateCardLocation(Round round)
         {
-            List<int> list = new List<int>();
-            int sitNumber = round.Dealer + 1;
-            for (int i = 0; i < 9; i++)
+            try
             {
-                if (round.ActivePlayersIndex[(sitNumber + i) % 9] != null && round.ActivePlayersIndex[(sitNumber + i) % 9].InHand)
+                List<int> list = new List<int>();
+                int sitNumber = round.Dealer + 1;
+                for (int i = 0; i < 9; i++)
                 {
-                    list.Add((sitNumber + i) % 9);
+                    if (round.ActivePlayersIndex[(sitNumber + i) % 9] != null && round.ActivePlayersIndex[(sitNumber + i) % 9].InHand)
+                    {
+                        list.Add((sitNumber + i) % 9);
+                    }
                 }
-            }
-            for (int i = 0; i < 9; i++)
-            {
-                if (round.ActivePlayersIndex[(sitNumber + i) % 9] != null && round.ActivePlayersIndex[(sitNumber + i) % 9].InHand)
+                for (int i = 0; i < 9; i++)
                 {
-                    list.Add(((sitNumber + i) % 9) + 10);
+                    if (round.ActivePlayersIndex[(sitNumber + i) % 9] != null && round.ActivePlayersIndex[(sitNumber + i) % 9].InHand)
+                    {
+                        list.Add(((sitNumber + i) % 9) + 10);
+                    }
                 }
-            }
 
-            return list;
+                return list;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
         private void AddDownButton_Clicked(object sender, EventArgs e)
         {
-            if (int.Parse(enterMoneyTextbox.message) - 500 > 0)
+            try
             {
-                enterMoneyTextbox.message = (int.Parse(enterMoneyTextbox.message) - 500).ToString();
+                if (int.Parse(enterMoneyTextbox.message) - 500 > 0)
+                {
+                    enterMoneyTextbox.message = (int.Parse(enterMoneyTextbox.message) - 500).ToString();
+                }
+                else
+                {
+                    enterMoneyTextbox.message = "0";
+                }
             }
-            else
+            catch (Exception ex)
             {
-                enterMoneyTextbox.message = "0";
+
             }
         }
 
         private void AddUpButton_Clicked(object sender, EventArgs e)
         {
-            if (int.Parse(enterMoneyTextbox.message) + 500 < myPlayer.Stat.Money)
+            try
             {
-                enterMoneyTextbox.message = (int.Parse(enterMoneyTextbox.message) + 500).ToString();
+                if (int.Parse(enterMoneyTextbox.message) + 500 < myPlayer.Stat.Money)
+                {
+                    enterMoneyTextbox.message = (int.Parse(enterMoneyTextbox.message) + 500).ToString();
+                }
+                else
+                {
+                    enterMoneyTextbox.message = myPlayer.Stat.Money.ToString();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                enterMoneyTextbox.message = myPlayer.Stat.Money.ToString();
+
             }
         }
 
         private void AddButton_Clicked(object sender, EventArgs e)
         {
-            gameManager.server.AddOnReBuy(tableId, casinoId, userEmail, signature, int.Parse(enterMoneyTextbox.message));
-            isEnterMoneyPanelVisible = false;
-            isEnterMoneyPanelVisible = false;
+            try
+            {
+                gameManager.server.AddOnReBuy(tableId, casinoId, userEmail, signature, int.Parse(enterMoneyTextbox.message));
+                isEnterMoneyPanelVisible = false;
+                isEnterMoneyPanelVisible = false;
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
         private void RaiseDownButton_Clicked(object sender, EventArgs e)
         {
-            if (int.Parse(raiseAmountTextbox.Text) > minimumRaise)
+            try
             {
-                raiseAmountTextbox.Text = (int.Parse(raiseAmountTextbox.Text) - currentBettingRound.RaiseJump).ToString();
+                if (int.Parse(raiseAmountTextbox.Text) > minimumRaise)
+                {
+                    raiseAmountTextbox.Text = (int.Parse(raiseAmountTextbox.Text) - currentBettingRound.RaiseJump).ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+
             }
         }
 
         private void RaiseUpButton_Clicked(object sender, EventArgs e)
         {
-            if (int.Parse(raiseAmountTextbox.Text) + currentBettingRound.RaiseJump < myPlayer.Money + myPlayer.CurrentRoundBet)
+            try
             {
-                raiseAmountTextbox.Text = (int.Parse(raiseAmountTextbox.Text) + currentBettingRound.RaiseJump).ToString();
+                if (int.Parse(raiseAmountTextbox.Text) + currentBettingRound.RaiseJump < myPlayer.Money + myPlayer.CurrentRoundBet)
+                {
+                    raiseAmountTextbox.Text = (int.Parse(raiseAmountTextbox.Text) + currentBettingRound.RaiseJump).ToString();
+                }
+                else
+                {
+                    raiseAmountTextbox.Text = (myPlayer.Money + myPlayer.CurrentRoundBet).ToString();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                raiseAmountTextbox.Text = (myPlayer.Money + myPlayer.CurrentRoundBet).ToString();
+
             }
         }
 
         private void RaiseButton_Clicked(object sender, EventArgs e)
         {
-            if (((string)raiseButton.Content).Equals("Confirm"))
+            try
             {
-                Button button = sender as Button;
-                gameManager.server.MakeAnAction(tableId, casinoId, userEmail, signature, int.Parse(button.Name), int.Parse(raiseAmountTextbox.Text));
-                raiseButton.Content = "Raise";
-                raiseUpButton.IsVisible = false;
-                raiseUpButton.IsEnabled = false;
-                raiseDownButton.IsVisible = false;
-                raiseDownButton.IsEnabled = false;
-                allInButton.IsVisible = false;
-                allInButton.IsEnabled = false;
-                raiseAmountTextbox.IsVisible = false;
+                if (((string)raiseButton.Content).Equals("Confirm"))
+                {
+                    Button button = sender as Button;
+                    gameManager.server.MakeAnAction(tableId, casinoId, userEmail, signature, int.Parse(button.Name), int.Parse(raiseAmountTextbox.Text));
+                    raiseButton.Content = "Raise";
+                    raiseUpButton.IsVisible = false;
+                    raiseUpButton.IsEnabled = false;
+                    raiseDownButton.IsVisible = false;
+                    raiseDownButton.IsEnabled = false;
+                    allInButton.IsVisible = false;
+                    allInButton.IsEnabled = false;
+                    raiseAmountTextbox.IsVisible = false;
+                }
+                else if (((string)raiseButton.Content).Equals("Raise"))
+                {
+                    raiseButton.Content = "Confirm";
+                    raiseUpButton.IsVisible = true;
+                    raiseUpButton.IsEnabled = true;
+                    raiseDownButton.IsVisible = true;
+                    raiseDownButton.IsEnabled = true;
+                    allInButton.IsVisible = true;
+                    allInButton.IsEnabled = true;
+                    raiseAmountTextbox.IsVisible = true;
+                    minimumRaise = currentBettingRound.MinimumBet;
+                    raiseAmountTextbox.Text = minimumRaise.ToString();
+                }
             }
-            else if (((string)raiseButton.Content).Equals("Raise"))
+            catch (Exception ex)
             {
-                raiseButton.Content = "Confirm";
-                raiseUpButton.IsVisible = true;
-                raiseUpButton.IsEnabled = true;
-                raiseDownButton.IsVisible = true;
-                raiseDownButton.IsEnabled = true;
-                allInButton.IsVisible = true;
-                allInButton.IsEnabled = true;
-                raiseAmountTextbox.IsVisible = true;
-                minimumRaise = currentBettingRound.MinimumBet;
-                raiseAmountTextbox.Text = minimumRaise.ToString();
+
             }
         }
 
         private void ExitButton_Clicked(object sender, EventArgs e)
         {
-            gameManager.server.SitOut(casinoId, tableId, userEmail, signature, true);
-            aTimer.Enabled = false;
-            gameManager.ScreenType = eScreenType.CasinoRoom;
+            try
+            {
+                gameManager.server.SitOut(casinoId, tableId, userEmail, signature, true);
+                aTimer.Enabled = false;
+                gameManager.ScreenType = eScreenType.CasinoRoom;
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         public void Update(GameTime i_gametime)
@@ -1000,47 +1131,68 @@ namespace CasinoSharedLibary
 
         private void collectMoneyFromPlayer()
         {
-            for (int i = 0; i < 9; i++)
+            try
             {
-                float diffrenceX = (chipLocations[9].X - chipLocations[i].X) / (float)50;
-                float diffrenceY = (chipLocations[9].Y - chipLocations[i].Y) / (float)50;
-                float x = chipMovingLocation[i].X + diffrenceX;
-                float y = chipMovingLocation[i].Y + diffrenceY;
-                chipMovingLocation[i] = new Vector2(x, y);
+                for (int i = 0; i < 9; i++)
+                {
+                    float diffrenceX = (chipLocations[9].X - chipLocations[i].X) / (float)50;
+                    float diffrenceY = (chipLocations[9].Y - chipLocations[i].Y) / (float)50;
+                    float x = chipMovingLocation[i].X + diffrenceX;
+                    float y = chipMovingLocation[i].Y + diffrenceY;
+                    chipMovingLocation[i] = new Vector2(x, y);
+                }
+            }
+            catch (Exception ex)
+            {
+
             }
         }
 
         private void moveChipsToTheWinner()
         {
-            int winner = round.WinnersIndex[0];
-            float diffrenceX = (chipLocations[9].X - chipLocations[winner].X) / (float)50;
-            float diffrenceY = (chipLocations[9].Y - chipLocations[winner].Y) / (float)50;
-            float x = chipMovingLocation[9].X - diffrenceX;
-            float y = chipMovingLocation[9].Y - diffrenceY;
-            chipMovingLocation[9] = new Vector2(x, y);
+            try
+            {
+                int winner = round.WinnersIndex[0];
+                float diffrenceX = (chipLocations[9].X - chipLocations[winner].X) / (float)50;
+                float diffrenceY = (chipLocations[9].Y - chipLocations[winner].Y) / (float)50;
+                float x = chipMovingLocation[9].X - diffrenceX;
+                float y = chipMovingLocation[9].Y - diffrenceY;
+                chipMovingLocation[9] = new Vector2(x, y);
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         private void updateStatsPanel(GameTime i_gameTime)
         {
-            if (!isStatsPanelVisible)
+            try
             {
-                MouseState mState = Mouse.GetState();
-                Rectangle mouseRectange = new Rectangle(mState.X, mState.Y, 1, 1);
-                Rectangle playerRectangel = new Rectangle(0, 0, (int)(75 * width), (int)(75 + storage.Cards[0].Height * height));
-                for (int i = 0; i < playersLocations.Count; i++)
+                if (!isStatsPanelVisible)
                 {
-                    playerRectangel.X = (int)playersLocations[i].X;
-                    playerRectangel.Y = (int)(playersLocations[i].Y - 60 * height);
-                    if (mouseRectange.Intersects(playerRectangel) && mState.LeftButton == ButtonState.Pressed && table.PlayersInTable[i] != null)
+                    MouseState mState = Mouse.GetState();
+                    Rectangle mouseRectange = new Rectangle(mState.X, mState.Y, 1, 1);
+                    Rectangle playerRectangel = new Rectangle(0, 0, (int)(75 * width), (int)(75 + storage.Cards[0].Height * height));
+                    for (int i = 0; i < playersLocations.Count; i++)
                     {
-                        isStatsPanelVisible = true;
-                        currentStatsPlayer = i;
+                        playerRectangel.X = (int)playersLocations[i].X;
+                        playerRectangel.Y = (int)(playersLocations[i].Y - 60 * height);
+                        if (mouseRectange.Intersects(playerRectangel) && mState.LeftButton == ButtonState.Pressed && table.PlayersInTable[i] != null)
+                        {
+                            isStatsPanelVisible = true;
+                            currentStatsPlayer = i;
+                        }
                     }
                 }
+                else
+                {
+                    closeStatsPanelButton.Update(i_gameTime, 0, 0);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                closeStatsPanelButton.Update(i_gameTime, 0, 0);
+
             }
         }
 
@@ -1141,15 +1293,29 @@ namespace CasinoSharedLibary
 
         private void CheckIfNeedReBuy()
         {
-            if (myPlayer.Money <= 0)
+            try
             {
-                Task.Delay(3000).ContinueWith(task => changeRebuyPanel());
+                if (myPlayer.Money <= 0)
+                {
+                    Task.Delay(3000).ContinueWith(task => changeRebuyPanel());
+                }
+            }
+            catch (Exception ex)
+            {
+
             }
         }
 
         private void changeRebuyPanel()
         {
-            isEnterMoneyPanelVisible = true;
+            try
+            {
+                isEnterMoneyPanelVisible = true;
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         private void hideBettingButtons()
