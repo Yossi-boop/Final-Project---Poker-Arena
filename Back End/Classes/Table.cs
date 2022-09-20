@@ -73,6 +73,8 @@ namespace Classes
 
         public bool IsRoundLive { get; set; }
 
+        public bool NewRound { get; set; }
+
         public Table()
         {
 
@@ -90,6 +92,7 @@ namespace Classes
                 NumberOfSits = i_NumberOfSits;
                 Dealer = i_NumberOfSits - 1;
                 initiateUserSits();
+                NewRound = true;
 
                 GameSetting = setting; 
             }
@@ -178,22 +181,33 @@ namespace Classes
                             // GetOutQueue.Clear();
                             // updatePlayerListAfterRound();
                             IsRoundLive = false;
-                        }
+                        NewRound = true;
+                        CurrentRound = null;
 
                     }
 
+                }
+                if (NewRound)
+                {
                     if (checkIfEnough())
                     {
+                        NewRound = false;
+
                         IsRoundLive = true;
                         updatePlayerListAfterRound();
-                        Dealer = nextPlayer(Dealer);
-                        CurrentRound = new Round(Players, NumberOfSits, Dealer, GameSetting.SmallBlind);
+                      
+                            Dealer = nextPlayer(Dealer);
+                            if (CurrentRound == null)
+                            {
+                                CurrentRound = new Round(Players, NumberOfSits, Dealer, GameSetting.SmallBlind);
+                            }
+                        
                     }
                     else
                     {
                         CurrentRound = null;
                     }
-                
+                }
             }
             catch (Exception e)
             {
@@ -399,7 +413,9 @@ namespace Classes
             try
             {
                 PokerPlayer player = GetPlayer(i_Email);
-                if (i_Now && CurrentRound != null)
+                PokerPlayer playerInTable = CurrentRound.GetPlayer(i_Email);
+
+                if (i_Now && CurrentRound != null && playerInTable != null)
                 {
                     CurrentRound.GetOut(player.Position);
                 }

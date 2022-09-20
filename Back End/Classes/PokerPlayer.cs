@@ -41,6 +41,9 @@ namespace Classes
 
         public bool UpdateResult { get; set; }
 
+        public bool InitilizeGame { get; set; }
+
+
         public int Position { get; set; }
 
         public Stats Stat { get; set; }
@@ -66,7 +69,7 @@ namespace Classes
                 ReadyToPlay = true;
                 UpdateResult = false;
                 LastActionTime = DateTime.Now;
-
+                InitilizeGame = false;
                 this.NewHand();
                 this.NewRound();
             }
@@ -110,7 +113,7 @@ namespace Classes
                 Stat.Money += Money;
                 Stat.VictoryPercentage = (float)Stat.NumberOfHandsWon / (float)Stat.NumberOfHandsPlay;
 
-                UpdateStats();
+                UpdateStats(false);
             }
             catch (Exception e)
             {
@@ -118,10 +121,11 @@ namespace Classes
             }
         }
 
-        public void UpdateStats()
+        public void UpdateStats(bool startGame)
         {
             try
             {
+                InitilizeGame = startGame;
                 writeInDataBase();
             }
             catch (Exception e)
@@ -226,7 +230,7 @@ namespace Classes
                     Money += i_Amount;
                     Stat.Money -= i_Amount;
                     this.ReadyToPlay = true;
-                    UpdateStats();
+                    UpdateStats(false);
                 } 
                 else
                 {

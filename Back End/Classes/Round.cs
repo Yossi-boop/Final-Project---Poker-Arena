@@ -113,10 +113,11 @@ namespace Classes
             {
                 foreach (var player in ActivePlayersIndex)
                 {
-                    if (player != null)
+                    if (player != null && !player.InitilizeGame)
                     {
+                        player.InitilizeGame = true;
                         player.Stat.Money -= player.Money;
-                        player.UpdateStats();
+                        player.UpdateStats(true);
                     }
                 }
             }

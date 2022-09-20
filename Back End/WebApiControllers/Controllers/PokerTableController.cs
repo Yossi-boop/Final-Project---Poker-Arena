@@ -24,7 +24,9 @@ namespace WebApiControllers.Controllers
                     return Ok(values);
                 }
                 catch (Exception e)
-                {                    
+                {
+
+                    
                     return BadRequest("Bad");
                 }
             
@@ -50,8 +52,9 @@ namespace WebApiControllers.Controllers
                     {
                         return BadRequest("There Is No Table");
                     }
+                table.StartRound();
 
-                    if (table.CurrentRound != null && table.CurrentRound.Part != RoundPart.Result)
+                if (table.CurrentRound != null && table.CurrentRound.Part != RoundPart.Result)
                     {
                         table.CurrentRound.CheckIfTimeout();
                     }
@@ -63,30 +66,33 @@ namespace WebApiControllers.Controllers
                 }
                 catch (Exception e)
                 {
+
                     
                     return BadRequest("Bad");
                 }
             
         }
+
+
         public IHttpActionResult Get(string CasinoId, string TableId)
         {
+
             try
             {
                 Table table = DataStorage.GetTable(TableId, CasinoId);
 
                 table.StartRound();
+               
+
                 return Ok("");
-    
-        }
+            }
             catch (Exception e)
             {
+
+
                 return BadRequest("Bad");
-
             }
+
         }
-
     }
-
-    
-
 }
