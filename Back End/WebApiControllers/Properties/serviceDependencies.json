@@ -6,6 +6,10 @@
     "mssql1": {
       "type": "mssql",
       "connectionId": "UsersDbContext"
+    },
+    "mssql2": {
+      "type": "mssql",
+      "connectionId": "poker-arena.database.windows.net"
     }
   }
 }

@@ -8,6 +8,12 @@
       "type": "mssql.azure",
       "connectionId": "UsersDbContext",
       "secretStore": "LocalSecretsFile"
+    },
+    "mssql2": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/poker-arena/databases/poker-arena",
+      "type": "mssql.azure",
+      "connectionId": "poker-arena.database.windows.net",
+      "secretStore": "LocalSecretsFile"
     }
   }
 }
