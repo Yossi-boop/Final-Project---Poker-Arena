@@ -57,8 +57,8 @@ namespace CasinoSharedLibary
 
             storage = new SpritesStorage(Content, UserScreenHeight, UserScreenWidth);
 
-            server = new Proxy("http://localhost:61968/");
-            //server = new Proxy();
+            //server = new Proxy("http://localhost:61968/");
+            server = new Proxy();
 
             loginPage = new LoginPage(this, GraphicsDevice, Content);
             registerPage = new RegisterPage(this, GraphicsDevice, Content);
