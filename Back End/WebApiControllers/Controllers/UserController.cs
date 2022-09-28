@@ -25,7 +25,7 @@ namespace WebApiControllers.Controllers
                     User user = DataStorage.GetUserByMail(i_Email);
                     if (user == null)
                     {
-                        return BadRequest("Email not exist");
+                        throw new Exception("Email not exist");
                     }
 
                     var values = new JObject();
@@ -35,7 +35,7 @@ namespace WebApiControllers.Controllers
                 catch (Exception e)
                 {
                                     
-                    return BadRequest("");
+                    return BadRequest(e.Message);
                 }
             
         }
@@ -43,14 +43,12 @@ namespace WebApiControllers.Controllers
         // POST: api/User
         public IHttpActionResult Post([FromBody]UserDetailsForCreation i_UserDetails)
         {
-          
-
                 try
                 {
                     User user = DataStorage.GetUserByMail(i_UserDetails.Email);
                     if (user != null)
                     {
-                        return BadRequest("Email already exist");
+                        throw new Exception("Email already exist");
                     }
                     user = new User(i_UserDetails.Name, i_UserDetails.Email, i_UserDetails.Password);
                     DataStorage.AddUser(user);
@@ -59,25 +57,23 @@ namespace WebApiControllers.Controllers
                 }
                 catch (Exception e)
                 {                    
-                    return BadRequest("There Is No Table");
+                    return BadRequest(e.Message);
                 }
             
         }
 
         // PUT: api/User/5
-        public void Put(string i_Email, [FromBody]User user)
+        public IHttpActionResult Put(string i_Email, [FromBody]User user)
         {
-            
-
                 try
                 {
                     DataStorage.UpdateUserDetails(i_Email, user);
-
+                return Ok("Updated");
 
                 }
                 catch (Exception e)
                 {
-
+                return BadRequest(e.Message);
                 }
             
         }

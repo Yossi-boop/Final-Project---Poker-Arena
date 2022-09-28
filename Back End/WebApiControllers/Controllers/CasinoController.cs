@@ -23,57 +23,23 @@ namespace WebApiControllers.Controllers
                 try
                 {
                     Casino casino = DataStorage.GetCasino(i_CasinoId);
-                    var values = new JArray();
+                if (casino == null)
+                {
+                    throw new Exception("Casino not found");
+                }
+
+                var values = new JArray();
                     values = JArray.FromObject(casino.Furnitures);
 
                     return Ok(values);
                 }
                 catch (Exception e)
                 {
-                    return BadRequest("Bad");
+                    return BadRequest(e.Message);
                 }
             
         }
 
-        // public IHttpActionResult Get(string i_CasinoId, string i_Email)
-        // {
-            
-        //         try
-        //         {
-        //             Casino casino = DataStorage.GetCasino(i_CasinoId);
-        //             User user = DataStorage.GetUserByMail(i_Email);
-
-        //             return Ok("Updated");
-        //         }
-        //         catch (Exception e)
-        //         {
-        //             using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-        //             {
-        //                 file.WriteLine("CasinoController.get2/" + e.Message);
-        //             }
-        //             return BadRequest("Bad");
-        //         }
-            
-        // }
-
-
-        // public IHttpActionResult Post([FromBody]string i_CasinoId, [FromBody]string i_Email)
-        // {
-           
-        //         try
-        //         {
-        //             Casino casino = DataStorage.GetCasino(i_CasinoId);
-        //             User user = DataStorage.GetUserByMail(i_Email);
-        //             return Ok("Updated");
-        //         }
-        //         catch (Exception e)
-        //         {
-        //             using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-        //             {
-        //                 file.WriteLine("CasinoController.post/" + e.Message);
-        //             }
-        //             return BadRequest("Bad");
-        //         }
-        // }
+    
     }
 }

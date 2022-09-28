@@ -48,15 +48,19 @@ namespace WebApiControllers.Controllers
                     {
                         return BadRequest("There Is No Table");
                     }
+                    if(table.Chat == null)
+                {
+                    return BadRequest("There Is No Chat");
 
-                    table.Chat.Archive.Add(new Message(i_Message.UserName, i_Message.Body));
+                }
+                table.Chat.Archive.Add(new Message(i_Message.UserName, i_Message.Body));
                     return Ok("MessageSent");
 
 
                 }
                 catch (Exception e)
                 {                    
-                    return BadRequest("There Is No Table");
+                    return BadRequest(e.Message);
                 }
             
         }

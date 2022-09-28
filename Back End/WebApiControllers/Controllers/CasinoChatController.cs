@@ -19,15 +19,17 @@ namespace WebApiControllers.Controllers
                 try
                 {
                     Casino casino = DataStorage.GetCasino(i_CasinoId);
-
-
+                    if(casino == null)
+                {
+                    throw new Exception("Casino not found");
+                }
                     var values = new JArray();
                     values = JArray.FromObject(casino.GetMessages());
                     return Ok(values);
                 }
                 catch (Exception e)
                 {                    
-                    return BadRequest("Bad");
+                    return BadRequest(e.Message);
                 }
             
         }
@@ -41,20 +43,24 @@ namespace WebApiControllers.Controllers
                     Casino casino = DataStorage.GetCasino(i_Message.CasinoId);
                     if (casino == null)
                     {
-                        return BadRequest("There Is No Casino");
+                        throw new Exception("Casino not found");
                     }
                     lock(postLock)
                     {
                     casino.CasinoChat.Archive.Add(new Message(i_Message.UserName, i_Message.Body));
                     }
                     CharacterInstance user = casino.UserInCasino(i_Message.Email);
+                    if(user == null)
+                {
+                    throw new Exception("User not found");
+                }
                     user.AddMessage(i_Message.Body);
 
-                    return Ok("MessageSent");
+                    return Ok("Message sent");
                 }
                 catch (Exception e)
                 {                    
-                    return BadRequest("Bad");
+                    return BadRequest(e.Message);
                 }
             
         }

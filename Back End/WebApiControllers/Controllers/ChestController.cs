@@ -21,7 +21,11 @@ namespace WebApiControllers.Controllers
                 try
                 {
                     Casino casino = DataStorage.GetCasino(CasinoId);
-                    var values = new JObject();
+                if (casino == null)
+                {
+                    throw new Exception("Casino not found");
+                }
+                var values = new JObject();
                     values = JObject.FromObject(casino.TreasureChest);
 
                     return Ok(values);
@@ -29,23 +33,32 @@ namespace WebApiControllers.Controllers
                 catch (Exception e)
                 {
                                       
-                    return BadRequest("Bad");
+                    return BadRequest(e.Message);
                 }
             
         }
 
-        public void Post([FromBody]CollectChest Details)
+        public IHttpActionResult Post([FromBody]CollectChest Details)
         {
             
                 try
                 {
                     Casino casino = DataStorage.GetCasino(Details.CasinoId);
-                    Stats stats = DataStorage.GetStatsByMail(Details.Email);
-                    casino.CollectMoney(stats);
+                if (casino == null)
+                {
+                    throw new Exception("Casino not found");
+                }
+                Stats stats = DataStorage.GetStatsByMail(Details.Email);
+                if (stats == null)
+                {
+                    throw new Exception("stats not found");
+                }
+                casino.CollectMoney(stats);
+                return Ok("Updated");
                 }
                 catch (Exception e)
                 {
-                                        
+                    return BadRequest(e.Message);        
                 }
             
         }

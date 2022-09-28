@@ -27,7 +27,7 @@ namespace WebApiControllers.Controllers
                 {
 
                     
-                    return BadRequest("Bad");
+                    return BadRequest(e.Message);
                 }
             
         }
@@ -38,8 +38,11 @@ namespace WebApiControllers.Controllers
                 try
                 {
                     Table table = DataStorage.GetTable(TableId, CasinoId);
-
-                    table.updateAction(Email);
+                if (table == null)
+                {
+                    return BadRequest("Table not found");
+                }
+                table.updateAction(Email);
 
 
                     DataStorage.LogedInUser user = DataStorage.GetActiveUserByMail(Email);
@@ -68,7 +71,7 @@ namespace WebApiControllers.Controllers
                 {
 
                     
-                    return BadRequest("Bad");
+                    return BadRequest(e.Message);
                 }
             
         }

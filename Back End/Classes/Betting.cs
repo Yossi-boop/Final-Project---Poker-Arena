@@ -27,7 +27,7 @@ namespace Classes
                     return ActivePlayers[CurrentPlayerIndex];
                 } catch(Exception e)
                 {
-                 throw e;
+                    return null; 
                 }
             }
         }
@@ -63,7 +63,7 @@ namespace Classes
         {
             try
             {
-                if (!(CurrentPlayer.Signature.Equals(i_Signature)))
+                if (CurrentPlayer == null || !(CurrentPlayer.Signature.Equals(i_Signature)))
                 {
                     return false;
                 }

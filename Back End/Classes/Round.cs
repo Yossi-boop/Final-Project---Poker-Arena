@@ -63,6 +63,10 @@ namespace Classes
         {
             try
             {
+                if(currentBettingRound == null || currentBettingRound.CurrentPlayer == null)
+                {
+                    return;
+                }
                 if (currentBettingRound.BiggestMoneyInPot > currentBettingRound.CurrentPlayer.CurrentRoundBet)
                 {
                     MakeAnAction(currentBettingRound.CurrentPlayer.Signature, eAction.Fold, 0);
@@ -117,6 +121,10 @@ namespace Classes
                     {
                         player.InitilizeGame = true;
                         player.Stat.Money -= player.Money;
+                        if(player.Stat.Money < 0)
+                        {
+                            player.Stat.Money = 0;
+                        }
                         player.UpdateStats(true);
                     }
                 }
@@ -413,7 +421,6 @@ namespace Classes
                 if (currentBettingRound!= null && currentBettingRound.MakeAnAction(i_Signature, i_Action, i_Raise))
                 {
                     LastActionTime = DateTime.Now;
-                    Console.WriteLine(LastActionTime);
                     currentBettingRound.CurrentPlayerIndex = nextPlayer(currentBettingRound.CurrentPlayerIndex);
                     if (isOnlyOne(i_Signature))
                     {
@@ -688,9 +695,19 @@ namespace Classes
             try
             {
                 PokerPlayer player = ActivePlayersIndex[i_PlayerPosition];
+                if(player == null)
+                {
+                    return;
+                }
                 if (Part != RoundPart.Result && currentBettingRound != null && currentBettingRound.CurrentPlayerIndex == i_PlayerPosition)
                 {
                     MakeAnAction(player.Signature, eAction.Fold, 0);
+                    if(Part != RoundPart.Result)
+                    {
+                        UsersHands = new List<PokerHand>();
+                        getBestHandsForAllRemainingUsers();
+                        player.UpdateStatsAfterRound(false, UsersHands[i_PlayerPosition]);
+                    }
                 }
                 else
                 {

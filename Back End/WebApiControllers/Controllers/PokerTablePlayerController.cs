@@ -23,7 +23,7 @@ namespace WebApiControllers.Controllers
                     Table table = DataStorage.GetTable(TableId, CasinoId);
                     if (table == null)
                     {
-                        return BadRequest("There Is No Table");
+                        return BadRequest("Table not found");
                     }
                     var values = new JArray();
                     values = JArray.FromObject(table.Players);
@@ -32,7 +32,7 @@ namespace WebApiControllers.Controllers
                 }
                 catch (Exception e)
                 {                    
-                    return BadRequest("");
+                    return BadRequest(e.Message);
                 }
             
         }
@@ -45,13 +45,13 @@ namespace WebApiControllers.Controllers
                     Table table = DataStorage.GetTable(TableId, CasinoId);
                     if (table == null)
                     {
-                        return BadRequest("There Is No Table");
+                        return BadRequest("Table not found");
                     }
 
                     PokerPlayer player = table.GetPlayer(email);
                     if (player == null)
                     {
-                        return BadRequest("There Is No Player like this in this table");
+                        return BadRequest("Player not found");
                     }
 
                     var values = new JObject();
@@ -62,13 +62,13 @@ namespace WebApiControllers.Controllers
                 catch (Exception e)
                 {
                                        
-                    return BadRequest("");
+                    return BadRequest(e.Message);
 
                 }
             
         }
 
-        public void Get(string CasinoId, string TableId, string Email, string Signature)
+        public IHttpActionResult Get(string CasinoId, string TableId, string Email, string Signature)
         {
             
                 try
@@ -76,12 +76,12 @@ namespace WebApiControllers.Controllers
 
                     Table table = DataStorage.GetTable(TableId, CasinoId);
                     table.GetOut(Email, true);
-
+                    return Ok("Deleted");
                 }
                 catch (Exception e)
                 {
-                    
-                    
+                    return BadRequest(e.Message);
+
                 }
             
         }
@@ -95,24 +95,36 @@ namespace WebApiControllers.Controllers
                     Table table = DataStorage.GetTable(i_User.TableId, i_User.CasinoId);
                     if (table == null)
                     {
-                        return BadRequest("There Is No Table");
+                    throw new Exception("Table not found");
                     }
                     Stats stats = DataStorage.GetStatsByMail(i_User.Email);
-                    User user = DataStorage.GetUserByMail(i_User.Email);
-                    table.AddUser(i_User.Email, i_User.Name, i_User.Money, i_User.Index, stats, (int)user.Figure);
+                if (stats == null)
+                {
+                    throw new Exception("Stats not found");
+                }
+                User user = DataStorage.GetUserByMail(i_User.Email);
+                if (user == null)
+                {
+                    throw new Exception("User not found");
+                }
+                table.AddUser(i_User.Email, i_User.Name, i_User.Money, i_User.Index, stats, (int)user.Figure);
                     PokerPlayer player = table.GetPlayer(i_User.Email);
-                    return Ok(player.Signature);
+                if (player == null)
+                {
+                    throw new Exception("player not found");
+                }
+                return Ok(player.Signature);
                 }
                 catch (Exception e)
                 {
                                         
-                    return BadRequest("");
+                    return BadRequest(e.Message);
                 }
             
         }
 
         // PUT: api/PokerTablePlayer/5 // ReBuy
-        public void Put([FromBody]PokerPlayerReBuyDetails i_Details)
+        public IHttpActionResult Put([FromBody]PokerPlayerReBuyDetails i_Details)
         {
            
                 try
@@ -120,18 +132,24 @@ namespace WebApiControllers.Controllers
                     if (Security.CheckIfSignatureValid(i_Details.TableId, i_Details.CasinoId, i_Details.Email, i_Details.Signature))
                     {
                         Table table = DataStorage.GetTable(i_Details.TableId, i_Details.CasinoId);
-                        table.ReBuyAddOnAddToQueue(i_Details.Amount, i_Details.Email);
+                    if (table == null)
+                    {
+                        throw new Exception("Table not found");
                     }
+                    table.ReBuyAddOnAddToQueue(i_Details.Amount, i_Details.Email);
+                    return Ok("Updated");
+                    }
+                throw new Exception("Invalid signature");
                 }
                 catch (Exception e)
                 {
-                    
+                    return BadRequest(e.Message);
                 }
             
         }
 
         // DELETE: api/PokerTablePlayer/5 //GoOut
-        public void Delete(string CasinoId, string TableId, string Email, string Signature)
+        public IHttpActionResult Delete(string CasinoId, string TableId, string Email, string Signature)
         {
             
                 try
@@ -139,14 +157,21 @@ namespace WebApiControllers.Controllers
                     if (Security.CheckIfSignatureValid(TableId, CasinoId, Email, Signature))
                     {
                         Table table = DataStorage.GetTable(TableId, CasinoId);
-                        table.GetOut(Email, true);
+                    if (table == null)
+                    {
+                        throw new Exception("Table not found");
                     }
+                    table.GetOut(Email, true);
+                    return Ok("Deleted");
                 }
+                throw new Exception("Invalid signature");
+            }
                 catch (Exception e)
                 {
-                  
-                }
-        
+                return BadRequest(e.Message);
+
+            }
+
         }
     }
 }

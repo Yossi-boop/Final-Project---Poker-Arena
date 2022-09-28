@@ -413,10 +413,9 @@ namespace Classes
             try
             {
                 PokerPlayer player = GetPlayer(i_Email);
-                PokerPlayer playerInTable = CurrentRound.GetPlayer(i_Email);
-
-                if (i_Now && CurrentRound != null && playerInTable != null)
+                if (i_Now && CurrentRound != null &&  CurrentRound.GetPlayer(i_Email) != null)
                 {
+
                     CurrentRound.GetOut(player.Position);
                 }
                 PlayersInTable[player.Position] = null;

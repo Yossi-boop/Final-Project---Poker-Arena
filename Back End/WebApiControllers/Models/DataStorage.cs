@@ -143,6 +143,10 @@ namespace WebApiControllers.Models
         {
             foreach (Casino casino in Casinos)
             {
+                if(casino == null)
+                {
+                    continue;
+                }
                 if (casino.Id.Equals(i_CasinoId))
                 {
                     return casino;

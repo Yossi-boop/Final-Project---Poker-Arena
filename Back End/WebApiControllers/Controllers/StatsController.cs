@@ -32,40 +32,43 @@ namespace WebApiControllers.Controllers
                 catch (Exception e)
                 {
                                         
-                    return BadRequest("");
+                    return BadRequest(e.Message);
 
                 }
             
         }
 
         
-        public void Post(string i_Email)
+        public IHttpActionResult Post(string i_Email)
         {
             
                 try
                 {
                     DataStorage.AddStats(i_Email);
+                return Ok("Stats created");
                 }
                 catch (Exception e)
                 {
-                    
+                return BadRequest(e.Message);
                 }
             
         }
 
-        public void Put(string i_Email, [FromBody]Stats i_Stats)
+        public IHttpActionResult Put(string i_Email, [FromBody]Stats i_Stats)
         {
             
                 try
                 {
                     DataStorage.UpdataStats(i_Email, i_Stats);
+                return Ok("Stats updated");
 
-                }
-                catch (Exception e)
+            }
+            catch (Exception e)
                 {
-                                        
-                }
-            
+                return BadRequest(e.Message);
+
+            }
+
         }
     }
 }

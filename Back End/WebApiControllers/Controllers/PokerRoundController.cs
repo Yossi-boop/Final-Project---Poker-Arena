@@ -21,7 +21,7 @@ namespace WebApiControllers.Controllers
                     Table table = DataStorage.GetTable(TableId, CasinoId);
                     if (table == null)
                     {
-                        return BadRequest("There Is No Table");
+                        return BadRequest("Table not found");
                     }
 
                     var values = new JObject();
@@ -32,7 +32,7 @@ namespace WebApiControllers.Controllers
                 catch (Exception e)
                 {
                                         
-                    return BadRequest("Bad");
+                    return BadRequest(e.Message);
                 }
             
         }

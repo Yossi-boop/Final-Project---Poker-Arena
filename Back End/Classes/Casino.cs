@@ -51,7 +51,11 @@ namespace Classes
         {
             try
             {
-                if (!TreasureChest.Collected)
+                if(TreasureChest == null)
+                {
+                    this.createNewChest();
+                }
+                if (!TreasureChest.Collected && stats != null)
                 {
                     stats.Money += TreasureChest.GoldAmount;
                     writeInDataBase(stats);
@@ -72,11 +76,11 @@ namespace Classes
                 values = JObject.FromObject(stats);
                 HttpContent content = new StringContent(values.ToString(), Encoding.UTF8, "application/json");
                 //putRequestAsync("https://pokerarenaapi.azurewebsites.net/api/Stats?i_Email=" + stats.UserEmail, content);
-                putRequestAsync("http://localhost:61968/api/Stats?i_Email=" + stats.UserEmail, content);
+                putRequestAsync("https://webapicontrollers20220101232715.azurewebsites.net/api/Stats?i_Email=" + stats.UserEmail, content);
             }
             catch (Exception e)
             {
-            throw e;
+                throw e;
             }
         }
 
@@ -211,12 +215,20 @@ namespace Classes
 
         private bool checkIfCharacterBlockLocation(CharacterInstance character, int x, int y)
         {
+            if(character == null)
+            {
+                return false;
+            }
             return x >= character.CurrentXPos - 100 && x <= character.CurrentXPos + 150 &&
                 y >= character.CurrentYPos - 100 && y <= character.CurrentYPos + 150;
         }
 
         private bool checkIfFurnituresBlockLocation(FurnitureInstance furniture, int x, int y)
         {
+            if (furniture == null)
+            {
+                return false;
+            }
             return x >= furniture.CurrentXPos - 100 && x <= furniture.CurrentXPos + furniture.Width + 20 &&
                 y >= furniture.CurrentYPos - 100 && y <= furniture.CurrentYPos + furniture.Length + 20;
         }
@@ -266,6 +278,10 @@ namespace Classes
             {
                 List<CharacterInstance> relevantUsers = new List<CharacterInstance>();
                 CharacterInstance mainCharacter = UserInCasino(i_Email);
+                if(mainCharacter == null)
+                {
+                    return null;
+                }
                 int x = mainCharacter.CurrentXPos;
                 int y = mainCharacter.CurrentYPos;
 
