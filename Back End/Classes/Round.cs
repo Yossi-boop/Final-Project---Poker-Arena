@@ -431,8 +431,23 @@ namespace Classes
                     {
                         Part++;
                         playRoundPart();
+                        PokerPlayer nextPlayer = currentBettingRound.CurrentPlayer;
+
+                        if (nextPlayer != null && nextPlayer.Money <= 0)
+                        {
+                            MakeAnAction(nextPlayer.Signature, eAction.Check, 0);
+                        }
+                        }
+                        else
+                        {
+                            PokerPlayer nextPlayer = currentBettingRound.CurrentPlayer;
+
+                            if (nextPlayer != null && nextPlayer.Money <= 0)
+                            {
+                                MakeAnAction(nextPlayer.Signature, eAction.Check, 0);
+                            }
+                        }
                     }
-                }
                 else
                 {
                     return false;
@@ -536,17 +551,22 @@ namespace Classes
         {
             try
             {
-                int count = 0;
+                int playersInHand = 0;
+                int playersInAllIn = 0;
                 foreach (var player in ActivePlayersIndex)
                 {
-                    if (player != null && player.InHand &&
-                        (player.Money > 0 || player.Signature.Equals(i_Signature)))
+                    if (player != null && player.InHand)
                     {
-                        count++;
+                        playersInHand++;
+                        if (player.Money == 0 || player.Signature.Equals(i_Signature))
+                        {
+                            playersInAllIn++;
+                        }
                     }
+
                 }
 
-                if (count == 1)
+                if (playersInHand == 1 || playersInHand - playersInAllIn == 0)
                 {
                     return true;
                 }
@@ -555,7 +575,7 @@ namespace Classes
             }
             catch (Exception e)
             {
-               throw e;
+                throw e;
             }
         }
 
