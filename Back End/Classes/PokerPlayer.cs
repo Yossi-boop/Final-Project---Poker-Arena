@@ -140,7 +140,7 @@ namespace Classes
                 var values = new JObject();
                 values = JObject.FromObject(Stat);
                 HttpContent content = new StringContent(values.ToString(), Encoding.UTF8, "application/json");
-                putRequestAsync("https://webapicontrollers20220101232715.azurewebsites.net/api/Stats?i_Email=" + Email, content);
+                putRequestAsync("http://localhost:61968/api/Stats?i_Email=" + Email, content);
             }
             catch (Exception e)
             {                

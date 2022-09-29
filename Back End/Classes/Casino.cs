@@ -76,7 +76,7 @@ namespace Classes
                 values = JObject.FromObject(stats);
                 HttpContent content = new StringContent(values.ToString(), Encoding.UTF8, "application/json");
                 //putRequestAsync("https://pokerarenaapi.azurewebsites.net/api/Stats?i_Email=" + stats.UserEmail, content);
-                putRequestAsync("https://webapicontrollers20220101232715.azurewebsites.net/api/Stats?i_Email=" + stats.UserEmail, content);
+                putRequestAsync("http://localhost:61968/api/Stats?i_Email=" + stats.UserEmail, content);
             }
             catch (Exception e)
             {
