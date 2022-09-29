@@ -358,6 +358,11 @@ namespace Server
                 HttpContent content = new StringContent(values.ToString(), Encoding.UTF8, "application/json");
                 string result = PostRequestAsync(BaseURL + "api/PokerTablePlayer", content).Result;
 
+                if(result.Contains("User not have enough balance"))
+                {
+                    return "User not have enough balance";
+                }
+
                 return result.Substring(1, 15);
             }
             catch (Exception e)
