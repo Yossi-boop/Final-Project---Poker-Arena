@@ -128,6 +128,12 @@ namespace CasinoSharedLibary
         private int currentStatsPlayer = -1;
         #endregion
 
+        #region Find chest panel
+        private bool isFindChestPanelVisible = false;
+        private DrawingButton findChestConfirm;
+        private Rectangle findChestRectangle;
+        #endregion
+
         private DrawingButton volumeOnOffButton;
 
         public PokerTable(Game1 i_gameManager, GraphicsDevice i_graphics, SpriteBatch i_Painter, SpritesStorage i_Storage, ContentManager i_contentManager, string i_CasinoId, string i_TableId, string i_Email, string i_Name)
@@ -146,10 +152,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerTable.PokerTable " + e.Message);
-                }
+                
                 throw e;
             }
         }
@@ -398,6 +401,10 @@ namespace CasinoSharedLibary
                 }
                 volumeOnOffButton.Click += VolumeOnOffButton_Click;
 
+                findChestConfirm = new DrawingButton(storage.GreenUI[0], storage.Fonts[0]);
+                findChestConfirm.Text = "Confrim";
+                findChestConfirm.Click += FindChestConfirm_Click;
+
                 StackPanel fixedButtonsPanel = new StackPanel()
                 {
                     Margin = 5,
@@ -473,12 +480,13 @@ namespace CasinoSharedLibary
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerTable.Load " + e.Message);
-                }
                 throw e;
             }
+        }
+
+        private void FindChestConfirm_Click(object sender, EventArgs e)
+        {
+            isFindChestPanelVisible = false;
         }
 
         private void VolumeOnOffButton_Click(object sender, EventArgs e)
@@ -498,10 +506,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception ex)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerTable.VolumeOnOffButton_Click " + ex.Message);
-                }
+                
             }
         }
 
@@ -509,11 +514,14 @@ namespace CasinoSharedLibary
         {
             try
             {
-                raiseAmountTextbox.Text = (myPlayer.Money + myPlayer.CurrentRoundBet).ToString();
+                if (myPlayer != null)
+                {
+                    raiseAmountTextbox.Text = (myPlayer.Money + myPlayer.CurrentRoundBet).ToString();
+                }
             }
-            catch(Exception)
+            catch (Exception ex)
             {
-
+               
             }
         }
 
@@ -526,16 +534,15 @@ namespace CasinoSharedLibary
                 {
                     raiseAmountTextbox.Text = minimumRaise.ToString();
                 }
-                else if (raiseAmount > myPlayer.Money + myPlayer.CurrentRoundBet)
+                else if (myPlayer != null && raiseAmount > myPlayer.Money + myPlayer.CurrentRoundBet)
                 {
                     raiseAmountTextbox.Text = (myPlayer.Money + myPlayer.CurrentRoundBet).ToString();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                
             }
-
         }
 
         private void CloseStatsPanel_Click(object sender, EventArgs e)
@@ -543,15 +550,22 @@ namespace CasinoSharedLibary
             try {
                 closeStatsPanel();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                
             }
         }
 
         private void closeStatsPanel()
         {
-            isStatsPanelVisible = false;
+            try
+            {
+                isStatsPanelVisible = false;
+            }
+            catch(Exception ex)
+            {
+                
+            }
         }
 
         private void CloseHandsRatingButton_Click(object sender, EventArgs e)
@@ -561,7 +575,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception ex)
             {
-
+                
             }
         }
         private void exitRebuyPanel_Clicked(object sender, EventArgs e)
@@ -571,21 +585,20 @@ namespace CasinoSharedLibary
             }
             catch (Exception ex)
             {
-
+                
             }
         }
         private void HandsRatingButton_Clicked(object sender, EventArgs e)
         {
             try
             {
-
-
                 handsRatingPictureSwitch();
-            }catch(Exception ex)
+            }
+            catch(Exception ex)
             {
-
+                
             }
-            }
+        }
 
         private void handsRatingPictureSwitch()
         {
@@ -594,9 +607,9 @@ namespace CasinoSharedLibary
                 closeHandsRatingButton.IsVisible = true;
                 closeHandsRatingButton.IsEnabled = true;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-
+                
             }
         }
 
@@ -608,7 +621,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception ex)
             {
-
+                
             }
         }
 
@@ -617,11 +630,19 @@ namespace CasinoSharedLibary
             try {
                 DrawingButton button = sender as DrawingButton;
                 index = int.Parse(button.Name);
-                signature = gameManager.server.AddPlayerToTable(tableId, casinoId, userEmail, userName, 1000, int.Parse(button.Name));
+                string result = gameManager.server.AddPlayerToTable(tableId, casinoId, userEmail, userName, 1000, int.Parse(button.Name));
+                if(result.Contains("User not have enough balance"))
+                {
+                    isFindChestPanelVisible = true;
+                }
+                else
+                {
+                    signature = result;
+                }
             }
             catch (Exception ex)
             {
-
+                
             }
         }
 
@@ -635,14 +656,10 @@ namespace CasinoSharedLibary
 
                 aTimer.AutoReset = true;
                 aTimer.Enabled = true;
-
-
-               
-
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-
+                
             }
         }
 
@@ -660,12 +677,9 @@ namespace CasinoSharedLibary
                         currentRoundPart = round.Part;
                         lastRoundPart = (currentRoundPart == RoundPart.PreFlop) ? currentRoundPart : lastRoundPart;
                         currentBettingRound = round.currentBettingRound;
-                        currentPlayer = currentBettingRound.CurrentPlayer;
+                        if(currentBettingRound != null)
+                            currentPlayer = currentBettingRound.CurrentPlayer;
                         cardDrawingLocations = calculateCardLocation(round);
-                    }
-                    else
-                    {
-
                     }
 
                     List<Message> testChatData = gameManager.server.GetTableChatMessages(tableId, casinoId);
@@ -677,18 +691,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception ex)
             {
-
-            }
-        }
-        private void startRound(Object source, System.Timers.ElapsedEventArgs e)
-        {
-            try
-            {
-                gameManager.server.startRound(tableId, casinoId);
-            }
-            catch (Exception ex)
-            {
-
+                
             }
         }
 
@@ -698,18 +701,21 @@ namespace CasinoSharedLibary
             {
                 List<int> list = new List<int>();
                 int sitNumber = round.Dealer + 1;
-                for (int i = 0; i < 9; i++)
+                if (round.ActivePlayersIndex != null)
                 {
-                    if (round.ActivePlayersIndex[(sitNumber + i) % 9] != null && round.ActivePlayersIndex[(sitNumber + i) % 9].InHand)
+                    for (int i = 0; i < 9; i++)
                     {
-                        list.Add((sitNumber + i) % 9);
+                        if (round.ActivePlayersIndex[(sitNumber + i) % 9] != null && round.ActivePlayersIndex[(sitNumber + i) % 9].InHand)
+                        {
+                            list.Add((sitNumber + i) % 9);
+                        }
                     }
-                }
-                for (int i = 0; i < 9; i++)
-                {
-                    if (round.ActivePlayersIndex[(sitNumber + i) % 9] != null && round.ActivePlayersIndex[(sitNumber + i) % 9].InHand)
+                    for (int i = 0; i < 9; i++)
                     {
-                        list.Add(((sitNumber + i) % 9) + 10);
+                        if (round.ActivePlayersIndex[(sitNumber + i) % 9] != null && round.ActivePlayersIndex[(sitNumber + i) % 9].InHand)
+                        {
+                            list.Add(((sitNumber + i) % 9) + 10);
+                        }
                     }
                 }
 
@@ -725,18 +731,14 @@ namespace CasinoSharedLibary
         {
             try
             {
-                if (int.Parse(enterMoneyTextbox.message) - 500 > 0)
+                if (int.Parse(enterMoneyTextbox.message) - table.GameSetting.MinBalance >= table.GameSetting.MinBalance)
                 {
-                    enterMoneyTextbox.message = (int.Parse(enterMoneyTextbox.message) - 500).ToString();
-                }
-                else
-                {
-                    enterMoneyTextbox.message = "0";
+                    enterMoneyTextbox.updateMessageExtern((int.Parse(enterMoneyTextbox.message) - table.GameSetting.MinBalance).ToString());
                 }
             }
             catch (Exception ex)
             {
-
+                
             }
         }
 
@@ -744,18 +746,21 @@ namespace CasinoSharedLibary
         {
             try
             {
-                if (int.Parse(enterMoneyTextbox.message) + 500 < myPlayer.Stat.Money)
+                if (myPlayer != null && myPlayer.Stat != null)
                 {
-                    enterMoneyTextbox.message = (int.Parse(enterMoneyTextbox.message) + 500).ToString();
-                }
-                else
-                {
-                    enterMoneyTextbox.message = myPlayer.Stat.Money.ToString();
+                    if (int.Parse(enterMoneyTextbox.message) + table.GameSetting.MinBalance < myPlayer.Stat.Money && int.Parse(enterMoneyTextbox.message) + table.GameSetting.MinBalance <= table.GameSetting.MaxBalance)
+                    {
+                        enterMoneyTextbox.updateMessageExtern((int.Parse(enterMoneyTextbox.message) + table.GameSetting.MinBalance).ToString());
+                    }
+                    else
+                    {
+                        enterMoneyTextbox.updateMessageExtern(myPlayer.Stat.Money.ToString());
+                    }
                 }
             }
             catch (Exception ex)
             {
-
+                
             }
         }
 
@@ -765,11 +770,10 @@ namespace CasinoSharedLibary
             {
                 gameManager.server.AddOnReBuy(tableId, casinoId, userEmail, signature, int.Parse(enterMoneyTextbox.message));
                 isEnterMoneyPanelVisible = false;
-                isEnterMoneyPanelVisible = false;
             }
             catch (Exception ex)
             {
-
+               
             }
         }
         private void RaiseDownButton_Clicked(object sender, EventArgs e)
@@ -783,7 +787,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception ex)
             {
-
+                
             }
         }
 
@@ -802,7 +806,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception ex)
             {
-
+                
             }
         }
 
@@ -839,7 +843,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception ex)
             {
-
+                
             }
         }
 
@@ -853,7 +857,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception ex)
             {
-
+                
             }
         }
 
@@ -959,14 +963,22 @@ namespace CasinoSharedLibary
 
                 _guiSystem.Update(i_gametime);
                 updateEnterMoneyPanel(i_gametime, currentInput);
+                updateFindChestPanel(i_gametime);
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerTable.Update " + e.Message);
-                }
+                
                 throw e;
+            }
+        }
+
+        private void updateFindChestPanel(GameTime i_gametime)
+        {
+            if (isFindChestPanelVisible)
+            {
+                findChestRectangle = new Rectangle(400, 250, 550, 200);
+                findChestConfirm.Position = new Vector2(findChestRectangle.X + 180, findChestRectangle.Y + 135);
+                findChestConfirm.Update(i_gametime, 0, 0);
             }
         }
 
@@ -986,10 +998,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerTable.CheckIfInTable " + e.Message);
-                }
+                
                 throw e;
             }
         }
@@ -1038,10 +1047,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerTable.movingChipsInEndOfPart " + e.Message);
-                }
+                
                 throw e;
             }
 
@@ -1069,10 +1075,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerTable.totalBetStopMoving " + e.Message);
-                }
+                
                 throw e;
             }
         }
@@ -1095,10 +1098,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerTable.restartChipLocations " + e.Message);
-                }
+                
                 throw e;
             }
         }
@@ -1121,10 +1121,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerTable.chipsStopMoving " + e.Message);
-                }
+                
                 throw e;
             }
         }
@@ -1144,7 +1141,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception ex)
             {
-
+                
             }
         }
 
@@ -1161,7 +1158,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception ex)
             {
-
+                
             }
         }
 
@@ -1192,7 +1189,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception ex)
             {
-
+                
             }
         }
 
@@ -1207,10 +1204,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerTable.updateDrawHandsRating " + e.Message);
-                }
+                
             }
         }
 
@@ -1218,7 +1212,7 @@ namespace CasinoSharedLibary
         {
             try
             {
-                if (isEnterMoneyPanelVisible)
+                if (isEnterMoneyPanelVisible && myPlayer != null)
                 {
                     enterMoneyRaiseUp.IsEnabled = true;
                     enterMoneyRaiseUp.IsVisible = true;
@@ -1241,13 +1235,20 @@ namespace CasinoSharedLibary
                     enterMoneyExit.Size = new Size(120, 50);
                     enterMoneyExit.Update(i_gameTime, 0, 0);
                     enterMoneyTextbox.Update(i_input, new Vector2(enterMoneyRaiseDown.Position.X + 93, enterMoneyRaiseDown.Position.Y));
-                    if(int.Parse(enterMoneyTextbox.message) > myPlayer.Stat.Money)
+                    if (enterMoneyTextbox.message.Length > 0)
                     {
-                        enterMoneyTextbox.updateMessageExtern(myPlayer.Stat.Money.ToString());
+                        if (int.Parse(enterMoneyTextbox.message) > myPlayer.Stat.Money)
+                        {
+                            if(myPlayer.Stat.Money <= table.GameSetting.MaxBalance)
+                                enterMoneyTextbox.updateMessageExtern(myPlayer.Stat.Money.ToString());
+                            else
+                                enterMoneyTextbox.updateMessageExtern(table.GameSetting.MaxBalance.ToString());
+                        }
                     }
                 }
                 else
                 {
+                    isEnterMoneyPanelVisible = false;
                     enterMoneyRaiseUp.IsEnabled = false;
                     enterMoneyRaiseUp.IsVisible = false;
                     enterMoneyRaiseDown.IsEnabled = false;
@@ -1260,10 +1261,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerTable.updateEnterMoneyPanel " + e.Message);
-                }
+                
             }
         }
 
@@ -1284,10 +1282,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerTable.updateChat " + e.Message);
-                }
+                
             }
         }
 
@@ -1297,12 +1292,15 @@ namespace CasinoSharedLibary
             {
                 if (myPlayer.Money <= 0)
                 {
-                    Task.Delay(3000).ContinueWith(task => changeRebuyPanel());
+                    if (myPlayer.Stat.Money >= table.GameSetting.MinBalance)
+                        Task.Delay(3000).ContinueWith(task => changeRebuyPanel());
+                    else
+                        isFindChestPanelVisible = true;
                 }
             }
             catch (Exception ex)
             {
-
+                
             }
         }
 
@@ -1311,10 +1309,11 @@ namespace CasinoSharedLibary
             try
             {
                 isEnterMoneyPanelVisible = true;
+                enterMoneyTextbox.updateMessageExtern(table.GameSetting.MinBalance.ToString());
             }
             catch (Exception ex)
             {
-
+                
             }
         }
 
@@ -1333,10 +1332,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerTable.hideBettingButtons " + e.Message);
-                }
+                
             }
         }
 
@@ -1355,10 +1351,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerTable.activeBettingButtons " + e.Message);
-                }
+                
             }
         }
 
@@ -1382,10 +1375,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerTable.CheckOrCall " + e.Message);
-                }
+                
             }
         }
 
@@ -1419,16 +1409,28 @@ namespace CasinoSharedLibary
 
                 _guiSystem.Draw(i_gametime);
                 drawEnterMoneyPanel(i_gametime);
+                drawFindChestPanel(i_gametime);
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerTable.Draw " + e.Message);
-                }
+                
                 throw e;
             }
 
+        }
+
+        private void drawFindChestPanel(GameTime i_gametime)
+        {
+            if(isFindChestPanelVisible)
+            {
+                painter.Draw(storage.GreenUI[5], findChestRectangle, Color.White);
+                painter.DrawString(storage.Fonts[0], 
+                    @"You're out of GOLD!
+Go find a chest 
+inside the casino room!"
+, new Vector2(findChestRectangle.X + 120, findChestRectangle.Y + 15), Color.Black);
+                findChestConfirm.Draw(i_gametime, painter);
+            }
         }
 
         private void drawTotalBets(GameTime i_gametime)
@@ -1456,10 +1458,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerTable.drawTotalBets " + e.Message);
-                }
+                
             }
         }
 
@@ -1502,10 +1501,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerTable.drawStatsPanel " + e.Message);
-                }
+                
             }
         }
 
@@ -1521,10 +1517,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerTable.frawHandsRating " + e.Message);
-                }
+                
             }
         }
 
@@ -1532,7 +1525,7 @@ namespace CasinoSharedLibary
         {
             try
             {
-                if (isEnterMoneyPanelVisible)
+                if (isEnterMoneyPanelVisible && myPlayer != null)
                 {
                     painter.Draw(storage.GreenUI[5], enterMoneyRectangle, Color.White);
                     painter.DrawString(storage.Fonts[0], "Buy Into Game", new Vector2(enterMoneyRectangle.X + 100, enterMoneyRectangle.Y + 20), Color.Black);
@@ -1549,10 +1542,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerTable.drawEnterMoneyPanel " + e.Message);
-                }
+                
             }
         }
 
@@ -1574,10 +1564,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerTable.drawCards " + e.Message);
-                }
+                
             }
         }
 
@@ -1766,10 +1753,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerTable.drawSharedCards " + e.Message);
-                }
+                
             }
         }
 
@@ -1797,10 +1781,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerTable.drawPlayerCard " + e.Message);
-                }
+                
             }
         }
         private void darwDealerButton()
@@ -1859,10 +1840,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerTable.drawDealerButton " + e.Message);
-                }
+                
             }
         }
 
@@ -2073,10 +2051,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerTable.drawActionBar " + e.Message);
-                }
+                
             }
         }
 
@@ -2102,10 +2077,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerTable.convertCardsToint " + e.Message);
-                }
+                
                 throw e;
             }
         }
@@ -2166,10 +2138,7 @@ namespace CasinoSharedLibary
             }
             catch (Exception e)
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Logger.Path, true))
-                {
-                    file.WriteLine("PokerTable.PaintPlayersAndSits " + e.Message);
-                }
+                
             }
         }
     }
